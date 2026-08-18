@@ -26,3 +26,6 @@ next-env.d.ts
 node_modules/
 .next/
 out/
+
+# graphify tool output
+/graphify-out/
