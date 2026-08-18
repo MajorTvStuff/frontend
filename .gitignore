@@ -21,3 +21,8 @@ next-env.d.ts
 
 # client source drop (26MB incl. video); site uses processed copies in public/
 /Assets/
+
+# nested variant apps
+node_modules/
+.next/
+out/

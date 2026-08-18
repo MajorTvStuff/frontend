@@ -1,0 +1,43 @@
+{
+  "note": "All copy verbatim from MAJOR CONTENT_Copy.docx (received 2026-08-17). Do not edit wording here without RG sign-off.",
+  "name": "MAJOR CONTENT",
+  "domain": "https://www.majorcontent.com",
+  "verticals": "TV | FILM | BOOKS",
+  "introLines": [
+    "Bridging Content and Culture",
+    "with Global Icons",
+    "Premium Programming",
+    "Worldwide Bestsellers",
+    "Resonating with the collective majority",
+    "That’s"
+  ],
+  "company": [
+    "MAJOR CONTENT is a TV | Film production and literary management company whose work spans Emmy Award-winning programming and New York Times Bestselling books, focusing on unscripted and scripted series, features, documentaries, and non-fiction and fiction books.",
+    "Driven by the approach of being culturally inspired, but not culturally exclusive, MAJOR CONTENT leverages a track record of industry leadership and a distinctive sensibility in premium programming and major trade publishing to help shape and elevate universal content for global audiences.",
+    "MAJOR CONTENT takes a holistic approach to storytelling—transcending the confines of a single show, movie, or book."
+  ],
+  "tvFilm": {
+    "label": "TV | FILM",
+    "body": "Major Content develops and produces scripted and unscripted series, features, and documentaries, with credits spanning premium cable, broadcast, and streaming platforms. Several of its projects are inspired by or adapted from bestselling books, drawing directly on the synergy between publishing and production to build marquee IP-driven properties."
+  },
+  "books": {
+    "label": "BOOKS",
+    "body": "Major Content represents adult non-fiction and children's fiction by industry-leading, platform-driven, and celebrity authors, whose stories have the potential of becoming compelling television. Major Content brings a proven editorial and marketing sensibility to pair luminary authors with today's top publishing houses."
+  },
+  "founder": {
+    "name": "Raymond Garcia",
+    "role": "Founder & CEO",
+    "bio": [
+      "Raymond Garcia is the founder and CEO of Major Content, under which he has Executive Produced shows such as HULU's Emmy Award-winning DRIVE with SWIZZ BEATZ, OWN's and HBO MAX's TIME OF ESSENCE, DISCOVERY+'s and HBO MAX's REMIX MY SPACE with Marsai Martin, and VH1's RICKY MARTIN: BEHIND VEGAS RESIDENCY, and also served as literary representation for New York Times Bestsellers authors, such as Marco Borges, THE GREENPRINT and Emme Muñiz, LORD HELP ME.",
+      "Previously, Garcia was the Publisher and founder of Celebra | Penguin Random House, a premier celebrity imprint publishing adult nonfiction and children's fiction titles, primarily by mainstream Hispanic authors in both English and Spanish. Celebra's mission was to fully maximize the potential of every book worldwide with its distinctive approach of leveraging the multifaceted global platforms of its authors to reach a mass audience.",
+      "Home to a variety of International and New York Times Bestsellers, Celebra published acclaimed authors, including Jennifer Lopez, Ricky Martin, Emilio and Gloria Estefan, Mario Lopez, Victor Cruz, Rita Moreno, La La Anthony, Thalía, Tommy Mottola, Angie Martinez, George Lopez, Pelé, Juanes, Marco Borges, Adamari Lopez, Colombian President Álvaro Uribe, Soledad O'Brien, and Ednita Nazario, among many others.",
+      "Prior to starting Celebra, Garcia was the Associate Publisher and Marketing Director of Rayo | HarperCollins, which published revered authors including Isabel Allende, Paulo Coelho, and Gloria Estefan with her New York Times Bestselling children's book.",
+      "Prior to HarperCollins, Garcia was the Founder and President of REG | Strategic Innovations, a fully integrated branding and design firm based out of New Jersey and Florida, helping to bring Hispanic brands to Mainstream markets and Mainstream brands to Hispanic markets. His most notable achievements were developing the first interactive multicultural campaign with TIME Inc and growing the Celia Cruz license into a perennial International property."
+    ],
+    "recognition": "Garcia was also notably named one of People en Español's 50 Most Influential Hispanics – one of only three figures in business and the only representative in book publishing."
+  },
+  "contact": {
+    "email": "info@majorcontent.com",
+    "emailConfirm": "Contact email for the new brand not yet provided — placeholder pending RG (question 5 in MAJOR-CONTENT-CONCEPTS.md)."
+  }
+}

@@ -1,0 +1,210 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ *  MAJOR CONTENT — the Reel build (RadicalMedia DNA)
+ *  Light chrome, one grotesque, zero decorative color: the key art and
+ *  jackets supply every drop of color on the page. Brand red appears
+ *  only where the logo itself carries it.
+ * ------------------------------------------------------------------ */
+
+@theme {
+  --color-*: initial;
+
+  --color-paper: #ffffff;
+  --color-ink: #0c0e12;
+  --color-mid: #5c6570;
+  --color-faint: #9aa2ab;
+  --color-line: #e8eaec;
+  --color-screen: #08090b;     /* the dark room the montage plays in */
+  --color-red: #a22d32;        /* the M's wings */
+  --color-silver: #b2bec6;
+
+  --font-ui: var(--font-grotesk), Arial, sans-serif;
+
+  --text-meta: 0.6875rem;
+  --text-meta--line-height: 1.35;
+  --text-meta--letter-spacing: 0.14em;
+  --text-cap: 0.9375rem;
+  --text-cap--line-height: 1.35;
+  --text-base: 1rem;
+  --text-base--line-height: 1.6;
+  --text-about: 0.9375rem;
+  --text-about--line-height: 1.75;
+  --text-h2: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
+  --text-h2--line-height: 1.1;
+
+  --ease-weighted: cubic-bezier(0.3, 1.06, 0.32, 1);
+
+  --radius-*: initial;
+  --radius-none: 0;
+  --radius-pill: 999px;
+}
+
+/* ---------- base ---------- */
+
+@layer base {
+  :root {
+    color-scheme: light;
+  }
+
+  html {
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-ui);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ink);
+    outline-offset: 3px;
+  }
+
+  @media print {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+/* ---------- components ---------- */
+
+@layer components {
+  .meta-caps {
+    font-family: var(--font-ui);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+    letter-spacing: var(--text-meta--letter-spacing);
+    text-transform: uppercase;
+    font-weight: 600;
+  }
+
+  .display-heavy {
+    font-family: var(--font-ui);
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  THE MONTAGE — hard cuts through the slate, pure CSS.
+ *  Each slide owns one slot of the loop; step-end easing makes the
+ *  cut instantaneous, like an edit, not a crossfade. Slide 0 is the
+ *  natural (no-animation) state, so reduced-motion and print hold on
+ *  the first frame.
+ * ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* Elements carry static opacity (slide 0 visible, the rest hidden);
+     the animation overrides it while running, so killing the animation
+     (reduced motion, print) freezes the montage on frame one.
+     12 slides -> each owns 1/12 of the loop (8.333%). */
+  .cut {
+    animation: cut var(--loop) step-end infinite;
+    animation-delay: var(--at);
+  }
+  @keyframes cut {
+    0% { opacity: 1; }
+    8.333% { opacity: 1; }
+    8.334% { opacity: 0; }
+    100% { opacity: 0; }
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  THE LOGO BUILD — the Manifesto's choreography, cut to reel pace:
+ *  wings, M, letters out of the M, descriptor. ~2.4s total, over the
+ *  montage. Natural state = finished lockup.
+ * ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  .logo-wings {
+    animation: logo-fade 0.5s var(--ease-weighted) 0.4s both;
+  }
+  .logo-letters {
+    animation: logo-letters 1.3s var(--ease-weighted) 0.8s both;
+  }
+  .logo-shift {
+    animation: logo-shift 1.3s var(--ease-weighted) 0.8s both;
+  }
+  .logo-descriptor {
+    animation: logo-descriptor 0.7s var(--ease-weighted) 2s both;
+  }
+
+  @keyframes logo-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  @keyframes logo-letters {
+    0% { opacity: 0; clip-path: inset(-6% 79.5% -6% -1%); }
+    14% { opacity: 1; clip-path: inset(-6% 79.5% -6% -1%); }
+    24% { opacity: 1; clip-path: inset(-6% 79.5% -6% -1%); }
+    100% { opacity: 1; clip-path: inset(-6% -1% -6% -1%); }
+  }
+  @keyframes logo-shift {
+    0% { transform: translateX(39%); }
+    24% { transform: translateX(39%); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes logo-descriptor {
+    from { opacity: 0; transform: scaleX(1.14); }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+}
+
+/* ---------- the wall ---------- */
+
+/* caption strip inversion on hover/focus — Radical's move */
+.tile-caption {
+  transition: background-color 0.3s, color 0.3s;
+}
+.tile:hover .tile-caption,
+.tile:focus-visible .tile-caption {
+  background-color: var(--color-ink);
+}
+.tile:hover .tile-title,
+.tile:focus-visible .tile-title {
+  color: var(--color-paper);
+}
+.tile:hover .tile-sub,
+.tile:focus-visible .tile-sub {
+  color: var(--color-faint);
+}
+
+/* ---------- scroll reveals (zero JS; static without support) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .scroll-rise {
+      animation: scroll-rise var(--ease-weighted) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 38%;
+    }
+  }
+  @keyframes scroll-rise {
+    from { opacity: 0; transform: translateY(1.25rem); }
+  }
+}
