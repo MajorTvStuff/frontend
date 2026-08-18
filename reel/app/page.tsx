@@ -1,11 +1,32 @@
-import { site } from "@/lib/content";
+import { site, projects, projectDims } from "@/lib/content";
+import type { Slide } from "@/components/Montage";
 import { Montage } from "@/components/Montage";
 import { Wall } from "@/components/Wall";
 import { Lockup } from "@/components/Lockup";
 import { Confirm } from "@/components/Confirm";
 
+const SLIDE_SPEC: { slug: string; fit: "cover" | "contain" }[] = [
+  { slug: "drive", fit: "cover" },
+  { slug: "true-love", fit: "contain" },
+  { slug: "time-of-essence", fit: "cover" },
+  { slug: "the-love-playbook", fit: "contain" },
+  { slug: "remix-my-space", fit: "cover" },
+  { slug: "me", fit: "contain" },
+  { slug: "behind-the-vegas-residency", fit: "cover" },
+  { slug: "why-soccer-matters", fit: "contain" },
+  { slug: "estefan-kitchen", fit: "contain" },
+  { slug: "my-voice", fit: "contain" },
+  { slug: "clemente", fit: "contain" },
+  { slug: "out-of-the-blue", fit: "contain" },
+];
+
 export default function Home() {
   const f = site.founder;
+  const slides: Slide[] = SLIDE_SPEC.map((s) => {
+    const p = projects.find((x) => x.slug === s.slug)!;
+    const d = projectDims(s.slug);
+    return { ...s, title: p.title, proof: p.proof, ...d };
+  });
 
   return (
     <>
@@ -22,7 +43,7 @@ export default function Home() {
 
       <main>
         {/* ————— the reel ————— */}
-        <Montage />
+        <Montage slides={slides} />
 
         {/* ————— one line, then the work ————— */}
         <p className="mx-auto max-w-[1320px] px-5 pb-2 pt-10 text-sm text-mid sm:px-8">

@@ -110,29 +110,10 @@
 }
 
 /* ------------------------------------------------------------------ *
- *  THE MONTAGE — hard cuts through the slate, pure CSS.
- *  Each slide owns one slot of the loop; step-end easing makes the
- *  cut instantaneous, like an edit, not a crossfade. Slide 0 is the
- *  natural (no-animation) state, so reduced-motion and print hold on
- *  the first frame.
+ *  THE HERO CAROUSEL transitions live in the Montage component
+ *  (blur + fade + zoom settle via CSS transitions; the global
+ *  reduced-motion rule above makes swaps instant).
  * ------------------------------------------------------------------ */
-
-@media (prefers-reduced-motion: no-preference) {
-  /* Elements carry static opacity (slide 0 visible, the rest hidden);
-     the animation overrides it while running, so killing the animation
-     (reduced motion, print) freezes the montage on frame one.
-     12 slides -> each owns 1/12 of the loop (8.333%). */
-  .cut {
-    animation: cut var(--loop) step-end infinite;
-    animation-delay: var(--at);
-  }
-  @keyframes cut {
-    0% { opacity: 1; }
-    8.333% { opacity: 1; }
-    8.334% { opacity: 0; }
-    100% { opacity: 0; }
-  }
-}
 
 /* ------------------------------------------------------------------ *
  *  THE LOGO BUILD — the Manifesto's choreography, cut to reel pace:
