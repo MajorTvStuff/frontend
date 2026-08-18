@@ -1,0 +1,292 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ *
+ *  MAJOR CONTENT — the Manifesto build
+ *  One black cinematic page. Brand colors are measured from the logo
+ *  assets (see archive/DESIGN-NOTES.md): the M's book-page red and the
+ *  descriptor silver. The ground is near-black with the navy hue of
+ *  the letter facets.
+ * ------------------------------------------------------------------ */
+
+@theme {
+  --color-*: initial;
+
+  --color-ground: #05080d;      /* the room: near-black, navy-hinted */
+  --color-ground-lift: #0a1018; /* raised surfaces */
+  --color-white: #f4f6f8;
+  --color-bright: #ffffff;
+  --color-gray: #b9c2ca;        /* body text on black */
+  --color-dim: #77828c;         /* secondary text */
+  --color-red: #a22d32;         /* the M's book-page wings */
+  --color-red-bright: #d4555c;  /* wing red lifted to pass contrast as display text */
+  --color-silver: #b2bec6;      /* the descriptor silver */
+
+  --color-todo-bg: #3a2d05;
+  --color-todo-text: #ffd666;
+
+  --font-ui: var(--font-grotesk), Arial, sans-serif;
+  --font-serif: var(--font-serif-text), georgia, serif;
+
+  --text-meta: 0.75rem;
+  --text-meta--line-height: 1.4;
+  --text-meta--letter-spacing: 0.22em;
+  --text-sm: 0.875rem;
+  --text-sm--line-height: 1.6;
+  --text-base: 1rem;
+  --text-base--line-height: 1.7;
+  --text-read: 1.1875rem;
+  --text-read--line-height: 1.8;
+  --text-flow: clamp(1.5rem, 1rem + 2.4vw, 2.625rem);
+  --text-flow--line-height: 1.35;
+  --text-thesis: clamp(1.375rem, 1rem + 1.8vw, 2.125rem);
+  --text-thesis--line-height: 1.5;
+  --text-h2: clamp(1.75rem, 1.3rem + 2vw, 2.75rem);
+  --text-h2--line-height: 1.1;
+  --text-beat: clamp(2.25rem, 1.2rem + 5vw, 5.5rem);
+  --text-beat--line-height: 1.04;
+
+  --ease-weighted: cubic-bezier(0.3, 1.06, 0.32, 1);
+
+  --radius-*: initial;
+  --radius-none: 0;
+  --radius-pill: 999px;
+}
+
+/* ---------- base ---------- */
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scrollbar-gutter: stable;
+  }
+
+  body {
+    background: var(--color-ground);
+    color: var(--color-gray);
+    font-family: var(--font-ui);
+    font-size: var(--text-base);
+    line-height: var(--text-base--line-height);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection {
+    background: var(--color-red);
+    color: var(--color-bright);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-silver);
+    outline-offset: 3px;
+  }
+
+  /* print has no scroll and no time axis: show everything, animate nothing */
+  @media print {
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+}
+
+/* ---------- components ---------- */
+
+@layer components {
+  .meta-caps {
+    font-family: var(--font-ui);
+    font-size: var(--text-meta);
+    line-height: var(--text-meta--line-height);
+    letter-spacing: var(--text-meta--letter-spacing);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  .display-condensed {
+    font-family: var(--font-ui);
+    font-stretch: 78%;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  /* manifesto voice: light editorial serif */
+  .serif-flow {
+    font-family: var(--font-serif);
+    font-weight: 300;
+    letter-spacing: 0.005em;
+  }
+
+  .prose-read {
+    font-family: var(--font-serif);
+    font-size: var(--text-read);
+    line-height: var(--text-read--line-height);
+    font-weight: 330;
+  }
+
+  /* hairline that stops short of the column edge */
+  .hairline-short {
+    position: relative;
+    height: 1px;
+  }
+  .hairline-short::before {
+    content: "";
+    position: absolute;
+    inset: 0 16% 0 0;
+    background: currentColor;
+    opacity: 0.3;
+  }
+
+  .todo-chip {
+    display: inline-block;
+    border-radius: var(--radius-pill);
+    background: var(--color-todo-bg);
+    color: var(--color-todo-text);
+    font-family: var(--font-ui);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    line-height: 1;
+    padding: 0.3em 0.7em;
+    vertical-align: 0.2em;
+    text-transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  THE INTRO — word-flow ending in the logo build. Pure CSS.
+ *  Natural (no-animation) state == final state: lines invisible,
+ *  lockup fully assembled. Reduced-motion and print therefore land
+ *  on the finished frame for free.
+ * ------------------------------------------------------------------ */
+
+@media (prefers-reduced-motion: no-preference) {
+  /* each line: fade in, hold, fade out — staggered by --i */
+  .intro-line {
+    animation: intro-line 2.3s var(--ease-weighted) both;
+    animation-delay: calc(var(--i) * 1.85s + 0.6s);
+  }
+  @keyframes intro-line {
+    0% { opacity: 0; transform: translateY(0.6rem); }
+    22% { opacity: 1; transform: translateY(0); }
+    72% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* logo build begins as "That's" clears (~12.3s) */
+  .logo-wings {
+    animation: logo-fade 1.1s var(--ease-weighted) 12.3s both;
+  }
+  .logo-letters {
+    animation: logo-letters 2.4s var(--ease-weighted) 13.1s both;
+  }
+  .logo-shift {
+    animation: logo-shift 2.4s var(--ease-weighted) 13.1s both;
+  }
+  .logo-descriptor {
+    animation: logo-descriptor 1.3s var(--ease-weighted) 15.3s both;
+  }
+  .logo-verticals {
+    animation: logo-fade 1s var(--ease-weighted) 16.2s both;
+  }
+  .intro-scrollcue {
+    animation: logo-fade 1s var(--ease-weighted) 17s both;
+  }
+
+  @keyframes logo-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  /* letters revealed left-to-right out of the M; hidden entirely until
+     the animation's own delay elapses (fill-mode both holds 0%) */
+  @keyframes logo-letters {
+    0% { opacity: 0; clip-path: inset(-6% 79.5% -6% -1%); }
+    12% { opacity: 1; clip-path: inset(-6% 79.5% -6% -1%); }
+    22% { opacity: 1; clip-path: inset(-6% 79.5% -6% -1%); }
+    100% { opacity: 1; clip-path: inset(-6% -1% -6% -1%); }
+  }
+  /* the whole mark starts with the M centered, settles to true center */
+  @keyframes logo-shift {
+    0% { transform: translateX(39%); }
+    18% { transform: translateX(39%); }
+    100% { transform: translateX(0); }
+  }
+  @keyframes logo-descriptor {
+    from { opacity: 0; transform: scaleX(1.14); }
+    to { opacity: 1; transform: scaleX(1); }
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  THE SHELF — one slow perpetual drift. Two identical tracks give a
+ *  seamless loop; hover or keyboard focus pauses it. Reduced motion
+ *  turns it into a plain horizontally scrollable shelf.
+ * ------------------------------------------------------------------ */
+
+.shelf {
+  overflow: hidden;
+  display: flex;
+}
+.shelf-track {
+  display: flex;
+  flex: none;
+  gap: 2.25rem;
+  padding-right: 2.25rem;
+  animation: shelf-drift 160s linear infinite;
+}
+.shelf:hover .shelf-track,
+.shelf:focus-within .shelf-track {
+  animation-play-state: paused;
+}
+@keyframes shelf-drift {
+  to { transform: translateX(-100%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shelf {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .shelf-track[aria-hidden="true"] {
+    display: none;
+  }
+}
+
+/* ---------- scroll-driven section reveals (zero JS; static fallback) ---------- */
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .scroll-rise {
+      animation: scroll-rise var(--ease-weighted) both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 42%;
+    }
+    .rule-draw {
+      transform-origin: left;
+      animation: rule-draw var(--ease-weighted) both;
+      animation-timeline: view();
+      animation-range: entry 0% cover 30%;
+    }
+  }
+  @keyframes scroll-rise {
+    from { opacity: 0; transform: translateY(1.5rem); }
+  }
+  @keyframes rule-draw {
+    from { transform: scaleX(0); }
+  }
+}
