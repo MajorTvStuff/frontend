@@ -6,7 +6,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "MAJOR CONTENT — TV | Film Production & Literary Management",
+  title: "Concept 03 · The Manifesto — MAJOR CONTENT",
   description:
     "Bridging content and culture: Emmy Award-winning programming and New York Times Bestselling books. A TV | Film production and literary management company founded by Raymond Garcia.",
   alternates: { canonical: "/" },
@@ -51,6 +51,13 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
         />
         {children}
+        {/* concept-phase watermark — remove when a direction is chosen */}
+        <div
+          aria-hidden="true"
+          className="meta-caps pointer-events-none fixed bottom-3 right-3 z-50 border border-silver/25 bg-ground/70 px-2.5 py-1.5 !text-[0.6rem] text-silver/70 print:hidden"
+        >
+          Concept 03 · The Manifesto
+        </div>
       </body>
     </html>
   );

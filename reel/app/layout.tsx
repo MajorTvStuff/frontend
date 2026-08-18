@@ -15,7 +15,7 @@ const grotesk = localFont({
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "MAJOR CONTENT — TV | Film Production & Literary Management",
+  title: "Concept 01 · The Reel — MAJOR CONTENT",
   description:
     "Emmy Award-winning programming and New York Times Bestselling books, one slate. A TV | Film production and literary management company founded by Raymond Garcia.",
   alternates: { canonical: "/" },
@@ -54,6 +54,13 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
         />
         {children}
+        {/* concept-phase watermark — remove when a direction is chosen */}
+        <div
+          aria-hidden="true"
+          className="meta-caps pointer-events-none fixed bottom-3 right-3 z-50 border border-line bg-paper/80 px-2.5 py-1.5 !text-[0.6rem] text-mid print:hidden"
+        >
+          Concept 01 · The Reel
+        </div>
       </body>
     </html>
   );

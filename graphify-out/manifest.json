@@ -1,0 +1,590 @@
+{
+  "app/layout.tsx": {
+    "mtime": 1787029299.3570802,
+    "seen": 1787072400.5018356,
+    "ast_hash": "ad217fb0e7a4d16180452d0805b7db43",
+    "semantic_hash": "ad217fb0e7a4d16180452d0805b7db43"
+  },
+  "app/page.tsx": {
+    "mtime": 1787029333.8379931,
+    "seen": 1787072400.5018356,
+    "ast_hash": "bc92b490c20519a7a2c314eb467d2411",
+    "semantic_hash": "bc92b490c20519a7a2c314eb467d2411"
+  },
+  "app/robots.ts": {
+    "mtime": 1787029345.3848622,
+    "seen": 1787072400.5018356,
+    "ast_hash": "20965042ebb534328dcf834c7c582fa4",
+    "semantic_hash": "20965042ebb534328dcf834c7c582fa4"
+  },
+  "app/sitemap.ts": {
+    "mtime": 1787029344.1157475,
+    "seen": 1787072400.5018356,
+    "ast_hash": "6529922ae452aef16e53f82c473812f1",
+    "semantic_hash": "6529922ae452aef16e53f82c473812f1"
+  },
+  "components/Confirm.tsx": {
+    "mtime": 1787029272.2409823,
+    "seen": 1787072400.5018356,
+    "ast_hash": "417bce4530f51256841a92a3c905c39a",
+    "semantic_hash": "417bce4530f51256841a92a3c905c39a"
+  },
+  "components/Intro.tsx": {
+    "mtime": 1787039667.8139555,
+    "seen": 1787072400.5018356,
+    "ast_hash": "38ed803427171c819016a570f4e0a5fa",
+    "semantic_hash": "38ed803427171c819016a570f4e0a5fa"
+  },
+  "components/Lockup.tsx": {
+    "mtime": 1787029220.110251,
+    "seen": 1787072400.5018356,
+    "ast_hash": "772c715b4323912c9c455c8ac419a3bd",
+    "semantic_hash": "772c715b4323912c9c455c8ac419a3bd"
+  },
+  "components/Shelf.tsx": {
+    "mtime": 1787029685.4173925,
+    "seen": 1787072400.5018356,
+    "ast_hash": "f80ef80a5b06e4e93f0cdd0cf881ec4a",
+    "semantic_hash": "f80ef80a5b06e4e93f0cdd0cf881ec4a"
+  },
+  "content/projects.json": {
+    "mtime": 1787028996.2808807,
+    "seen": 1787072400.5018356,
+    "ast_hash": "061e19a75911ed631ec6cb6b219dca6b",
+    "semantic_hash": "061e19a75911ed631ec6cb6b219dca6b"
+  },
+  "content/site.json": {
+    "mtime": 1787028971.324924,
+    "seen": 1787072400.5018356,
+    "ast_hash": "ddab754cbb2a6a528e4f4a869a7e32d4",
+    "semantic_hash": "ddab754cbb2a6a528e4f4a869a7e32d4"
+  },
+  "lib/content.ts": {
+    "mtime": 1787029477.784758,
+    "seen": 1787072400.5018356,
+    "ast_hash": "29e5815ec2cddfef23a701a5b9a273ed",
+    "semantic_hash": "29e5815ec2cddfef23a701a5b9a273ed"
+  },
+  "lib/fonts.ts": {
+    "mtime": 1787029676.1264493,
+    "seen": 1787072400.5018356,
+    "ast_hash": "33e30605b5a65ec83c455d7b194a2edc",
+    "semantic_hash": "33e30605b5a65ec83c455d7b194a2edc"
+  },
+  "lib/image-dims.json": {
+    "mtime": 1787028907.3154185,
+    "seen": 1787072400.5018356,
+    "ast_hash": "a0ebcb30e3e29076c09df44c2c746288",
+    "semantic_hash": "a0ebcb30e3e29076c09df44c2c746288"
+  },
+  "lib/site.ts": {
+    "mtime": 1787029141.4961262,
+    "seen": 1787072400.5018356,
+    "ast_hash": "639b9545e1db2fe1c90ea6e6994da0b5",
+    "semantic_hash": "639b9545e1db2fe1c90ea6e6994da0b5"
+  },
+  "lib/wordmark.ts": {
+    "mtime": 1787029012.936681,
+    "seen": 1787072400.5018356,
+    "ast_hash": "28adc9fd758bd2b4b5885a3da82b9db4",
+    "semantic_hash": "28adc9fd758bd2b4b5885a3da82b9db4"
+  },
+  "next.config.ts": {
+    "mtime": 1787029342.6137147,
+    "seen": 1787072400.5018356,
+    "ast_hash": "85bea71d01ab54cf498fe09fb0bdd556",
+    "semantic_hash": "85bea71d01ab54cf498fe09fb0bdd556"
+  },
+  "package.json": {
+    "mtime": 1787028935.1322289,
+    "seen": 1787072400.5018356,
+    "ast_hash": "1461f2b372e821aba5f2673ac6236a8a",
+    "semantic_hash": "1461f2b372e821aba5f2673ac6236a8a"
+  },
+  "postcss.config.mjs": {
+    "mtime": 1787028944.2545176,
+    "seen": 1787072400.5018356,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "reel/app/layout.tsx": {
+    "mtime": 1787041710.919852,
+    "seen": 1787072400.5018356,
+    "ast_hash": "34b3a07e88103f4d7b5620c90e820647",
+    "semantic_hash": "34b3a07e88103f4d7b5620c90e820647"
+  },
+  "reel/app/page.tsx": {
+    "mtime": 1787043208.1111772,
+    "seen": 1787072400.5018356,
+    "ast_hash": "7e907c1d9336e126c8eb74d2c7034c33",
+    "semantic_hash": "7e907c1d9336e126c8eb74d2c7034c33"
+  },
+  "reel/app/robots.ts": {
+    "mtime": 1787041743.9280467,
+    "seen": 1787072400.5018356,
+    "ast_hash": "20965042ebb534328dcf834c7c582fa4",
+    "semantic_hash": "20965042ebb534328dcf834c7c582fa4"
+  },
+  "reel/app/sitemap.ts": {
+    "mtime": 1787041743.8912055,
+    "seen": 1787072400.5018356,
+    "ast_hash": "6529922ae452aef16e53f82c473812f1",
+    "semantic_hash": "6529922ae452aef16e53f82c473812f1"
+  },
+  "reel/components/Confirm.tsx": {
+    "mtime": 1787041695.8475227,
+    "seen": 1787072400.5018356,
+    "ast_hash": "417bce4530f51256841a92a3c905c39a",
+    "semantic_hash": "417bce4530f51256841a92a3c905c39a"
+  },
+  "reel/components/Lockup.tsx": {
+    "mtime": 1787042187.6353824,
+    "seen": 1787072400.5018356,
+    "ast_hash": "740279f45c7033cd3ea28bd6f4a67a94",
+    "semantic_hash": "740279f45c7033cd3ea28bd6f4a67a94"
+  },
+  "reel/components/Montage.tsx": {
+    "mtime": 1787043208.1101844,
+    "seen": 1787072400.5018356,
+    "ast_hash": "0c8f294fc9d86b805d8e3c5a2800040b",
+    "semantic_hash": "0c8f294fc9d86b805d8e3c5a2800040b"
+  },
+  "reel/components/Wall.tsx": {
+    "mtime": 1787042393.2483554,
+    "seen": 1787072400.5018356,
+    "ast_hash": "56175016fa3ac50c3c0c0607e3051554",
+    "semantic_hash": "56175016fa3ac50c3c0c0607e3051554"
+  },
+  "reel/content/projects.json": {
+    "mtime": 1787041452.3610296,
+    "seen": 1787072400.5018356,
+    "ast_hash": "061e19a75911ed631ec6cb6b219dca6b",
+    "semantic_hash": "061e19a75911ed631ec6cb6b219dca6b"
+  },
+  "reel/content/site.json": {
+    "mtime": 1787041452.3379662,
+    "seen": 1787072400.5018356,
+    "ast_hash": "ddab754cbb2a6a528e4f4a869a7e32d4",
+    "semantic_hash": "ddab754cbb2a6a528e4f4a869a7e32d4"
+  },
+  "reel/lib/content.ts": {
+    "mtime": 1787041452.476367,
+    "seen": 1787072400.5018356,
+    "ast_hash": "29e5815ec2cddfef23a701a5b9a273ed",
+    "semantic_hash": "29e5815ec2cddfef23a701a5b9a273ed"
+  },
+  "reel/lib/image-dims.json": {
+    "mtime": 1787041452.4447398,
+    "seen": 1787072400.5018356,
+    "ast_hash": "a0ebcb30e3e29076c09df44c2c746288",
+    "semantic_hash": "a0ebcb30e3e29076c09df44c2c746288"
+  },
+  "reel/lib/site.ts": {
+    "mtime": 1787041452.5213282,
+    "seen": 1787072400.5018356,
+    "ast_hash": "639b9545e1db2fe1c90ea6e6994da0b5",
+    "semantic_hash": "639b9545e1db2fe1c90ea6e6994da0b5"
+  },
+  "reel/lib/wordmark.ts": {
+    "mtime": 1787041452.4051638,
+    "seen": 1787072400.5018356,
+    "ast_hash": "28adc9fd758bd2b4b5885a3da82b9db4",
+    "semantic_hash": "28adc9fd758bd2b4b5885a3da82b9db4"
+  },
+  "reel/next.config.ts": {
+    "mtime": 1787041452.6876447,
+    "seen": 1787072400.5018356,
+    "ast_hash": "85bea71d01ab54cf498fe09fb0bdd556",
+    "semantic_hash": "85bea71d01ab54cf498fe09fb0bdd556"
+  },
+  "reel/package.json": {
+    "mtime": 1787041468.683529,
+    "seen": 1787072400.5018356,
+    "ast_hash": "e1a0222e93267c1140c69bca71d5882f",
+    "semantic_hash": "e1a0222e93267c1140c69bca71d5882f"
+  },
+  "reel/postcss.config.mjs": {
+    "mtime": 1787041452.6534417,
+    "seen": 1787072400.5018356,
+    "ast_hash": "239f3ebf717465dc636818a1a619398d",
+    "semantic_hash": "239f3ebf717465dc636818a1a619398d"
+  },
+  "reel/tsconfig.json": {
+    "mtime": 1787041452.6187062,
+    "seen": 1787072400.5018356,
+    "ast_hash": "2d66d37f03cdafa68b630f5aa584f3e3",
+    "semantic_hash": "2d66d37f03cdafa68b630f5aa584f3e3"
+  },
+  "tsconfig.json": {
+    "mtime": 1787029449.9176612,
+    "seen": 1787072400.5018356,
+    "ast_hash": "2d66d37f03cdafa68b630f5aa584f3e3",
+    "semantic_hash": "2d66d37f03cdafa68b630f5aa584f3e3"
+  },
+  "MAJOR-CONTENT-CONCEPTS.md": {
+    "mtime": 1787027029.1954198,
+    "seen": 1787072400.5018356,
+    "ast_hash": "962dfc44477aa62ff126e5ec23432691",
+    "semantic_hash": "962dfc44477aa62ff126e5ec23432691"
+  },
+  "app/apple-icon.png": {
+    "mtime": 1787028924.6531887,
+    "seen": 1787072400.5018356,
+    "ast_hash": "96ea405f9136b72f9a96cb8686883242",
+    "semantic_hash": "96ea405f9136b72f9a96cb8686883242"
+  },
+  "app/icon.svg": {
+    "mtime": 1787028924.6425352,
+    "seen": 1787072400.5018356,
+    "ast_hash": "878ec4ba190641098e1991b767f91a33",
+    "semantic_hash": "878ec4ba190641098e1991b767f91a33"
+  },
+  "public/brand/major-mark-reversed.svg": {
+    "mtime": 1787028924.57272,
+    "seen": 1787072400.5018356,
+    "ast_hash": "0f0c6c01ec63e6231435a6dedd8d1f91",
+    "semantic_hash": "0f0c6c01ec63e6231435a6dedd8d1f91"
+  },
+  "public/brand/major-mark.svg": {
+    "mtime": 1787028924.5255415,
+    "seen": 1787072400.5018356,
+    "ast_hash": "92945611eef3ada31de251140f75b025",
+    "semantic_hash": "92945611eef3ada31de251140f75b025"
+  },
+  "public/brand/major-wordmark-reversed.svg": {
+    "mtime": 1787028924.4663908,
+    "seen": 1787072400.5018356,
+    "ast_hash": "b840ce0febb33a8a1cf6db6820df716f",
+    "semantic_hash": "b840ce0febb33a8a1cf6db6820df716f"
+  },
+  "public/brand/og.png": {
+    "mtime": 1787029360.0184069,
+    "seen": 1787072400.5018356,
+    "ast_hash": "56c07a4bbd2d5d101952dfbd7e0260ed",
+    "semantic_hash": "56c07a4bbd2d5d101952dfbd7e0260ed"
+  },
+  "public/projects/a-memoir.jpg": {
+    "mtime": 1787028906.4964883,
+    "seen": 1787072400.5018356,
+    "ast_hash": "2b93e608c03a236abc3ad2dd9b60f81a",
+    "semantic_hash": "2b93e608c03a236abc3ad2dd9b60f81a"
+  },
+  "public/projects/behind-the-vegas-residency.jpg": {
+    "mtime": 1787028907.3128915,
+    "seen": 1787072400.5018356,
+    "ast_hash": "4de09bcdf04e03daf19005eaf5223423",
+    "semantic_hash": "4de09bcdf04e03daf19005eaf5223423"
+  },
+  "public/projects/celia-my-life.jpg": {
+    "mtime": 1787028906.8805501,
+    "seen": 1787072400.5018356,
+    "ast_hash": "7d1c094eb6a2e3d01ca297bad5b9420c",
+    "semantic_hash": "7d1c094eb6a2e3d01ca297bad5b9420c"
+  },
+  "public/projects/chasing-the-sun.jpg": {
+    "mtime": 1787028906.7635865,
+    "seen": 1787072400.5018356,
+    "ast_hash": "659da300ad020fa3d53e019ca0d422dd",
+    "semantic_hash": "659da300ad020fa3d53e019ca0d422dd"
+  },
+  "public/projects/chords-of-strength.jpg": {
+    "mtime": 1787028906.8103378,
+    "seen": 1787072400.5018356,
+    "ast_hash": "f0564a12429b05f2ff5238a65d616dbe",
+    "semantic_hash": "f0564a12429b05f2ff5238a65d616dbe"
+  },
+  "public/projects/clemente.jpg": {
+    "mtime": 1787028906.8735375,
+    "seen": 1787072400.5018356,
+    "ast_hash": "db0374759d561cbc8c98854e34e7a332",
+    "semantic_hash": "db0374759d561cbc8c98854e34e7a332"
+  },
+  "public/projects/drive.jpg": {
+    "mtime": 1787028907.1657038,
+    "seen": 1787072400.5018356,
+    "ast_hash": "c7bd223ff942df3de40dbf988b100cc0",
+    "semantic_hash": "c7bd223ff942df3de40dbf988b100cc0"
+  },
+  "public/projects/estefan-kitchen.jpg": {
+    "mtime": 1787028906.440267,
+    "seen": 1787072400.5018356,
+    "ast_hash": "1588c4d2b171fe34ef8d6f4747565ebe",
+    "semantic_hash": "1588c4d2b171fe34ef8d6f4747565ebe"
+  },
+  "public/projects/growing-stronger.jpg": {
+    "mtime": 1787028906.816362,
+    "seen": 1787072400.5018356,
+    "ast_hash": "f24c63f25a5553c96eaba475ace6616b",
+    "semantic_hash": "f24c63f25a5553c96eaba475ace6616b"
+  },
+  "public/projects/im-not-gonna-lie.jpg": {
+    "mtime": 1787028906.8023238,
+    "seen": 1787072400.5018356,
+    "ast_hash": "4847bde1f2ed38c9c66e93e2bb96bb1a",
+    "semantic_hash": "4847bde1f2ed38c9c66e93e2bb96bb1a"
+  },
+  "public/projects/lord-help-me.jpg": {
+    "mtime": 1787028906.9534316,
+    "seen": 1787072400.5018356,
+    "ast_hash": "add5deadf50c1264e093b68601689049",
+    "semantic_hash": "add5deadf50c1264e093b68601689049"
+  },
+  "public/projects/me.jpg": {
+    "mtime": 1787028906.3784301,
+    "seen": 1787072400.5018356,
+    "ast_hash": "9047a04948cea1b7f53f156f0395f4b1",
+    "semantic_hash": "9047a04948cea1b7f53f156f0395f4b1"
+  },
+  "public/projects/mud-tacos.jpg": {
+    "mtime": 1787028907.0402489,
+    "seen": 1787072400.5018356,
+    "ast_hash": "aaaabdf8ab16e9de2240127fd1796ea7",
+    "semantic_hash": "aaaabdf8ab16e9de2240127fd1796ea7"
+  },
+  "public/projects/my-voice.jpg": {
+    "mtime": 1787028906.49147,
+    "seen": 1787072400.5018356,
+    "ast_hash": "c195ff2ee7ec75578d43c5ed8cb1b7fe",
+    "semantic_hash": "c195ff2ee7ec75578d43c5ed8cb1b7fe"
+  },
+  "public/projects/noelle-the-bulldog.jpg": {
+    "mtime": 1787028907.030226,
+    "seen": 1787072400.5018356,
+    "ast_hash": "d30ffb0d40de7c4c587eca9d04275d09",
+    "semantic_hash": "d30ffb0d40de7c4c587eca9d04275d09"
+  },
+  "public/projects/out-of-the-blue.jpg": {
+    "mtime": 1787028906.6526148,
+    "seen": 1787072400.5018356,
+    "ast_hash": "a4771deeeb169e6d131cc25353d0f8e7",
+    "semantic_hash": "a4771deeeb169e6d131cc25353d0f8e7"
+  },
+  "public/projects/remix-my-space.jpg": {
+    "mtime": 1787028907.2596402,
+    "seen": 1787072400.5018356,
+    "ast_hash": "c5840e8768e3788c0f845f2d4ef1863f",
+    "semantic_hash": "c5840e8768e3788c0f845f2d4ef1863f"
+  },
+  "public/projects/santiago-the-dreamer.jpg": {
+    "mtime": 1787028907.110996,
+    "seen": 1787072400.5018356,
+    "ast_hash": "a2c73c822066bb9d0bfde2dda5666df2",
+    "semantic_hash": "a2c73c822066bb9d0bfde2dda5666df2"
+  },
+  "public/projects/the-22-day-revolution.jpg": {
+    "mtime": 1787028906.702363,
+    "seen": 1787072400.5018356,
+    "ast_hash": "44847a0748aa217f8533b7271e91dbd9",
+    "semantic_hash": "44847a0748aa217f8533b7271e91dbd9"
+  },
+  "public/projects/the-love-playbook.jpg": {
+    "mtime": 1787028906.4302328,
+    "seen": 1787072400.5018356,
+    "ast_hash": "258290a13ca19825cfd54122b35bcbce",
+    "semantic_hash": "258290a13ca19825cfd54122b35bcbce"
+  },
+  "public/projects/time-of-essence.jpg": {
+    "mtime": 1787028907.192828,
+    "seen": 1787072400.5018356,
+    "ast_hash": "52dbceb720c9dbd58b80882c11227f14",
+    "semantic_hash": "52dbceb720c9dbd58b80882c11227f14"
+  },
+  "public/projects/to-selena-with-love.jpg": {
+    "mtime": 1787028906.5491736,
+    "seen": 1787072400.5018356,
+    "ast_hash": "8b4c5c2183c2fd4e72839846da46b870",
+    "semantic_hash": "8b4c5c2183c2fd4e72839846da46b870"
+  },
+  "public/projects/true-love.jpg": {
+    "mtime": 1787028906.3729067,
+    "seen": 1787072400.5018356,
+    "ast_hash": "4ee003fed636904ebca282709ed5cfc9",
+    "semantic_hash": "4ee003fed636904ebca282709ed5cfc9"
+  },
+  "public/projects/why-soccer-matters.jpg": {
+    "mtime": 1787028906.5989146,
+    "seen": 1787072400.5018356,
+    "ast_hash": "33ae8bf97b84b1906eea993a2cfa7580",
+    "semantic_hash": "33ae8bf97b84b1906eea993a2cfa7580"
+  },
+  "reel/app/apple-icon.png": {
+    "mtime": 1787041452.2132928,
+    "seen": 1787072400.5018356,
+    "ast_hash": "96ea405f9136b72f9a96cb8686883242",
+    "semantic_hash": "96ea405f9136b72f9a96cb8686883242"
+  },
+  "reel/app/icon.svg": {
+    "mtime": 1787041452.1695065,
+    "seen": 1787072400.5018356,
+    "ast_hash": "878ec4ba190641098e1991b767f91a33",
+    "semantic_hash": "878ec4ba190641098e1991b767f91a33"
+  },
+  "reel/public/brand/major-mark.svg": {
+    "mtime": 1787041452.0164604,
+    "seen": 1787072400.5018356,
+    "ast_hash": "92945611eef3ada31de251140f75b025",
+    "semantic_hash": "92945611eef3ada31de251140f75b025"
+  },
+  "reel/public/brand/major-wordmark-reversed.svg": {
+    "mtime": 1787041451.9688358,
+    "seen": 1787072400.5018356,
+    "ast_hash": "b840ce0febb33a8a1cf6db6820df716f",
+    "semantic_hash": "b840ce0febb33a8a1cf6db6820df716f"
+  },
+  "reel/public/brand/major-wordmark.svg": {
+    "mtime": 1787041467.9219403,
+    "seen": 1787072400.5018356,
+    "ast_hash": "dffd3ab4ab49054f8646accab8c33c0f",
+    "semantic_hash": "dffd3ab4ab49054f8646accab8c33c0f"
+  },
+  "reel/public/brand/og.png": {
+    "mtime": 1787041452.0881577,
+    "seen": 1787072400.5018356,
+    "ast_hash": "56c07a4bbd2d5d101952dfbd7e0260ed",
+    "semantic_hash": "56c07a4bbd2d5d101952dfbd7e0260ed"
+  },
+  "reel/public/projects/a-memoir.jpg": {
+    "mtime": 1787041451.6451125,
+    "seen": 1787072400.5018356,
+    "ast_hash": "2b93e608c03a236abc3ad2dd9b60f81a",
+    "semantic_hash": "2b93e608c03a236abc3ad2dd9b60f81a"
+  },
+  "reel/public/projects/behind-the-vegas-residency.jpg": {
+    "mtime": 1787041451.515686,
+    "seen": 1787072400.5018356,
+    "ast_hash": "4de09bcdf04e03daf19005eaf5223423",
+    "semantic_hash": "4de09bcdf04e03daf19005eaf5223423"
+  },
+  "reel/public/projects/celia-my-life.jpg": {
+    "mtime": 1787041451.377703,
+    "seen": 1787072400.5018356,
+    "ast_hash": "7d1c094eb6a2e3d01ca297bad5b9420c",
+    "semantic_hash": "7d1c094eb6a2e3d01ca297bad5b9420c"
+  },
+  "reel/public/projects/chasing-the-sun.jpg": {
+    "mtime": 1787041451.629083,
+    "seen": 1787072400.5018356,
+    "ast_hash": "659da300ad020fa3d53e019ca0d422dd",
+    "semantic_hash": "659da300ad020fa3d53e019ca0d422dd"
+  },
+  "reel/public/projects/chords-of-strength.jpg": {
+    "mtime": 1787041451.7781372,
+    "seen": 1787072400.5018356,
+    "ast_hash": "f0564a12429b05f2ff5238a65d616dbe",
+    "semantic_hash": "f0564a12429b05f2ff5238a65d616dbe"
+  },
+  "reel/public/projects/clemente.jpg": {
+    "mtime": 1787041451.5904503,
+    "seen": 1787072400.5018356,
+    "ast_hash": "db0374759d561cbc8c98854e34e7a332",
+    "semantic_hash": "db0374759d561cbc8c98854e34e7a332"
+  },
+  "reel/public/projects/drive.jpg": {
+    "mtime": 1787041451.4709978,
+    "seen": 1787072400.5018356,
+    "ast_hash": "c7bd223ff942df3de40dbf988b100cc0",
+    "semantic_hash": "c7bd223ff942df3de40dbf988b100cc0"
+  },
+  "reel/public/projects/estefan-kitchen.jpg": {
+    "mtime": 1787041451.8774326,
+    "seen": 1787072400.5018356,
+    "ast_hash": "1588c4d2b171fe34ef8d6f4747565ebe",
+    "semantic_hash": "1588c4d2b171fe34ef8d6f4747565ebe"
+  },
+  "reel/public/projects/growing-stronger.jpg": {
+    "mtime": 1787041451.857881,
+    "seen": 1787072400.5018356,
+    "ast_hash": "f24c63f25a5553c96eaba475ace6616b",
+    "semantic_hash": "f24c63f25a5553c96eaba475ace6616b"
+  },
+  "reel/public/projects/im-not-gonna-lie.jpg": {
+    "mtime": 1787041451.5744135,
+    "seen": 1787072400.5018356,
+    "ast_hash": "4847bde1f2ed38c9c66e93e2bb96bb1a",
+    "semantic_hash": "4847bde1f2ed38c9c66e93e2bb96bb1a"
+  },
+  "reel/public/projects/lord-help-me.jpg": {
+    "mtime": 1787041451.7164025,
+    "seen": 1787072400.5018356,
+    "ast_hash": "add5deadf50c1264e093b68601689049",
+    "semantic_hash": "add5deadf50c1264e093b68601689049"
+  },
+  "reel/public/projects/me.jpg": {
+    "mtime": 1787041451.5357518,
+    "seen": 1787072400.5018356,
+    "ast_hash": "9047a04948cea1b7f53f156f0395f4b1",
+    "semantic_hash": "9047a04948cea1b7f53f156f0395f4b1"
+  },
+  "reel/public/projects/mud-tacos.jpg": {
+    "mtime": 1787041451.55178,
+    "seen": 1787072400.5018356,
+    "ast_hash": "aaaabdf8ab16e9de2240127fd1796ea7",
+    "semantic_hash": "aaaabdf8ab16e9de2240127fd1796ea7"
+  },
+  "reel/public/projects/my-voice.jpg": {
+    "mtime": 1787041451.7615974,
+    "seen": 1787072400.5018356,
+    "ast_hash": "c195ff2ee7ec75578d43c5ed8cb1b7fe",
+    "semantic_hash": "c195ff2ee7ec75578d43c5ed8cb1b7fe"
+  },
+  "reel/public/projects/noelle-the-bulldog.jpg": {
+    "mtime": 1787041451.3993158,
+    "seen": 1787072400.5018356,
+    "ast_hash": "d30ffb0d40de7c4c587eca9d04275d09",
+    "semantic_hash": "d30ffb0d40de7c4c587eca9d04275d09"
+  },
+  "reel/public/projects/out-of-the-blue.jpg": {
+    "mtime": 1787041451.897504,
+    "seen": 1787072400.5018356,
+    "ast_hash": "a4771deeeb169e6d131cc25353d0f8e7",
+    "semantic_hash": "a4771deeeb169e6d131cc25353d0f8e7"
+  },
+  "reel/public/projects/remix-my-space.jpg": {
+    "mtime": 1787041451.494553,
+    "seen": 1787072400.5018356,
+    "ast_hash": "c5840e8768e3788c0f845f2d4ef1863f",
+    "semantic_hash": "c5840e8768e3788c0f845f2d4ef1863f"
+  },
+  "reel/public/projects/santiago-the-dreamer.jpg": {
+    "mtime": 1787041451.4183633,
+    "seen": 1787072400.5018356,
+    "ast_hash": "a2c73c822066bb9d0bfde2dda5666df2",
+    "semantic_hash": "a2c73c822066bb9d0bfde2dda5666df2"
+  },
+  "reel/public/projects/the-22-day-revolution.jpg": {
+    "mtime": 1787041451.7941902,
+    "seen": 1787072400.5018356,
+    "ast_hash": "44847a0748aa217f8533b7271e91dbd9",
+    "semantic_hash": "44847a0748aa217f8533b7271e91dbd9"
+  },
+  "reel/public/projects/the-love-playbook.jpg": {
+    "mtime": 1787041451.6681864,
+    "seen": 1787072400.5018356,
+    "ast_hash": "258290a13ca19825cfd54122b35bcbce",
+    "semantic_hash": "258290a13ca19825cfd54122b35bcbce"
+  },
+  "reel/public/projects/time-of-essence.jpg": {
+    "mtime": 1787041451.4529457,
+    "seen": 1787072400.5018356,
+    "ast_hash": "52dbceb720c9dbd58b80882c11227f14",
+    "semantic_hash": "52dbceb720c9dbd58b80882c11227f14"
+  },
+  "reel/public/projects/to-selena-with-love.jpg": {
+    "mtime": 1787041451.6110384,
+    "seen": 1787072400.5018356,
+    "ast_hash": "8b4c5c2183c2fd4e72839846da46b870",
+    "semantic_hash": "8b4c5c2183c2fd4e72839846da46b870"
+  },
+  "reel/public/projects/true-love.jpg": {
+    "mtime": 1787041451.691344,
+    "seen": 1787072400.5018356,
+    "ast_hash": "4ee003fed636904ebca282709ed5cfc9",
+    "semantic_hash": "4ee003fed636904ebca282709ed5cfc9"
+  },
+  "reel/public/projects/why-soccer-matters.jpg": {
+    "mtime": 1787041451.7344728,
+    "seen": 1787072400.5018356,
+    "ast_hash": "33ae8bf97b84b1906eea993a2cfa7580",
+    "semantic_hash": "33ae8bf97b84b1906eea993a2cfa7580"
+  }
+}
