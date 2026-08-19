@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { projects, projectDims, type Project } from "@/lib/content";
+import { projects, type Project } from "@/lib/content";
 
 /**
  * The wall: all 24 titles in the copy doc's exact order. Books span 3
@@ -8,19 +8,23 @@ import { projects, projectDims, type Project } from "@/lib/content";
  * lines, adapted: Title / credit / proof, inverting on hover.
  */
 function Tile({ p }: { p: Project }) {
-  const { width, height } = projectDims(p.slug);
   const isShow = p.medium === "show";
 
+  /* Uniform media boxes so every row reads as one object: books sit in a
+     2:3 frame (letterboxed on white — square picture books stay uncropped),
+     shows fill a 4:3 frame, which at double column width is exactly the
+     same rendered height as the 2:3 books beside them. */
   const inner = (
     <>
-      <div className="relative overflow-hidden bg-line">
+      <div
+        className={`relative overflow-hidden ${isShow ? "aspect-[4/3]" : "aspect-[2/3]"}`}
+      >
         <Image
           src={`/projects/${p.slug}.jpg`}
           alt={`${p.title}${p.credit ? ` — ${p.credit}` : ""}`}
-          width={width}
-          height={height}
+          fill
           sizes={isShow ? "(min-width: 640px) 50vw, 100vw" : "(min-width: 640px) 25vw, 50vw"}
-          className="w-full"
+          className={isShow ? "object-cover" : "object-contain"}
         />
         {p.trailer && (
           <span className="meta-caps absolute right-3 top-3 bg-screen/85 px-2.5 py-1.5 text-paper">
@@ -28,7 +32,7 @@ function Tile({ p }: { p: Project }) {
           </span>
         )}
       </div>
-      <div className="tile-caption -mx-2 mt-1 px-2 py-2">
+      <div className="tile-caption -mx-2 mt-1 min-h-[5.25rem] px-2 py-2">
         <p className="tile-title text-cap font-bold uppercase tracking-wide text-ink transition-colors duration-300">
           {p.title}
         </p>

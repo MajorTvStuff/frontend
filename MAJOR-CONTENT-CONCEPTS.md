@@ -210,6 +210,10 @@ slate expands. Worth putting in front of RG as an option.
    majorcontent.com at the host and 301 majortvproductions.com to it.
 9. **Offices/footer** — the old LA/NY office addresses were c/o Endemol Shine
    and Truly Original. What should the footer say now — city names only?
+10. **"TV | FILM | BOOKS"** — the phrase appears in your copy doc (hero close and
+    section labels) while the logo descriptor moves to CONTENT. Does the
+    three-vertical line survive the rebrand as the working descriptor, or
+    should pages lead with CONTENT alone?
 
 ---
 

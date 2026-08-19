@@ -5,19 +5,20 @@ import { Wall } from "@/components/Wall";
 import { Lockup } from "@/components/Lockup";
 import { Confirm } from "@/components/Confirm";
 
+/* Hero roster: only sources that hold up full-bleed on a retina display
+   (>= ~1100px). The small legacy scans (ME, A MEMOIR, the 500px cookbook
+   covers) live in the wall at thumbnail size, where they are sharp. */
 const SLIDE_SPEC: { slug: string; fit: "cover" | "contain" }[] = [
   { slug: "drive", fit: "cover" },
   { slug: "true-love", fit: "contain" },
   { slug: "time-of-essence", fit: "cover" },
   { slug: "the-love-playbook", fit: "contain" },
   { slug: "remix-my-space", fit: "cover" },
-  { slug: "me", fit: "contain" },
-  { slug: "behind-the-vegas-residency", fit: "cover" },
   { slug: "why-soccer-matters", fit: "contain" },
-  { slug: "estefan-kitchen", fit: "contain" },
+  { slug: "behind-the-vegas-residency", fit: "cover" },
   { slug: "my-voice", fit: "contain" },
+  { slug: "chasing-the-sun", fit: "contain" },
   { slug: "clemente", fit: "contain" },
-  { slug: "out-of-the-blue", fit: "contain" },
 ];
 
 export default function Home() {
@@ -42,8 +43,8 @@ export default function Home() {
       </header>
 
       <main>
-        {/* ————— the reel ————— */}
-        <Montage slides={slides} />
+        {/* ————— the reel: word flow -> logo -> ambient carousel ————— */}
+        <Montage slides={slides} introLines={site.introLines} />
 
         {/* ————— one line, then the work ————— */}
         <p className="mx-auto max-w-[1320px] px-5 pb-2 pt-10 text-sm text-mid sm:px-8">
@@ -51,28 +52,55 @@ export default function Home() {
         </p>
         <Wall />
 
-        {/* ————— who we are: dense, editorial, on black ————— */}
-        <section className="bg-screen text-paper">
+        {/* ————— the icons band: his strongest names, out of the paragraph ————— */}
+        {site.icons && (
+          <section className="border-y border-line">
+            <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8">
+              <h2 className="meta-caps scroll-rise text-mid">Global icons</h2>
+              <p className="scroll-rise display-heavy mt-6 text-names leading-snug text-ink">
+                {site.icons.map((name, i) => (
+                  <span key={name}>
+                    <span className="whitespace-nowrap">
+                      {name}
+                      {i < site.icons!.length - 1 && (
+                        <span aria-hidden="true" className="ml-3 text-red">
+                          ·
+                        </span>
+                      )}
+                    </span>{" "}
+                  </span>
+                ))}
+              </p>
+              <p className="scroll-rise mt-6 max-w-xl text-sm text-mid">
+                Published at Celebra | Penguin Random House under founder and
+                publisher Raymond Garcia.
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* ————— who we are: same light chrome as the wall ————— */}
+        <section>
           <div className="mx-auto grid max-w-[1320px] gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20">
             <div className="scroll-rise">
-              <h2 className="meta-caps text-silver">Company</h2>
+              <h2 className="meta-caps text-mid">Company</h2>
               <div className="mt-6 space-y-5">
                 {site.company.map((para) => (
-                  <p key={para.slice(0, 40)} className="text-about text-paper/80">
+                  <p key={para.slice(0, 40)} className="text-about text-ink/80">
                     {para}
                   </p>
                 ))}
               </div>
-              <div className="mt-10 grid grid-cols-2 gap-6 border-t border-paper/15 pt-8">
+              <div className="mt-10 grid grid-cols-2 gap-6 border-t border-line pt-8">
                 <div>
-                  <h3 className="meta-caps text-silver">{site.tvFilm.label}</h3>
-                  <p className="mt-3 text-about text-paper/70">
+                  <h3 className="meta-caps text-mid">{site.tvFilm.label}</h3>
+                  <p className="mt-3 text-about text-ink/70">
                     {site.tvFilm.body}
                   </p>
                 </div>
                 <div>
-                  <h3 className="meta-caps text-silver">{site.books.label}</h3>
-                  <p className="mt-3 text-about text-paper/70">
+                  <h3 className="meta-caps text-mid">{site.books.label}</h3>
+                  <p className="mt-3 text-about text-ink/70">
                     {site.books.body}
                   </p>
                 </div>
@@ -80,16 +108,16 @@ export default function Home() {
             </div>
 
             <div className="scroll-rise lg:[animation-range:entry_8%_entry_46%]">
-              <h2 className="meta-caps text-silver">Founder</h2>
-              <p className="display-heavy mt-6 text-h2">{f.name}</p>
-              <p className="meta-caps mt-1 text-paper/50">{f.role}</p>
+              <h2 className="meta-caps text-mid">Founder</h2>
+              <p className="display-heavy mt-6 text-h2 text-ink">{f.name}</p>
+              <p className="meta-caps mt-1 text-mid">{f.role}</p>
               <div className="mt-6 space-y-5">
                 {f.bio.map((para) => (
-                  <p key={para.slice(0, 40)} className="text-about text-paper/70">
+                  <p key={para.slice(0, 40)} className="text-about text-ink/70">
                     {para}
                   </p>
                 ))}
-                <p className="text-about font-semibold text-paper/90">
+                <p className="text-about font-semibold text-ink">
                   {f.recognition}
                 </p>
               </div>
@@ -98,20 +126,20 @@ export default function Home() {
 
           {/* ————— contact + footer ————— */}
           <div className="mx-auto max-w-[1320px] px-5 pb-14 sm:px-8">
-            <div className="border-t border-paper/15 pt-10">
+            <div className="border-t border-line pt-10">
               <p>
                 <Confirm q={site.contact.emailConfirm}>
                   <a
                     href={`mailto:${site.contact.email}`}
-                    className="display-heavy text-h2 text-paper underline decoration-red decoration-2 underline-offset-8 transition-colors duration-300 hover:text-silver"
+                    className="display-heavy text-h2 text-ink underline decoration-red decoration-2 underline-offset-8 transition-colors duration-300 hover:text-mid"
                   >
                     {site.contact.email}
                   </a>
                 </Confirm>
               </p>
               <div className="mt-12 flex flex-wrap items-end justify-between gap-8">
-                <Lockup className="w-36 opacity-70" />
-                <p className="meta-caps text-paper/50">
+                <Lockup tone="ink" className="w-36 opacity-80" />
+                <p className="meta-caps text-mid">
                   {site.verticals} · © {new Date().getFullYear()} Major Content
                 </p>
               </div>

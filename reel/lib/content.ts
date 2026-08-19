@@ -28,6 +28,7 @@ const Site = z.object({
     recognition: z.string(),
   }),
   contact: z.object({ email: z.string(), emailConfirm: z.string() }),
+  icons: z.array(z.string()).optional(),
 });
 
 export type Project = z.infer<typeof Project>;

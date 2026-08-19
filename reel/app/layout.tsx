@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
 import { site } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
@@ -12,6 +12,10 @@ const grotesk = localFont({
   weight: "100 900",
   declarations: [{ prop: "font-stretch", value: "62% 125%" }],
 });
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+};
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

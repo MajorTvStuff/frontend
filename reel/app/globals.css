@@ -32,6 +32,10 @@
   --text-about--line-height: 1.75;
   --text-h2: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
   --text-h2--line-height: 1.1;
+  --text-flow: clamp(1.375rem, 1rem + 2vw, 2.375rem);
+  --text-flow--line-height: 1.35;
+  --text-names: clamp(1.25rem, 0.9rem + 1.8vw, 2.125rem);
+  --text-names--line-height: 1.35;
 
   --ease-weighted: cubic-bezier(0.3, 1.06, 0.32, 1);
 
@@ -49,6 +53,7 @@
 
   html {
     scrollbar-gutter: stable;
+    background: #ffffff;
   }
 
   body {
@@ -110,29 +115,54 @@
 }
 
 /* ------------------------------------------------------------------ *
- *  THE HERO CAROUSEL transitions live in the Montage component
- *  (blur + fade + zoom settle via CSS transitions; the global
- *  reduced-motion rule above makes swaps instant).
- * ------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------ *
- *  THE LOGO BUILD — the Manifesto's choreography, cut to reel pace:
- *  wings, M, letters out of the M, descriptor. ~2.4s total, over the
- *  montage. Natural state = finished lockup.
+ *  THE INTRO — RG's word-flow sequence at reel pace, over the live
+ *  carousel (whose blur/fade transitions live in the Montage
+ *  component). Six lines breathe in and out on a heavy scrim, "That's"
+ *  resolves into the logo build, the scrim relaxes, the caption
+ *  arrives. Natural (no-animation) state = finished frame, so
+ *  reduced-motion and print land on the resolved hero.
  * ------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: no-preference) {
+  /* lines: ~1.15s cadence, done ~8.2s */
+  .intro-line {
+    animation: intro-line 1.55s var(--ease-weighted) both;
+    animation-delay: calc(var(--i) * 1.15s + 0.45s);
+  }
+  @keyframes intro-line {
+    0% { opacity: 0; transform: translateY(0.5rem); }
+    24% { opacity: 1; transform: translateY(0); }
+    70% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* heavy scrim holds through the word flow, then lets the reel through */
+  .intro-scrim {
+    animation: intro-scrim 10.6s linear both;
+  }
+  @keyframes intro-scrim {
+    0% { opacity: 1; }
+    85% { opacity: 1; }
+    100% { opacity: 0; }
+  }
+
+  /* the caption waits for the intro to resolve */
+  .hero-caption {
+    animation: logo-fade 0.9s var(--ease-weighted) 10.4s both;
+  }
+
+  /* logo build resolves out of "That's" (~8s) */
   .logo-wings {
-    animation: logo-fade 0.5s var(--ease-weighted) 0.4s both;
+    animation: logo-fade 0.6s var(--ease-weighted) 8s both;
   }
   .logo-letters {
-    animation: logo-letters 1.3s var(--ease-weighted) 0.8s both;
+    animation: logo-letters 1.5s var(--ease-weighted) 8.5s both;
   }
   .logo-shift {
-    animation: logo-shift 1.3s var(--ease-weighted) 0.8s both;
+    animation: logo-shift 1.5s var(--ease-weighted) 8.5s both;
   }
   .logo-descriptor {
-    animation: logo-descriptor 0.7s var(--ease-weighted) 2s both;
+    animation: logo-descriptor 0.8s var(--ease-weighted) 9.8s both;
   }
 
   @keyframes logo-fade {

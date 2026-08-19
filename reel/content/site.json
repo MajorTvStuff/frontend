@@ -39,5 +39,25 @@
   "contact": {
     "email": "info@majorcontent.com",
     "emailConfirm": "Contact email for the new brand not yet provided — placeholder pending RG (question 5 in MAJOR-CONTENT-CONCEPTS.md)."
-  }
+  },
+  "icons": [
+    "Jennifer Lopez",
+    "Ricky Martin",
+    "Emilio & Gloria Estefan",
+    "Mario Lopez",
+    "Victor Cruz",
+    "Rita Moreno",
+    "La La Anthony",
+    "Thalía",
+    "Tommy Mottola",
+    "Angie Martinez",
+    "George Lopez",
+    "Pelé",
+    "Juanes",
+    "Marco Borges",
+    "Adamari Lopez",
+    "Álvaro Uribe",
+    "Soledad O'Brien",
+    "Ednita Nazario"
+  ]
 }

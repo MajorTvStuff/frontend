@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Lockup } from "@/components/Lockup";
 
@@ -14,64 +14,63 @@ export type Slide = {
 };
 
 /**
- * The hero: a slow carousel through the slate — key art full-bleed, book
- * jackets staged on black — with the logo build playing over it. Each
- * slide melts into the next (blur + fade + a slight zoom settle). It
- * advances on its own every few seconds; the arrows and dots let a
- * visitor pilot it manually, and any manual pick simply resets the
- * auto-advance clock. Reduced motion: no auto-advance, instant swaps,
- * controls still work.
+ * The hero, in three layers:
+ * 1. An ambient carousel of the slate — no controls, it just plays.
+ *    Slides melt into each other (blur + fade + zoom settle).
+ * 2. RG's word-flow sequence over a heavy scrim: the six lines breathe in
+ *    and out at reel pace while the slate flashes behind them, then the
+ *    scrim relaxes.
+ * 3. The logo build resolves out of "That's" and holds.
+ * The caption tracks the slide that is actually visible (it swaps mid-
+ * transition, not at state change). Reduced motion: no cycling, finished
+ * lockup, first frame.
  */
 const HOLD_MS = 5500;
+const CAPTION_LAG_MS = 900;
 
-function Chevron({ flip = false }: { flip?: boolean }) {
-  return (
-    <svg
-      viewBox="0 0 24 24"
-      className={`h-6 w-6 ${flip ? "rotate-180" : ""}`}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      <path d="M15 5 8 12l7 7" strokeLinecap="square" />
-    </svg>
-  );
-}
-
-export function Montage({ slides }: { slides: Slide[] }) {
-  const SLIDES = slides;
+export function Montage({
+  slides,
+  introLines,
+}: {
+  slides: Slide[];
+  introLines: string[];
+}) {
   const [index, setIndex] = useState(0);
+  const [captionIndex, setCaptionIndex] = useState(0);
+  const firstRun = useRef(true);
 
-  // one clock: every change (auto or manual) schedules the next advance,
-  // so picking a slide by hand quietly restarts the timer
+  // auto-advance only — the reel is ambience, not navigation
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setTimeout(
-      () => setIndex((i) => (i + 1) % SLIDES.length),
-      HOLD_MS
-    );
+    const t = setTimeout(() => setIndex((i) => (i + 1) % slides.length), HOLD_MS);
+    return () => clearTimeout(t);
+  }, [index, slides.length]);
+
+  // the caption follows the image: it flips once the incoming slide
+  // dominates the crossfade, so credit and picture never disagree
+  useEffect(() => {
+    if (firstRun.current) {
+      firstRun.current = false;
+      return;
+    }
+    const t = setTimeout(() => setCaptionIndex(index), CAPTION_LAG_MS);
     return () => clearTimeout(t);
   }, [index]);
 
-  const current = SLIDES[index];
+  const current = slides[captionIndex];
 
   return (
-    <section
-      className="relative overflow-hidden bg-screen"
-      aria-roledescription="carousel"
-      aria-label="MAJOR CONTENT — the slate"
-    >
+    <section className="relative overflow-hidden bg-screen">
       <h1 className="sr-only">
         MAJOR CONTENT — TV | FILM | BOOKS. Bridging content and culture with
-        global icons, premium programming, worldwide bestsellers.
+        global icons, premium programming, worldwide bestsellers — resonating
+        with the collective majority.
       </h1>
 
-      <div className="relative h-[62svh] min-h-[420px] w-full sm:h-[74svh]">
-        {/* the backgrounds */}
+      <div className="relative h-[62svh] min-h-[440px] w-full sm:h-[76svh]">
+        {/* layer 1 — the ambient reel */}
         <div aria-hidden="true" className="absolute inset-0">
-          {SLIDES.map((s, i) => {
-            const { width, height } = s;
+          {slides.map((s, i) => {
             const active = i === index;
             return (
               <div
@@ -85,14 +84,15 @@ export function Montage({ slides }: { slides: Slide[] }) {
                 <Image
                   src={`/projects/${s.slug}.jpg`}
                   alt=""
-                  width={width}
-                  height={height}
+                  width={s.width}
+                  height={s.height}
                   priority={i < 2}
+                  quality={90}
                   sizes="100vw"
                   className={
                     s.fit === "cover"
                       ? "h-full w-full object-cover"
-                      : "h-full w-full object-contain py-[4svh]"
+                      : "h-full w-full object-contain py-[3svh]"
                   }
                 />
               </div>
@@ -100,13 +100,31 @@ export function Montage({ slides }: { slides: Slide[] }) {
           })}
         </div>
 
-        {/* quiet scrim so the lockup and controls always read */}
+        {/* resting scrim — just enough for the lockup to read */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(8,9,11,0.5)_0%,rgba(8,9,11,0.12)_55%,rgba(8,9,11,0.45)_100%)]"
+          className="absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(8,9,11,0.5)_0%,rgba(8,9,11,0.12)_55%,rgba(8,9,11,0.4)_100%)]"
+        />
+        {/* intro scrim — heavy during the word flow, then lets the reel through */}
+        <div
+          aria-hidden="true"
+          className="intro-scrim absolute inset-0 z-20 bg-screen/80 opacity-0"
         />
 
-        {/* the logo builds over the reel, then holds */}
+        {/* layer 2 — the word flow */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-30">
+          {introLines.map((line, i) => (
+            <p
+              key={line}
+              style={{ "--i": i } as React.CSSProperties}
+              className="intro-line absolute inset-0 flex items-center justify-center px-6 text-center font-light text-flow text-paper opacity-0 [text-shadow:0_2px_18px_rgba(8,9,11,0.9)]"
+            >
+              {line}
+            </p>
+          ))}
+        </div>
+
+        {/* layer 3 — the logo resolves and holds */}
         <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
           <Lockup
             animate
@@ -115,61 +133,15 @@ export function Montage({ slides }: { slides: Slide[] }) {
           />
         </div>
 
-        {/* pilot: arrows */}
-        <button
-          type="button"
-          onClick={() => setIndex((index + SLIDES.length - 1) % SLIDES.length)}
-          aria-label="Previous background"
-          className="absolute left-3 top-1/2 z-40 -translate-y-1/2 p-3 text-paper/80 transition-colors duration-300 [filter:drop-shadow(0_1px_6px_rgba(8,9,11,0.9))] hover:text-paper sm:left-5"
+        {/* now playing — ambient label, arrives after the intro */}
+        <p
+          aria-hidden="true"
+          className="hero-caption meta-caps absolute bottom-5 left-5 z-40 max-w-[80%] text-paper [text-shadow:0_1px_8px_rgba(8,9,11,0.9)] sm:left-8"
         >
-          <Chevron />
-        </button>
-        <button
-          type="button"
-          onClick={() => setIndex((index + 1) % SLIDES.length)}
-          aria-label="Next background"
-          className="absolute right-3 top-1/2 z-40 -translate-y-1/2 p-3 text-paper/80 transition-colors duration-300 [filter:drop-shadow(0_1px_6px_rgba(8,9,11,0.9))] hover:text-paper sm:right-5"
-        >
-          <Chevron flip />
-        </button>
-
-        {/* pilot: what's playing + dots */}
-        <div className="absolute inset-x-0 bottom-0 z-40 flex flex-wrap items-end justify-between gap-4 px-5 pb-5 sm:px-8">
-          <p
-            aria-live="polite"
-            className="meta-caps max-w-[60%] text-paper [text-shadow:0_1px_8px_rgba(8,9,11,0.9)]"
-          >
-            {current.title}
-            <span className="mx-2 text-paper/50" aria-hidden="true">
-              ·
-            </span>
-            <span className="text-silver">{current.proof}</span>
-          </p>
-          <div
-            role="group"
-            aria-label="Choose a background"
-            className="flex items-center gap-2.5"
-          >
-            {SLIDES.map((s, i) => (
-              <button
-                key={s.slug}
-                type="button"
-                onClick={() => setIndex(i)}
-                aria-label={s.title}
-                aria-current={i === index ? "true" : undefined}
-                className="group p-1"
-              >
-                <span
-                  className={`block h-1.5 w-1.5 rounded-pill transition-all duration-300 [filter:drop-shadow(0_1px_4px_rgba(8,9,11,0.9))] ${
-                    i === index
-                      ? "w-5 bg-paper"
-                      : "bg-paper/45 group-hover:bg-paper/80"
-                  }`}
-                />
-              </button>
-            ))}
-          </div>
-        </div>
+          {current.title}
+          <span className="mx-2 text-paper/50">·</span>
+          <span className="text-silver">{current.proof}</span>
+        </p>
       </div>
     </section>
   );
