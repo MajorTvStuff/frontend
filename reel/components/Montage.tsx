@@ -60,7 +60,10 @@ export function Montage({
   const current = slides[captionIndex];
 
   return (
-    <section className="relative overflow-hidden bg-screen">
+    <section
+      className="relative overflow-hidden"
+      style={{ background: "linear-gradient(178deg, #001528 0%, #001d33 60%, #003b59 130%)" }}
+    >
       <h1 className="sr-only">
         MAJOR CONTENT — TV | FILM | BOOKS. Bridging content and culture with
         global icons, premium programming, worldwide bestsellers — resonating
@@ -103,7 +106,7 @@ export function Montage({
         {/* resting scrim — just enough for the lockup to read */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(8,9,11,0.5)_0%,rgba(8,9,11,0.12)_55%,rgba(8,9,11,0.4)_100%)]"
+          className="absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(0,21,40,0.5)_0%,rgba(0,21,40,0.12)_55%,rgba(0,21,40,0.4)_100%)]"
         />
         {/* intro scrim — heavy during the word flow, then lets the reel through */}
         <div
@@ -117,7 +120,7 @@ export function Montage({
             <p
               key={line}
               style={{ "--i": i } as React.CSSProperties}
-              className="intro-line absolute inset-0 flex items-center justify-center px-6 text-center font-light text-flow text-paper opacity-0 [text-shadow:0_2px_18px_rgba(8,9,11,0.9)]"
+              className="intro-line absolute inset-0 flex items-center justify-center px-6 text-center font-light text-flow text-paper opacity-0 [text-shadow:0_2px_18px_rgba(0,18,35,0.9)]"
             >
               {line}
             </p>
@@ -129,14 +132,14 @@ export function Montage({
           <Lockup
             animate
             bright
-            className="w-[min(26rem,62vw)] [filter:drop-shadow(0_2px_22px_rgba(8,9,11,0.95))_drop-shadow(0_0_6px_rgba(8,9,11,0.7))]"
+            className="w-[min(26rem,62vw)] [filter:drop-shadow(0_2px_22px_rgba(0,18,35,0.95))_drop-shadow(0_0_6px_rgba(0,18,35,0.7))]"
           />
         </div>
 
         {/* now playing — ambient label, arrives after the intro */}
         <p
           aria-hidden="true"
-          className="hero-caption meta-caps absolute bottom-5 left-5 z-40 max-w-[80%] text-paper [text-shadow:0_1px_8px_rgba(8,9,11,0.9)] sm:left-8"
+          className="hero-caption meta-caps absolute bottom-5 left-5 z-40 max-w-[80%] text-paper [text-shadow:0_1px_8px_rgba(0,18,35,0.9)] sm:left-8"
         >
           {current.title}
           <span className="mx-2 text-paper/50">·</span>

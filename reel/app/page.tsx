@@ -46,24 +46,24 @@ export default function Home() {
         {/* ————— the reel: word flow -> logo -> ambient carousel ————— */}
         <Montage slides={slides} introLines={site.introLines} />
 
-        {/* ————— one line, then the work ————— */}
-        <p className="mx-auto max-w-[1320px] px-5 pb-2 pt-10 text-sm text-mid sm:px-8">
-          {site.verticals} — the slate, in one wall.
+        {/* ————— one label, then the work ————— */}
+        <p className="meta-caps mx-auto max-w-[1320px] px-5 pb-2 pt-12 text-mid sm:px-8">
+          The slate <span className="text-faint">— {site.verticals}</span>
         </p>
         <Wall />
 
-        {/* ————— the icons band: his strongest names, out of the paragraph ————— */}
+        {/* ————— the icons band: names, not paragraphs ————— */}
         {site.icons && (
           <section className="border-y border-line">
-            <div className="mx-auto max-w-[1320px] px-5 py-16 sm:px-8">
+            <div className="mx-auto max-w-[1320px] px-5 py-20 sm:px-8">
               <h2 className="meta-caps scroll-rise text-mid">Global icons</h2>
-              <p className="scroll-rise display-heavy mt-6 text-names leading-snug text-ink">
+              <p className="scroll-rise display-heavy mt-8 text-names leading-snug text-ink">
                 {site.icons.map((name, i) => (
                   <span key={name}>
                     <span className="whitespace-nowrap">
                       {name}
                       {i < site.icons!.length - 1 && (
-                        <span aria-hidden="true" className="ml-3 text-red">
+                        <span aria-hidden="true" className="ml-3 text-signal">
                           ·
                         </span>
                       )}
@@ -71,7 +71,7 @@ export default function Home() {
                   </span>
                 ))}
               </p>
-              <p className="scroll-rise mt-6 max-w-xl text-sm text-mid">
+              <p className="scroll-rise mt-8 text-sm text-mid">
                 Published at Celebra | Penguin Random House under founder and
                 publisher Raymond Garcia.
               </p>
@@ -79,73 +79,66 @@ export default function Home() {
           </section>
         )}
 
-        {/* ————— who we are: same light chrome as the wall ————— */}
-        <section>
-          <div className="mx-auto grid max-w-[1320px] gap-14 px-5 py-20 sm:px-8 lg:grid-cols-2 lg:gap-20">
+        {/* ————— company: one statement, one sentence per room ————— */}
+        <section className="mx-auto max-w-4xl px-5 py-24 sm:px-8 sm:py-32">
+          <h2 className="meta-caps scroll-rise text-mid">Company</h2>
+          <p className="scroll-rise mt-8 text-flow font-light leading-normal text-ink">
+            {site.company[0]}
+          </p>
+          <div className="mt-16 grid gap-10 border-t border-line pt-10 sm:grid-cols-2">
             <div className="scroll-rise">
-              <h2 className="meta-caps text-mid">Company</h2>
-              <div className="mt-6 space-y-5">
-                {site.company.map((para) => (
-                  <p key={para.slice(0, 40)} className="text-about text-ink/80">
-                    {para}
-                  </p>
-                ))}
-              </div>
-              <div className="mt-10 grid grid-cols-2 gap-6 border-t border-line pt-8">
-                <div>
-                  <h3 className="meta-caps text-mid">{site.tvFilm.label}</h3>
-                  <p className="mt-3 text-about text-ink/70">
-                    {site.tvFilm.body}
-                  </p>
-                </div>
-                <div>
-                  <h3 className="meta-caps text-mid">{site.books.label}</h3>
-                  <p className="mt-3 text-about text-ink/70">
-                    {site.books.body}
-                  </p>
-                </div>
-              </div>
+              <h3 className="meta-caps text-mid">{site.tvFilm.label}</h3>
+              <p className="mt-4 text-about text-ink/75">
+                {site.tvFilm.body.split(". ")[0] + "."}
+              </p>
             </div>
-
-            <div className="scroll-rise lg:[animation-range:entry_8%_entry_46%]">
-              <h2 className="meta-caps text-mid">Founder</h2>
-              <p className="display-heavy mt-6 text-h2 text-ink">{f.name}</p>
-              <p className="meta-caps mt-1 text-mid">{f.role}</p>
-              <div className="mt-6 space-y-5">
-                {f.bio.map((para) => (
-                  <p key={para.slice(0, 40)} className="text-about text-ink/70">
-                    {para}
-                  </p>
-                ))}
-                <p className="text-about font-semibold text-ink">
-                  {f.recognition}
-                </p>
-              </div>
+            <div className="scroll-rise">
+              <h3 className="meta-caps text-mid">{site.books.label}</h3>
+              <p className="mt-4 text-about text-ink/75">
+                {site.books.body.split(". ")[0] + "."}
+              </p>
             </div>
           </div>
+        </section>
 
-          {/* ————— contact + footer ————— */}
-          <div className="mx-auto max-w-[1320px] px-5 pb-14 sm:px-8">
-            <div className="border-t border-line pt-10">
-              <p>
+        {/* ————— founder + contact: the original site's navy band ————— */}
+        <section className="bg-band text-paper">
+          <div className="mx-auto max-w-4xl px-5 py-24 sm:px-8 sm:py-28">
+            <h2 className="meta-caps scroll-rise text-silver">Founder</h2>
+            <p className="scroll-rise display-heavy mt-8 text-h2">{f.name}</p>
+            <p className="scroll-rise meta-caps mt-2 text-silver/80">{f.role}</p>
+            {f.careerLine && (
+              <p className="scroll-rise mt-8 max-w-2xl text-about text-paper/85">
+                {f.careerLine}
+              </p>
+            )}
+            {/* the recognition line, in the site's own published accent color */}
+            <p className="scroll-rise mt-8 max-w-2xl text-about font-medium text-signal">
+              {f.recognition}
+            </p>
+
+            <div className="mt-16 border-t border-paper/15 pt-10">
+              <p className="scroll-rise">
                 <Confirm q={site.contact.emailConfirm}>
                   <a
                     href={`mailto:${site.contact.email}`}
-                    className="display-heavy text-h2 text-ink underline decoration-red decoration-2 underline-offset-8 transition-colors duration-300 hover:text-mid"
+                    className="display-heavy text-h2 text-paper underline decoration-signal decoration-2 underline-offset-8 transition-colors duration-300 hover:text-silver"
                   >
                     {site.contact.email}
                   </a>
                 </Confirm>
               </p>
-              <div className="mt-12 flex flex-wrap items-end justify-between gap-8">
-                <Lockup tone="ink" className="w-36 opacity-80" />
-                <p className="meta-caps text-mid">
-                  {site.verticals} · © {new Date().getFullYear()} Major Content
-                </p>
-              </div>
             </div>
           </div>
         </section>
+
+        {/* ————— footer ————— */}
+        <footer className="mx-auto flex max-w-[1320px] flex-wrap items-end justify-between gap-8 px-5 py-12 sm:px-8">
+          <Lockup tone="ink" className="w-36 opacity-80" />
+          <p className="meta-caps text-mid">
+            {site.verticals} · © {new Date().getFullYear()} Major Content
+          </p>
+        </footer>
       </main>
     </>
   );

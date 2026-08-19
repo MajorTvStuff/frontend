@@ -25,6 +25,7 @@ const Site = z.object({
     name: z.string(),
     role: z.string(),
     bio: z.array(z.string()),
+    careerLine: z.string().optional(),
     recognition: z.string(),
   }),
   contact: z.object({ email: z.string(), emailConfirm: z.string() }),

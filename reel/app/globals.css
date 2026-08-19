@@ -10,12 +10,17 @@
 @theme {
   --color-*: initial;
 
+  /* the original majortvproductions.com scheme, measured from its assets:
+     navy ink + white, the blue-m-bg gradient for the dark room, the #003853
+     section band, and the published #26b3ef accent */
   --color-paper: #ffffff;
-  --color-ink: #0c0e12;
-  --color-mid: #5c6570;
-  --color-faint: #9aa2ab;
-  --color-line: #e8eaec;
-  --color-screen: #08090b;     /* the dark room the montage plays in */
+  --color-ink: #001223;        /* wordmark navy-ink */
+  --color-mid: #47596a;        /* navy-hued muted text */
+  --color-faint: #8fa1b0;
+  --color-line: #e2e8ed;       /* navy-tinted hairline */
+  --color-screen: #001528;     /* blue-m-bg-2.jpg, top of gradient */
+  --color-band: #003853;       /* the original founder-section navy */
+  --color-signal: #26b3ef;     /* the site's own published accent */
   --color-red: #a22d32;        /* the M's wings */
   --color-silver: #b2bec6;
 
