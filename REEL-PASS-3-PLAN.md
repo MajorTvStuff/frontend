@@ -172,12 +172,15 @@ it bumps a `run` key that remounts every intro layer (scrim, flash, word
 flow, logo, caption — restarting their CSS timelines), plays the audio from
 0 (allowed: it's a user gesture), and re-arms the trailer timer. No file →
 no button (verified both states headlessly; the probe's own 404 is the one
-expected console line until the clip lands). Reduced motion: probe skipped,
-button never renders. When RG's clip arrives, drop it at
-`reel/public/intro/opener.mp3` — zero code changes; then retune the flash/
-logo delays to the audio's beats.
-**The clip itself is blocked on RG** (Q12) — best candidate: Oprah's
-recorded introduction to TIME OF ESSENCE (his own EP credit on OWN).
+expected console line until a clip exists). Reduced motion: probe skipped,
+button never renders. Swapping the clip = replace the file + **restart the
+server** (`next start` snapshots `public/` at boot), no code change; then
+retune the flash/logo delays to the audio's beats.
+**TEMP comp clip installed 2026-08-20** at `reel/public/intro/opener.mp3`:
+Oprah's *"It elevated the way we saw ourselves."* cut from the TIME OF
+ESSENCE trailer (8.70s–11.95s, word timings from the captions, 0.15s/0.35s
+fades, 192k mp3, ~3.3s). Comp only — the official audio + clearance from
+OWN is still the launch requirement (Q12).
 
 ---
 

@@ -227,16 +227,16 @@ slate expands. Worth putting in front of RG as an option.
     International & National). Send a ranked list (top = most important =
     bigger, earlier) and it replaces the proxy. Also: any covers you'd
     rather bury further or drop entirely as too dated?
-12. **The Oprah audio** — the mechanism is built and waiting: drop the clip
-    at `reel/public/intro/opener.mp3` (or `.wav`) and a "Replay with sound"
-    control appears on the hero automatically — no code change. Browsers
-    block autoplaying sound, so audio rides that tap; confirm acceptable.
-    **Best candidate found:** Oprah recorded an introduction for TIME OF
-    ESSENCE itself — OWN's channel has "Oprah Winfrey introduces Time Of
-    Essence documentary," and in the series trailer she says *"It elevated
-    the way we saw ourselves."* Since you EP'd the series, request the
-    audio (and clearance) through OWN/the production. If there's a different
-    "this is a new age"-type clip you have in mind, send it — same drop-in.
+12. **The Oprah audio** — **a TEMP comp clip is live on the beta**: Oprah's
+    line from the TIME OF ESSENCE trailer (0:08.7–0:12, *"It elevated the
+    way we saw ourselves."*) is cut in at `reel/public/intro/opener.mp3`,
+    and a "Replay with sound" control on the hero plays it with the intro.
+    This is a comp for taste only — **before launch we need the official
+    audio + clearance from OWN/the production** (you EP'd the series, so
+    the ask runs through them). To swap in the official file (or any other
+    clip — "this is a new age," whatever you pick): replace that file
+    (mp3 or wav), restart the server, no code change. Browsers block
+    autoplaying sound, so audio always rides the tap — confirm acceptable.
 13. **A hosted trailer file** — after the intro, the hero now plays the DRIVE
     trailer muted behind the lockup. It's currently a YouTube embed; an MP4
     you own the rights to would be faster, cleaner, and rights-clear
