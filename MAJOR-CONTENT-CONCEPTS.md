@@ -227,10 +227,16 @@ slate expands. Worth putting in front of RG as an option.
     International & National). Send a ranked list (top = most important =
     bigger, earlier) and it replaces the proxy. Also: any covers you'd
     rather bury further or drop entirely as too dated?
-12. **The Oprah audio** — which clip is the "this is a moment" opener, where
-    is it from, and do we have rights to use it? One technical reality:
-    browsers block autoplaying sound, so the audio would ride an "enter with
-    sound" tap (or play after any first click) — confirm that's acceptable.
+12. **The Oprah audio** — the mechanism is built and waiting: drop the clip
+    at `reel/public/intro/opener.mp3` (or `.wav`) and a "Replay with sound"
+    control appears on the hero automatically — no code change. Browsers
+    block autoplaying sound, so audio rides that tap; confirm acceptable.
+    **Best candidate found:** Oprah recorded an introduction for TIME OF
+    ESSENCE itself — OWN's channel has "Oprah Winfrey introduces Time Of
+    Essence documentary," and in the series trailer she says *"It elevated
+    the way we saw ourselves."* Since you EP'd the series, request the
+    audio (and clearance) through OWN/the production. If there's a different
+    "this is a new age"-type clip you have in mind, send it — same drop-in.
 13. **A hosted trailer file** — after the intro, the hero now plays the DRIVE
     trailer muted behind the lockup. It's currently a YouTube embed; an MP4
     you own the rights to would be faster, cleaner, and rights-clear

@@ -71,11 +71,17 @@ resolves. The covers become part of the show.
 ### "Oprah Winfrey opens up audio of 'this is a moment' then books then open logo"
 **He means:** an intro sketch — a voice of ultimate cultural authority opens,
 covers flash, the logo builds. Sound as the hook.
-**Status:** the *visual* sequence (moment → books flash → logo build) is now
-built. The audio needs two things from RG: the actual clip (source + rights —
-which Oprah moment is this?), and a decision on interaction — **browsers
-block autoplaying sound**, so audio either rides a "enter with sound" tap or
-plays after any first click. Logged as a question for him.
+**Status: fully wired.** The visual sequence (moment → books flash → logo
+build) is built, and the audio mechanism is hard-coded and clip-ready: drop
+the file at `reel/public/intro/opener.mp3` (or `.wav`) and a "Replay with
+sound" control appears on the hero by itself — tapping it restarts the whole
+intro in sync with the audio and re-arms the trailer. (Browsers block
+autoplaying sound; the tap is the only way, by design of the web.)
+**The clip:** best candidate identified — Oprah recorded an introduction for
+TIME OF ESSENCE itself (RG's own EP credit, on her network); OWN's channel
+has "Oprah Winfrey introduces Time Of Essence documentary," and in the
+trailer she says *"It elevated the way we saw ourselves."* RG requests the
+audio + clearance through OWN/the production. Q12.
 
 ### "Book images and stuff — don't list titles"
 **He means:** the covers ARE the titles. Listing "TRUE LOVE — Jennifer Lopez"

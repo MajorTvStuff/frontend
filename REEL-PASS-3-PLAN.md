@@ -165,9 +165,19 @@ Global flips that follow:
 ### 1c — Oprah audio intro (his sketch: audio → books → logo)
 
 **Visual half ships with 1a** (moment → covers flash → logo build).
-**Audio half is blocked on RG**: need the clip + rights, and browsers block
-autoplaying sound — so the design would need an "enter with sound" tap.
-Logged as a question; no build work this pass.
+**Audio mechanism: BUILT (2026-08-19, after the main pass).** Montage probes
+`/intro/opener.mp3` then `/intro/opener.wav` at load; if a playable file
+exists, a "Replay with sound" button renders top-right of the hero. Tapping
+it bumps a `run` key that remounts every intro layer (scrim, flash, word
+flow, logo, caption — restarting their CSS timelines), plays the audio from
+0 (allowed: it's a user gesture), and re-arms the trailer timer. No file →
+no button (verified both states headlessly; the probe's own 404 is the one
+expected console line until the clip lands). Reduced motion: probe skipped,
+button never renders. When RG's clip arrives, drop it at
+`reel/public/intro/opener.mp3` — zero code changes; then retune the flash/
+logo delays to the audio's beats.
+**The clip itself is blocked on RG** (Q12) — best candidate: Oprah's
+recorded introduction to TIME OF ESSENCE (his own EP credit on OWN).
 
 ---
 

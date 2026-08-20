@@ -36,6 +36,11 @@ const HOLD_MS = 5500;
 const CAPTION_LAG_MS = 900;
 const TRAILER_AT_MS = 10600;
 
+/* RG's intro audio (the Oprah clip). Drop the file at either path and the
+   "Replay with sound" control appears on its own — no code change. Browsers
+   block autoplaying audio, so it only ever plays from the button's tap. */
+const AUDIO_SOURCES = ["/intro/opener.mp3", "/intro/opener.wav"];
+
 export function Montage({
   slides,
   introLines,
@@ -50,6 +55,10 @@ export function Montage({
   const [index, setIndex] = useState(0);
   const [captionIndex, setCaptionIndex] = useState(0);
   const [showTrailer, setShowTrailer] = useState(false);
+  // bumping `run` remounts every intro layer, restarting their CSS timelines
+  const [run, setRun] = useState(0);
+  const [audioReady, setAudioReady] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const firstRun = useRef(true);
 
   // auto-advance only — the reel is ambience, not navigation; it stops
@@ -73,12 +82,46 @@ export function Montage({
   }, [index]);
 
   // afterwards, the trailer plays — once the intro has fully resolved
+  // (re-armed on every replay: `run` resets the whole hero timeline)
   useEffect(() => {
     if (!trailer) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const t = setTimeout(() => setShowTrailer(true), TRAILER_AT_MS);
     return () => clearTimeout(t);
-  }, [trailer]);
+  }, [trailer, run]);
+
+  // probe for the intro clip — the sound control exists only if a playable
+  // file is actually there
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    let cancelled = false;
+    const tryLoad = (i: number) => {
+      if (cancelled || i >= AUDIO_SOURCES.length) return;
+      const a = new Audio();
+      a.preload = "auto";
+      a.oncanplaythrough = () => {
+        if (cancelled) return;
+        audioRef.current = a;
+        setAudioReady(true);
+      };
+      a.onerror = () => tryLoad(i + 1);
+      a.src = AUDIO_SOURCES[i];
+    };
+    tryLoad(0);
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  // the sound-on tap: restart the intro from the top, audio in sync
+  const replayWithSound = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    setShowTrailer(false);
+    setRun((r) => r + 1);
+    a.currentTime = 0;
+    void a.play().catch(() => {});
+  };
 
   const current = slides[captionIndex];
   const caption =
@@ -153,12 +196,17 @@ export function Montage({
         />
         {/* intro scrim — heavy during the word flow, then lets the reel through */}
         <div
+          key={`scrim-${run}`}
           aria-hidden="true"
           className="intro-scrim absolute inset-0 z-20 bg-screen/80 opacity-0"
         />
 
         {/* layer 2a — quick and explosive: covers hard-cut behind the words */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[25]">
+        <div
+          key={`flash-${run}`}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[25]"
+        >
           {flash.map((s, i) => (
             <div
               key={s.slug}
@@ -179,7 +227,11 @@ export function Montage({
         </div>
 
         {/* layer 2b — the word flow */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-30">
+        <div
+          key={`words-${run}`}
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-30"
+        >
           {introLines.map((line, i) => (
             <p
               key={line}
@@ -192,7 +244,10 @@ export function Montage({
         </div>
 
         {/* layer 3 — the logo resolves and holds */}
-        <div className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center">
+        <div
+          key={`logo-${run}`}
+          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
+        >
           <Lockup
             animate
             bright
@@ -202,6 +257,7 @@ export function Montage({
 
         {/* now playing — ambient label, arrives after the intro */}
         <p
+          key={`caption-${run}`}
           aria-hidden="true"
           className="hero-caption meta-caps absolute bottom-5 left-5 z-40 max-w-[80%] text-paper [text-shadow:0_1px_8px_rgba(0,18,35,0.9)] sm:left-8"
         >
@@ -209,6 +265,17 @@ export function Montage({
           <span className="mx-2 text-paper/50">·</span>
           <span className="text-silver">{caption.proof}</span>
         </p>
+
+        {/* sound on — appears only when the intro clip exists */}
+        {audioReady && (
+          <button
+            type="button"
+            onClick={replayWithSound}
+            className="meta-caps absolute right-5 top-5 z-40 border border-paper/25 bg-screen/70 px-3 py-2 text-paper transition-colors duration-300 hover:border-signal hover:text-signal sm:right-8"
+          >
+            Replay with sound
+          </button>
+        )}
       </div>
     </section>
   );
