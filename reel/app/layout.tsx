@@ -14,12 +14,12 @@ const grotesk = localFont({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#001528",
 };
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: "Concept 01 · The Reel — MAJOR CONTENT",
+  title: "MAJOR CONTENT — TV | FILM | BOOKS",
   description:
     "Emmy Award-winning programming and New York Times Bestselling books, one slate. A TV | Film production and literary management company founded by Raymond Garcia.",
   alternates: { canonical: "/" },
@@ -58,12 +58,12 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
         />
         {children}
-        {/* concept-phase watermark — remove when a direction is chosen */}
+        {/* beta watermark — the one div to delete at launch */}
         <div
           aria-hidden="true"
-          className="meta-caps pointer-events-none fixed bottom-3 right-3 z-50 border border-line bg-paper/80 px-2.5 py-1.5 !text-[0.6rem] text-mid print:hidden"
+          className="meta-caps pointer-events-none fixed bottom-3 right-3 z-50 border border-line bg-band/90 px-2.5 py-1.5 !text-[0.6rem] text-silver print:hidden"
         >
-          Concept 01 · The Reel
+          Beta MVP
         </div>
       </body>
     </html>

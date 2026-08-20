@@ -1,5 +1,5 @@
 import { site, projects, projectDims } from "@/lib/content";
-import type { Slide } from "@/components/Montage";
+import type { Slide, Trailer } from "@/components/Montage";
 import { Montage } from "@/components/Montage";
 import { Wall } from "@/components/Wall";
 import { Lockup } from "@/components/Lockup";
@@ -29,26 +29,38 @@ export default function Home() {
     return { ...s, title: p.title, proof: p.proof, ...d };
   });
 
+  // the covers that flash behind the word flow — the big book sources
+  const flash = slides.filter((s) => s.fit === "contain");
+
+  // afterwards, the trailer plays: DRIVE, the Emmy flagship
+  const drive = projects.find((p) => p.slug === "drive")!;
+  const driveId = drive.trailer
+    ? new URL(drive.trailer).searchParams.get("v")
+    : null;
+  const trailer: Trailer | undefined = driveId
+    ? { youtubeId: driveId, title: drive.title, proof: drive.proof }
+    : undefined;
+
   return (
     <>
-      {/* ————— slim chrome bar, Radical-style ————— */}
+      {/* ————— slim chrome bar — the reversed wordmark on the navy ————— */}
       <header className="flex items-center justify-between px-5 py-4 sm:px-8">
-        <Lockup tone="ink" className="w-28 sm:w-32" />
+        <Lockup tone="light" className="w-28 sm:w-32" />
         <a
           href={`mailto:${site.contact.email}`}
-          className="meta-caps text-ink underline decoration-line underline-offset-4 transition-colors duration-300 hover:decoration-ink"
+          className="meta-caps text-paper underline decoration-line underline-offset-4 transition-colors duration-300 hover:decoration-signal"
         >
           Contact
         </a>
       </header>
 
       <main>
-        {/* ————— the reel: word flow -> logo -> ambient carousel ————— */}
-        <Montage slides={slides} introLines={site.introLines} />
+        {/* ————— the reel: word flow -> covers flash -> logo -> trailer ————— */}
+        <Montage slides={slides} introLines={site.introLines} flash={flash} trailer={trailer} />
 
-        {/* ————— one label, then the work ————— */}
+        {/* ————— the slate label, then the work ————— */}
         <p className="meta-caps mx-auto max-w-[1320px] px-5 pb-2 pt-12 text-mid sm:px-8">
-          The slate <span className="text-faint">— {site.verticals}</span>
+          The slate <span className="text-faint">— {site.tvFilm.label}</span>
         </p>
         <Wall />
 
@@ -57,7 +69,7 @@ export default function Home() {
           <section className="border-y border-line">
             <div className="mx-auto max-w-[1320px] px-5 py-20 sm:px-8">
               <h2 className="meta-caps scroll-rise text-mid">Global icons</h2>
-              <p className="scroll-rise display-heavy mt-8 text-names leading-snug text-ink">
+              <p className="scroll-rise display-heavy mt-8 text-names leading-snug text-paper">
                 {site.icons.map((name, i) => (
                   <span key={name}>
                     <span className="whitespace-nowrap">
@@ -71,7 +83,7 @@ export default function Home() {
                   </span>
                 ))}
               </p>
-              <p className="scroll-rise mt-8 text-sm text-mid">
+              <p className="scroll-rise scroll-rise-2 mt-8 text-sm text-mid">
                 Published at Celebra | Penguin Random House under founder and
                 publisher Raymond Garcia.
               </p>
@@ -79,24 +91,37 @@ export default function Home() {
           </section>
         )}
 
-        {/* ————— company: one statement, one sentence per room ————— */}
+        {/* ————— company: continuity, one statement, the thesis ————— */}
         <section className="mx-auto max-w-4xl px-5 py-24 sm:px-8 sm:py-32">
           <h2 className="meta-caps scroll-rise text-mid">Company</h2>
-          <p className="scroll-rise mt-8 text-flow font-light leading-normal text-ink">
+          {site.positioning && (
+            /* RG's own words (call notes 2026-08-19) — pending written sign-off */
+            <p className="meta-caps scroll-rise mt-3 text-faint">
+              {site.positioning.continuity}
+            </p>
+          )}
+          <p className="scroll-rise mt-8 text-flow font-light leading-normal text-paper">
             {site.company[0]}
           </p>
-          <div className="mt-16 grid gap-10 border-t border-line pt-10 sm:grid-cols-2">
-            <div className="scroll-rise">
-              <h3 className="meta-caps text-mid">{site.tvFilm.label}</h3>
-              <p className="mt-4 text-about text-ink/75">
-                {site.tvFilm.body.split(". ")[0] + "."}
+          <div className="mt-16 border-t border-line pt-10">
+            {site.positioning && (
+              <p className="scroll-rise scroll-rise-2 text-about font-semibold text-paper">
+                {site.positioning.leverage}
               </p>
-            </div>
-            <div className="scroll-rise">
-              <h3 className="meta-caps text-mid">{site.books.label}</h3>
-              <p className="mt-4 text-about text-ink/75">
-                {site.books.body.split(". ")[0] + "."}
-              </p>
+            )}
+            <div className="mt-10 grid gap-10 sm:grid-cols-2">
+              <div className="scroll-rise scroll-rise-3">
+                <h3 className="meta-caps text-mid">{site.tvFilm.label}</h3>
+                <p className="mt-4 text-about text-mid">
+                  {site.tvFilm.body.split(". ")[0] + "."}
+                </p>
+              </div>
+              <div className="scroll-rise scroll-rise-3">
+                <h3 className="meta-caps text-mid">{site.books.label}</h3>
+                <p className="mt-4 text-about text-mid">
+                  {site.books.body.split(". ")[0] + "."}
+                </p>
+              </div>
             </div>
           </div>
         </section>
@@ -108,12 +133,12 @@ export default function Home() {
             <p className="scroll-rise display-heavy mt-8 text-h2">{f.name}</p>
             <p className="scroll-rise meta-caps mt-2 text-silver/80">{f.role}</p>
             {f.careerLine && (
-              <p className="scroll-rise mt-8 max-w-2xl text-about text-paper/85">
+              <p className="scroll-rise scroll-rise-2 mt-8 max-w-2xl text-about text-paper/85">
                 {f.careerLine}
               </p>
             )}
             {/* the recognition line, in the site's own published accent color */}
-            <p className="scroll-rise mt-8 max-w-2xl text-about font-medium text-signal">
+            <p className="scroll-rise scroll-rise-3 mt-8 max-w-2xl text-about font-medium text-signal">
               {f.recognition}
             </p>
 
@@ -134,7 +159,7 @@ export default function Home() {
 
         {/* ————— footer ————— */}
         <footer className="mx-auto flex max-w-[1320px] flex-wrap items-end justify-between gap-8 px-5 py-12 sm:px-8">
-          <Lockup tone="ink" className="w-36 opacity-80" />
+          <Lockup tone="light" className="w-36 opacity-80" />
           <p className="meta-caps text-mid">
             {site.verticals} · © {new Date().getFullYear()} Major Content
           </p>

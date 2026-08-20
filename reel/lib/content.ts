@@ -28,6 +28,9 @@ const Site = z.object({
     careerLine: z.string().optional(),
     recognition: z.string(),
   }),
+  positioning: z
+    .object({ note: z.string(), continuity: z.string(), leverage: z.string() })
+    .optional(),
   contact: z.object({ email: z.string(), emailConfirm: z.string() }),
   icons: z.array(z.string()).optional(),
 });

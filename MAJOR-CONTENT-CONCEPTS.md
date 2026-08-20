@@ -1,5 +1,13 @@
 # MAJOR CONTENT — three directions for majorcontent.com
 
+> **Resolved (2026-08-19):** the taste test is decided — **Variation 1 (THE
+> REEL) is the beta MVP**, rebuilt in the original majortvproductions.com
+> navy scheme per RG's call notes (see
+> [RG-CREATIVE-DIRECTION.md](RG-CREATIVE-DIRECTION.md)). The Marquee was
+> never built and is cancelled unless RG revives it; the Manifesto stays up
+> as an archived concept. The questions below remain live — Q11–Q13 are the
+> newest.
+
 Prepared from RG's brief, the asset drop (`Assets/`), his copy doc, both reference
 videos, and a teardown of all four benchmark sites. Everything below uses only
 what he sent — the hero copy sequence, the 24-project wall, the four trailers,
@@ -214,6 +222,23 @@ slate expands. Worth putting in front of RG as an option.
     section labels) while the logo descriptor moves to CONTENT. Does the
     three-vertical line survive the rebrand as the working descriptor, or
     should pages lead with CONTENT alone?
+11. **Priority list of book covers** — the shelf now clusters covers by
+    importance (currently proxied by the proof lines: #1 NYT → NYT →
+    International & National). Send a ranked list (top = most important =
+    bigger, earlier) and it replaces the proxy. Also: any covers you'd
+    rather bury further or drop entirely as too dated?
+12. **The Oprah audio** — which clip is the "this is a moment" opener, where
+    is it from, and do we have rights to use it? One technical reality:
+    browsers block autoplaying sound, so the audio would ride an "enter with
+    sound" tap (or play after any first click) — confirm that's acceptable.
+13. **A hosted trailer file** — after the intro, the hero now plays the DRIVE
+    trailer muted behind the lockup. It's currently a YouTube embed; an MP4
+    you own the rights to would be faster, cleaner, and rights-clear
+    (extends Q3/Q4). Same ask for any other trailer you'd want in rotation.
+    **Urgency note:** the DRIVE YouTube link in the copy doc is a fan
+    re-upload — it plays with a "BEST MOVIES" channel watermark baked into
+    the footage, which is now visible in the hero. An official file or
+    official link fixes that.
 
 ---
 

@@ -13,38 +13,53 @@ export type Slide = {
   height: number;
 };
 
+export type Trailer = {
+  youtubeId: string;
+  title: string;
+  proof: string;
+};
+
 /**
- * The hero, in three layers:
+ * The hero, in four layers:
  * 1. An ambient carousel of the slate — no controls, it just plays.
  *    Slides melt into each other (blur + fade + zoom settle).
- * 2. RG's word-flow sequence over a heavy scrim: the six lines breathe in
- *    and out at reel pace while the slate flashes behind them, then the
- *    scrim relaxes.
+ * 2. RG's word-flow sequence over a heavy scrim, with book covers
+ *    hard-cutting behind the lines ("quick and explosive") while
+ *    "Worldwide Bestsellers" reads.
  * 3. The logo build resolves out of "That's" and holds.
- * The caption tracks the slide that is actually visible (it swaps mid-
- * transition, not at state change). Reduced motion: no cycling, finished
- * lockup, first frame.
+ * 4. Afterwards the trailer fades up and plays muted behind the lockup
+ *    (the carousel stays mounted beneath as the offline fallback).
+ * The caption tracks whatever is actually visible. Reduced motion: no
+ * cycling, no flash, no trailer — finished lockup, first frame.
  */
 const HOLD_MS = 5500;
 const CAPTION_LAG_MS = 900;
+const TRAILER_AT_MS = 10600;
 
 export function Montage({
   slides,
   introLines,
+  flash,
+  trailer,
 }: {
   slides: Slide[];
   introLines: string[];
+  flash: Slide[];
+  trailer?: Trailer;
 }) {
   const [index, setIndex] = useState(0);
   const [captionIndex, setCaptionIndex] = useState(0);
+  const [showTrailer, setShowTrailer] = useState(false);
   const firstRun = useRef(true);
 
-  // auto-advance only — the reel is ambience, not navigation
+  // auto-advance only — the reel is ambience, not navigation; it stops
+  // once the trailer owns the frame
   useEffect(() => {
+    if (showTrailer) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const t = setTimeout(() => setIndex((i) => (i + 1) % slides.length), HOLD_MS);
     return () => clearTimeout(t);
-  }, [index, slides.length]);
+  }, [index, slides.length, showTrailer]);
 
   // the caption follows the image: it flips once the incoming slide
   // dominates the crossfade, so credit and picture never disagree
@@ -57,7 +72,19 @@ export function Montage({
     return () => clearTimeout(t);
   }, [index]);
 
+  // afterwards, the trailer plays — once the intro has fully resolved
+  useEffect(() => {
+    if (!trailer) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const t = setTimeout(() => setShowTrailer(true), TRAILER_AT_MS);
+    return () => clearTimeout(t);
+  }, [trailer]);
+
   const current = slides[captionIndex];
+  const caption =
+    showTrailer && trailer
+      ? { title: trailer.title, proof: `${trailer.proof} · Trailer` }
+      : { title: current.title, proof: current.proof };
 
   return (
     <section
@@ -103,6 +130,22 @@ export function Montage({
           })}
         </div>
 
+        {/* layer 1b — the trailer, once the intro has resolved */}
+        {showTrailer && trailer && (
+          <div
+            aria-hidden="true"
+            className="trailer-in absolute inset-0 z-[15] overflow-hidden opacity-0"
+          >
+            <iframe
+              src={`https://www.youtube-nocookie.com/embed/${trailer.youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.youtubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+              title=""
+              tabIndex={-1}
+              allow="autoplay; encrypted-media"
+              className="pointer-events-none absolute left-1/2 top-1/2 aspect-video min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
+            />
+          </div>
+        )}
+
         {/* resting scrim — just enough for the lockup to read */}
         <div
           aria-hidden="true"
@@ -114,7 +157,28 @@ export function Montage({
           className="intro-scrim absolute inset-0 z-20 bg-screen/80 opacity-0"
         />
 
-        {/* layer 2 — the word flow */}
+        {/* layer 2a — quick and explosive: covers hard-cut behind the words */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-[25]">
+          {flash.map((s, i) => (
+            <div
+              key={s.slug}
+              style={{ "--i": i } as React.CSSProperties}
+              className="intro-flash absolute inset-0 flex items-center justify-center opacity-0"
+            >
+              <Image
+                src={`/projects/${s.slug}.jpg`}
+                alt=""
+                width={s.width}
+                height={s.height}
+                quality={90}
+                sizes="45vh"
+                className="h-[58%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
+              />
+            </div>
+          ))}
+        </div>
+
+        {/* layer 2b — the word flow */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 z-30">
           {introLines.map((line, i) => (
             <p
@@ -141,9 +205,9 @@ export function Montage({
           aria-hidden="true"
           className="hero-caption meta-caps absolute bottom-5 left-5 z-40 max-w-[80%] text-paper [text-shadow:0_1px_8px_rgba(0,18,35,0.9)] sm:left-8"
         >
-          {current.title}
+          {caption.title}
           <span className="mx-2 text-paper/50">·</span>
-          <span className="text-silver">{current.proof}</span>
+          <span className="text-silver">{caption.proof}</span>
         </p>
       </div>
     </section>
