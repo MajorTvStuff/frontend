@@ -41,6 +41,9 @@
   --text-h2--line-height: 1.1;
   --text-flow: clamp(1.375rem, 1rem + 2vw, 2.375rem);
   --text-flow--line-height: 1.35;
+  /* the intro speaks at cinema scale — hero word-flow only */
+  --text-intro: clamp(2rem, 1.05rem + 3.4vw, 4.25rem);
+  --text-intro--line-height: 1.18;
   --text-names: clamp(1.25rem, 0.9rem + 1.8vw, 2.125rem);
   --text-names--line-height: 1.35;
 
@@ -193,22 +196,54 @@
   }
 
   /* the covers flash — quick and explosive, one every 0.6s, timed to run
-     while "Worldwide Bestsellers" reads (4.0s–7.6s), gone before the logo */
+     while "Worldwide Bestsellers" reads (4.0s–7.6s), gone before the logo.
+     Alternating tilt gives the cuts editorial energy. */
   .intro-flash {
     animation: intro-flash 0.62s var(--ease-weighted) both;
     animation-delay: calc(var(--i) * 0.6s + 4s);
   }
+  .intro-flash:nth-child(odd) img {
+    rotate: -1.4deg;
+  }
+  .intro-flash:nth-child(even) img {
+    rotate: 1.4deg;
+  }
   @keyframes intro-flash {
-    0% { opacity: 0; transform: scale(1.12); }
+    0% { opacity: 0; transform: scale(1.18); }
     12% { opacity: 1; transform: scale(1); }
     88% { opacity: 1; transform: scale(0.99); }
     100% { opacity: 0; }
+  }
+
+  /* the lockup lands with weight, on the same 8s beat as its build */
+  .logo-settle {
+    animation: logo-settle 1.6s var(--ease-weighted) 8s both;
+  }
+  @keyframes logo-settle {
+    from { transform: scale(1.06); }
+    to { transform: scale(1); }
+  }
+
+  /* the live frame breathes — a slow push-in on whichever slide is active */
+  .hero-drift {
+    animation: hero-drift 8s linear both;
+  }
+  @keyframes hero-drift {
+    from { transform: scale(1.02); }
+    to { transform: scale(1.09); }
   }
 
   /* afterwards, the trailer fades up behind the held lockup */
   .trailer-in {
     animation: logo-fade 1.6s var(--ease-weighted) 0.2s both;
   }
+}
+
+/* film grain — lifts the digital sterility off the navy and the imagery,
+   and hides gradient banding; a static SVG noise tile, no animation */
+.grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 160px 160px;
 }
 
 /* ---------- the wall ---------- */

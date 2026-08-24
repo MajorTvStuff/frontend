@@ -140,7 +140,7 @@ export function Montage({
         with the collective majority.
       </h1>
 
-      <div className="relative h-[62svh] min-h-[440px] w-full sm:h-[76svh]">
+      <div className="relative h-[68svh] min-h-[480px] w-full sm:h-[84svh]">
         {/* layer 1 — the ambient reel */}
         <div aria-hidden="true" className="absolute inset-0">
           {slides.map((s, i) => {
@@ -162,11 +162,11 @@ export function Montage({
                   priority={i < 2}
                   quality={90}
                   sizes="100vw"
-                  className={
+                  className={`${
                     s.fit === "cover"
                       ? "h-full w-full object-cover"
                       : "h-full w-full object-contain py-[3svh]"
-                  }
+                  }${active ? " hero-drift" : ""}`}
                 />
               </div>
             );
@@ -188,6 +188,12 @@ export function Montage({
             />
           </div>
         )}
+
+        {/* film grain over the imagery, under the scrims and type */}
+        <div
+          aria-hidden="true"
+          className="grain pointer-events-none absolute inset-0 z-[18] opacity-[0.05]"
+        />
 
         {/* resting scrim — just enough for the lockup to read */}
         <div
@@ -220,7 +226,8 @@ export function Montage({
                 height={s.height}
                 quality={90}
                 sizes="45vh"
-                className="h-[58%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
+                loading="eager"
+                className="h-[64%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
               />
             </div>
           ))}
@@ -236,7 +243,7 @@ export function Montage({
             <p
               key={line}
               style={{ "--i": i } as React.CSSProperties}
-              className="intro-line absolute inset-0 flex items-center justify-center px-6 text-center font-light text-flow text-paper opacity-0 [text-shadow:0_2px_18px_rgba(0,18,35,0.9)]"
+              className="intro-line absolute inset-0 flex items-center justify-center px-6 text-center font-light text-intro text-paper opacity-0 [text-shadow:0_2px_22px_rgba(0,18,35,0.95)] [text-wrap:balance]"
             >
               {line}
             </p>
@@ -251,7 +258,7 @@ export function Montage({
           <Lockup
             animate
             bright
-            className="w-[min(26rem,62vw)] [filter:drop-shadow(0_2px_22px_rgba(0,18,35,0.95))_drop-shadow(0_0_6px_rgba(0,18,35,0.7))]"
+            className="logo-settle w-[min(28rem,66vw)] [filter:drop-shadow(0_2px_22px_rgba(0,18,35,0.95))_drop-shadow(0_0_6px_rgba(0,18,35,0.7))]"
           />
         </div>
 
