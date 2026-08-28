@@ -379,7 +379,10 @@
   .slate-panel:nth-child(2) {
     grid-column: 8 / span 5;
     grid-row: 1;
-    margin-top: 7rem;
+    /* a deep drop: this tile is shorter than the lead, so a shallow offset
+       would leave it sharing the lead's scroll moment and never getting one
+       of its own — as a picture and as a trailer */
+    margin-top: 17rem;
   }
   .slate-panel:nth-child(3) {
     grid-column: 1 / span 6;

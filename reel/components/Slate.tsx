@@ -94,7 +94,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
   // cue band at once. These make "one at a time" a queue, not a race.
   const activeRef = useRef<{ slug: string; manual: boolean } | null>(null);
   const prevActive = useRef<{ slug: string; manual: boolean } | null>(null);
-  const inBand = useRef<Set<string>>(new Set());
+  const playable = useRef<string[]>([]);
   const dwellTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const setState = useCallback((slug: string, s: State) => {
@@ -173,14 +173,22 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       trading the player back and forth a second at a time. */
   const schedule = useCallback(() => {
     if (activeRef.current || dwellTimer.current) return;
+    // Measure the band fresh rather than trusting the observer's set: a tile
+    // that crossed the band while another was playing has already had its
+    // "entered" callback, and IntersectionObserver will not fire it again —
+    // so a queued tile would be skipped for the rest of the page load.
+    const vh = window.innerHeight;
+    const bandTop = vh * 0.3;
+    const bandBottom = vh * 0.7;
     let best: string | null = null;
     let bestD = Infinity;
-    inBand.current.forEach((slug) => {
+    playable.current.forEach((slug) => {
       if (played.current.has(slug)) return;
       const el = frames.current.get(slug);
       if (!el) return;
       const r = el.getBoundingClientRect();
-      const d = Math.abs(r.top + r.height / 2 - window.innerHeight / 2);
+      if (r.bottom <= bandTop || r.top >= bandBottom) return;
+      const d = Math.abs(r.top + r.height / 2 - vh / 2);
       if (d < bestD) {
         bestD = d;
         best = slug;
@@ -192,7 +200,6 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       dwellTimer.current = null;
       // re-check: the dwell is exactly the window in which things change
       if (activeRef.current || played.current.has(pick)) return;
-      if (!inBand.current.has(pick)) return;
       played.current.add(pick);
       activeRef.current = { slug: pick, manual: false };
       claimPlayer("slate");
@@ -203,24 +210,19 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
   // ---- observer B: who is in the cue band ----
   useEffect(() => {
     if (!canAuto) return;
-    const playable = shows.filter((s) => s.youtubeId);
-    if (!playable.length) return;
+    const list = shows.filter((s) => s.youtubeId);
+    playable.current = list.map((s) => s.slug);
+    if (!list.length) return;
 
     let io: IntersectionObserver | null = null;
     const arm = () => {
       io = new IntersectionObserver(
         (entries) => {
-          for (const e of entries) {
-            const slug = (e.target as HTMLElement).dataset.slug;
-            if (!slug) continue;
-            if (e.isIntersecting) inBand.current.add(slug);
-            else inBand.current.delete(slug);
-          }
-          schedule();
+          if (entries.length) schedule();
         },
         { rootMargin: "-30% 0px -30% 0px", threshold: 0 },
       );
-      playable.forEach((sh) => {
+      list.forEach((sh) => {
         const el = frames.current.get(sh.slug);
         if (el && io) io.observe(el);
       });
@@ -244,6 +246,26 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
     if (!active) schedule();
   }, [active, schedule]);
 
+  // ...and re-check as the page moves, so a tile that was queued behind
+  // another still arms the moment it owns the middle of the screen. schedule()
+  // returns immediately while a player is held, so this costs a comparison.
+  useEffect(() => {
+    if (!canAuto) return;
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        schedule();
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [canAuto, schedule]);
+
   // ---- observer C: the live panel left the screen -> retire ----
   useEffect(() => {
     if (!active) return;
@@ -254,7 +276,11 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       ([e]) => {
         if (!e.isIntersecting) retire(slug);
       },
-      { threshold: 0 },
+      // retire on leaving the CUE BAND, not the viewport: a trailer runs for
+      // minutes and a reader passes the wall in seconds, so holding the
+      // player until full exit means the tiles below never get their moment.
+      // Each tile plays while it owns the middle of the screen, then hands on.
+      { threshold: 0, rootMargin: "-30% 0px -30% 0px" },
     );
     io.observe(el);
     const onHide = () => {
@@ -273,6 +299,11 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
     const slug = active.slug;
     let started = false;
     let extended = false;
+    // YouTube reports playerState only when it CHANGES; the ~4/sec ticks
+    // that follow carry currentTime alone. So the state has to be latched —
+    // testing it against the same message that carries the timecode means
+    // the "wait until it is really moving" gate can never open.
+    let playing = false;
     let watchdog = setTimeout(() => {
       if (!started) retire(slug, "blocked");
     }, WATCHDOG_MS);
@@ -304,10 +335,12 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
           if (!started) retire(slug, "blocked");
         }, WATCHDOG_SLOW_MS - WATCHDOG_MS);
       }
+      if (typeof playerState === "number") playing = playerState === 1;
+
       // hold the poster until the picture is genuinely moving: at 0:00 the
       // player still has its own chrome up (title bar, channel name), and
       // burning off the art any earlier shows the viewer YouTube's UI
-      if (playerState === 1 && !started && (currentTime ?? 0) >= 0.35) {
+      if (playing && !started && (currentTime ?? 0) >= 0.35) {
         started = true;
         clearTimeout(watchdog);
         setState(slug, "live");
@@ -316,7 +349,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
         durations.current.set(slug, duration);
 
       const dur = durations.current.get(slug) ?? 0;
-      if (playerState === 1 && typeof currentTime === "number" && dur > 0) {
+      if (playing && typeof currentTime === "number" && dur > 0) {
         const line = lines.current.get(slug);
         const fill = fills.current.get(slug);
         // written through refs — a playing video never re-renders React
