@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Lockup } from "@/components/Lockup";
+import { claimPlayer, releasePlayer, onPlayerChange } from "@/lib/player-bus";
 
 export type Slide = {
   slug: string;
@@ -60,6 +61,8 @@ export function Montage({
   const [audioReady, setAudioReady] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const firstRun = useRef(true);
+  const heroRef = useRef<HTMLElement | null>(null);
+  const heroVisible = useRef(true);
 
   // auto-advance only — the reel is ambience, not navigation; it stops
   // once the trailer owns the frame
@@ -86,9 +89,46 @@ export function Montage({
   useEffect(() => {
     if (!trailer) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setTimeout(() => setShowTrailer(true), TRAILER_AT_MS);
+    const t = setTimeout(() => {
+      if (heroVisible.current) setShowTrailer(true);
+    }, TRAILER_AT_MS);
     return () => clearTimeout(t);
   }, [trailer, run]);
+
+  // whoever else takes the player wins: the slate claims it as you scroll
+  // into the wall, and the hero lets go on the spot
+  useEffect(() => {
+    return onPlayerChange((who) => {
+      if (who !== "hero") setShowTrailer(false);
+    });
+  }, []);
+
+  // hold/give up the claim as the hero's own trailer comes and goes
+  useEffect(() => {
+    if (showTrailer) claimPlayer("hero");
+    else releasePlayer("hero");
+    return () => releasePlayer("hero");
+  }, [showTrailer]);
+
+  // the hero player is also destroyed when the hero leaves — otherwise it
+  // keeps decoding (and looping) off-screen. Not remounted on re-entry:
+  // "Replay with sound" re-arms the whole hero.
+  useEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(
+      ([e]) => {
+        heroVisible.current = e.isIntersecting;
+        if (!e.isIntersecting) setShowTrailer(false);
+      },
+      // retire the hero once its bottom rises past mid-screen — a plain
+      // threshold-0 exit fires ~1s later than the slate's cue band, and the
+      // two players overlap for that window on a slow, deliberate scroll
+      { threshold: 0, rootMargin: "0px 0px -50% 0px" }
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // probe for the intro clip — the sound control exists only if a playable
   // file is actually there
@@ -131,6 +171,7 @@ export function Montage({
 
   return (
     <section
+      ref={heroRef}
       className="relative overflow-hidden"
       style={{ background: "linear-gradient(178deg, #001528 0%, #001d33 60%, #003b59 130%)" }}
     >
@@ -178,11 +219,11 @@ export function Montage({
           <div
             aria-hidden="true"
             className="trailer-in absolute inset-0 z-[15] overflow-hidden opacity-0"
+            inert
           >
             <iframe
-              src={`https://www.youtube-nocookie.com/embed/${trailer.youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.youtubeId}&playsinline=1&rel=0&modestbranding=1&iv_load_policy=3&disablekb=1`}
+              src={`https://www.youtube-nocookie.com/embed/${trailer.youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.youtubeId}&playsinline=1&rel=0&disablekb=1`}
               title=""
-              tabIndex={-1}
               allow="autoplay; encrypted-media"
               className="pointer-events-none absolute left-1/2 top-1/2 aspect-video min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
             />
@@ -273,16 +314,27 @@ export function Montage({
           <span className="text-silver">{caption.proof}</span>
         </p>
 
-        {/* sound on — appears only when the intro clip exists */}
-        {audioReady && (
-          <button
-            type="button"
-            onClick={replayWithSound}
-            className="meta-caps absolute right-5 top-5 z-40 border border-paper/25 bg-screen/70 px-3 py-2 text-paper transition-colors duration-300 hover:border-signal hover:text-signal sm:right-8"
-          >
-            Replay with sound
-          </button>
-        )}
+        {/* controls — sound-on appears only when the intro clip exists */}
+        <div className="absolute right-5 top-5 z-40 flex gap-2 sm:right-8">
+          {showTrailer && (
+            <button
+              type="button"
+              onClick={() => setShowTrailer(false)}
+              className="meta-caps border border-paper/25 bg-screen/70 px-3 py-2 text-paper transition-colors duration-300 hover:border-signal hover:text-signal"
+            >
+              Stop
+            </button>
+          )}
+          {audioReady && (
+            <button
+              type="button"
+              onClick={replayWithSound}
+              className="meta-caps border border-paper/25 bg-screen/70 px-3 py-2 text-paper transition-colors duration-300 hover:border-signal hover:text-signal"
+            >
+              Replay with sound
+            </button>
+          )}
+        </div>
       </div>
     </section>
   );

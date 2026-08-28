@@ -51,3 +51,18 @@ export function projectDims(slug: string): { width: number; height: number } {
   if (!d) throw new Error(`no image dims for project "${slug}"`);
   return { width: d[0], height: d[1] };
 }
+
+/** The `v` param of a youtube.com/youtu.be watch URL; null for anything else
+    (a Facebook permalink yields null, which is what keeps a non-embeddable
+    show structurally out of the player's target list). */
+export function youtubeId(url: string | null): string | null {
+  if (!url) return null;
+  try {
+    const u = new URL(url);
+    if (u.hostname.endsWith("youtu.be")) return u.pathname.slice(1) || null;
+    if (!u.hostname.endsWith("youtube.com")) return null;
+    return u.searchParams.get("v");
+  } catch {
+    return null;
+  }
+}

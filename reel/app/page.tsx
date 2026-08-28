@@ -1,6 +1,8 @@
-import { site, projects, projectDims } from "@/lib/content";
+import { site, projects, projectDims, youtubeId } from "@/lib/content";
 import type { Slide, Trailer } from "@/components/Montage";
 import { Montage } from "@/components/Montage";
+import type { Show } from "@/components/Slate";
+import { Slate } from "@/components/Slate";
 import { Wall } from "@/components/Wall";
 import { Lockup } from "@/components/Lockup";
 import { Confirm } from "@/components/Confirm";
@@ -34,12 +36,24 @@ export default function Home() {
 
   // afterwards, the trailer plays: DRIVE, the Emmy flagship
   const drive = projects.find((p) => p.slug === "drive")!;
-  const driveId = drive.trailer
-    ? new URL(drive.trailer).searchParams.get("v")
-    : null;
+  const driveId = youtubeId(drive.trailer);
   const trailer: Trailer | undefined = driveId
     ? { youtubeId: driveId, title: drive.title, proof: drive.proof }
     : undefined;
+
+  // the slate: four shows, four trailer panels. A Facebook-only trailer
+  // yields youtubeId null, which keeps it out of the player by construction.
+  const shows: Show[] = projects
+    .filter((p) => p.medium === "show")
+    .map((p) => ({
+      slug: p.slug,
+      title: p.title,
+      credit: p.credit,
+      proof: p.proof,
+      trailer: p.trailer,
+      ...projectDims(p.slug),
+      youtubeId: youtubeId(p.trailer),
+    }));
 
   return (
     <>
@@ -58,10 +72,10 @@ export default function Home() {
         {/* ————— the reel: word flow -> covers flash -> logo -> trailer ————— */}
         <Montage slides={slides} introLines={site.introLines} flash={flash} trailer={trailer} />
 
-        {/* ————— the slate label, then the work ————— */}
-        <p className="meta-caps mx-auto max-w-[1320px] px-5 pb-2 pt-12 text-mid sm:px-8">
-          The slate <span className="text-faint">— {site.tvFilm.label}</span>
-        </p>
+        {/* ————— the slate: each show gets its trailer moment ————— */}
+        <Slate shows={shows} label={site.tvFilm.label} />
+
+        {/* ————— the shelf ————— */}
         <Wall />
 
         {/* ————— the icons band: names, not paragraphs ————— */}
