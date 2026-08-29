@@ -48,13 +48,13 @@ company was, and the one differentiating claim sat at 15px, 81% down the page.
 The intro choreography, the wordmark tracing, the player contract and the
 trailer machinery all originate there and were carried forward.
 
-Open questions for the client live in `../MAJOR-CONTENT-CONCEPTS.md` (Q11-Q13
+Open questions for the client live in `../docs/MAJOR-CONTENT-CONCEPTS.md` (Q11-Q13
 are the newest: the cover priority list, the Oprah clip, and a hosted trailer
 file — the DRIVE link in his copy doc is a watermarked fan re-upload).
 
 ## Planned
 
-See `../ROADMAP.md` for the full list (detail pages, a catalog page, nav,
+See `../docs/ROADMAP.md` for the full list (detail pages, a catalog page, nav,
 TOS/privacy, and what is blocked on the client).
 
 - **Per-title detail pages.** Clicking a show or a book opens a full
@@ -63,5 +63,5 @@ TOS/privacy, and what is blocked on the client).
   thing that is BLOCKED is the client's own role on each title (EP,
   packager, literary rep, publisher…): we do not have it, and it is exactly
   the kind of fact that must never be inferred from a credit line. Logged as
-  Q14 in `../MAJOR-CONTENT-CONCEPTS.md`; the pages ship without a role field
+  Q14 in `../docs/MAJOR-CONTENT-CONCEPTS.md`; the pages ship without a role field
   until he sends one per title.
