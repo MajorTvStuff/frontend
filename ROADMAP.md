@@ -121,6 +121,43 @@ slate's hover-to-play trailers should move to the same source at that point.
 
 ---
 
+## Housekeeping: collapse the repo down to `site/`
+
+Right now the repository root is *itself* a Next app — the old "Manifesto"
+concept that ran on port 3006 — with its own `app/`, `components/`, `lib/`,
+`public/`, `package.json` and `node_modules` sitting loose beside the real
+build. That is the actual mess: from the root it is not obvious which of
+three apps is live.
+
+**Moves into `archive/`, no questions:**
+
+| What | Where | Why |
+|---|---|---|
+| root `app/ components/ content/ fonts/ lib/ public/` + `package.json`, `package-lock.json`, `next.config.ts`, `tsconfig.json`, `postcss.config.mjs`, `next-env.d.ts`, `.env.local` | `archive/manifesto/` | the port-3006 concept, superseded |
+| `reel/` | already copied to `archive/reel-v1/` — delete the top-level copy | its scripts are already neutered |
+| root `node_modules/`, `.next/` | delete outright | rebuildable; `site/` has its own |
+| `REEL-PASS-3-PLAN.md` | `archive/` | describes a build that no longer exists |
+| `CONCEPTS.html` | `archive/` | the taste-test launcher; only one build remains |
+
+**Two things I will NOT move without a word from you:**
+
+1. **`Assets/` (26 MB)** — the client's original drop: 24 book covers, key
+   art, logo lockups, the copy doc, the logo animation, the Uncontained
+   recording. It is not dead weight, it is the source everything is derived
+   from, and burying it under `archive/` implies otherwise. Suggest
+   `source/` at the root instead, or leave it exactly where it is.
+2. **`RG-CREATIVE-DIRECTION.md`, `MAJOR-CONTENT-CONCEPTS.md`, `ROADMAP.md`** —
+   these are live working documents, not history. The questions list is
+   still open and this roadmap is the plan. Suggest a `docs/` folder at the
+   root, or leave them.
+
+**Stays at the root regardless:** `.git`, `.gitignore`, and `site/`.
+
+**End state:** root holds `site/`, `archive/`, the source drop, the live
+docs, and nothing else that looks runnable.
+
+---
+
 ## Ideas worth considering (not agreed, just candidates)
 
 Ordered by impact per unit of effort.

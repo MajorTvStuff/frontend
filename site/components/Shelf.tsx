@@ -51,12 +51,10 @@ function Jacket({
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   usePointerSpring(ref);
-  // a short press that plays on click, so the lock is felt as well as seen
-  const [pressing, setPressing] = useState(false);
   return (
     <div
       ref={ref}
-      className={`tilt-cover ${className}${locked ? " is-locked" : ""}${pressing ? " is-pressing" : ""}`}
+      className={`tilt-cover ${className}${locked ? " is-locked" : ""}`}
       style={index === undefined ? undefined : ({ "--d": index } as React.CSSProperties)}
       onPointerEnter={() => onOpen(p)}
       onPointerLeave={() => onClose(p)}
@@ -67,11 +65,7 @@ function Jacket({
         aria-pressed={locked}
         onFocus={() => onOpen(p)}
         onBlur={() => onClose(p)}
-        onClick={() => {
-          setPressing(true);
-          window.setTimeout(() => setPressing(false), 420);
-          onLock(p);
-        }}
+        onClick={() => onLock(p)}
       >
         <span className="sr-only">
           {p.title}
@@ -79,14 +73,23 @@ function Jacket({
           {locked ? "Pinned. Activate to unpin." : "Activate to pin."}
         </span>
       </button>
-      <Image
-        src={`/projects/${p.slug}.jpg`}
-        alt={`${p.title}${p.credit ? ` — ${p.credit}` : ""}`}
-        width={p.width}
-        height={p.height}
-        sizes={sizes}
-        className={p.medium === "book" && caption ? "cover-lift h-auto w-full" : "cover h-auto w-full"}
-      />
+      {/* three elements, three transforms: the wrapper reveals, this one
+          holds the press, and the image tilts with the cursor. Sharing any
+          two of them on one element makes the last one written win. */}
+      <div className="jacket-press">
+        <Image
+          src={`/projects/${p.slug}.jpg`}
+          alt={`${p.title}${p.credit ? ` — ${p.credit}` : ""}`}
+          width={p.width}
+          height={p.height}
+          sizes={sizes}
+          className={
+            p.medium === "book" && caption
+              ? "cover-lift h-auto w-full"
+              : "cover h-auto w-full"
+          }
+        />
+      </div>
       {caption && p.credit && (
         <p className="meta-caps mt-3 text-mid">{p.credit}</p>
       )}

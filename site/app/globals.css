@@ -880,25 +880,25 @@
   outline-offset: 3px;
 }
 
-/* the press: a jacket is pushed down and settles, so pinning is felt as
-   well as seen. Short, and it never fights the tilt because it animates a
-   nested element rather than the same one the cursor is moving. */
-.tilt-cover.is-pressing img {
-  animation: jacket-press 420ms var(--ease-out-strong);
+/* THE PRESS — a held state, not a bounce.
+   Pinning pushes the jacket down and it STAYS down for as long as it holds
+   the panel; releasing it, or pinning another book, lets it rise back up
+   along the same curve. One transition serves both directions, which is
+   what makes the reverse feel like the same movement played backwards.
+   It lives on its own element because the wrapper already owns the reveal
+   transform and the image owns the cursor tilt. */
+.jacket-press {
+  transition:
+    transform 280ms var(--ease-out-strong),
+    filter 280ms var(--ease-out-strong);
 }
-@keyframes jacket-press {
-  0% {
-    transform: scale(1);
-  }
-  28% {
-    transform: scale(0.94) translateY(3px);
-  }
-  100% {
-    transform: scale(1);
-  }
+.tilt-cover.is-locked .jacket-press {
+  transform: scale(0.94) translateY(5px);
+  /* the shadow tightens as it goes down, the way a real object's does */
+  filter: drop-shadow(0 4px 10px rgba(0, 5, 12, 0.75));
 }
-/* a pinned jacket keeps a standing marker, so you can see which one the
-   panel is holding after the press has finished */
+/* and it keeps a standing marker, so which book holds the panel is legible
+   after the movement has finished */
 .tilt-cover.is-locked::after {
   content: "";
   position: absolute;
@@ -906,12 +906,19 @@
   border: 1px solid var(--color-signal);
   pointer-events: none;
   z-index: 3;
+  animation: pin-frame 280ms var(--ease-out-strong) both;
+}
+@keyframes pin-frame {
+  from {
+    opacity: 0;
+    inset: -14px;
+  }
 }
 .book-panel.is-pinned {
   border-left-color: var(--color-signal);
 }
 @media (prefers-reduced-motion: reduce) {
-  .tilt-cover.is-pressing img {
+  .tilt-cover.is-locked::after {
     animation: none;
   }
 }
