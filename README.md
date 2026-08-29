@@ -33,5 +33,7 @@ npm start       # http://localhost:3011
 - **`Assets/`** — the source everything is derived from. The images in
   `site/public/projects/` were processed from here at 1440px; the copy in
   `site/content/` is transcribed from the copy doc verbatim.
-- **`archive/`** — `legacy/` is the 2018 site, `manifesto/` and `reel-v1/`
-  are superseded builds of this rebrand. Nothing here runs.
+- **`archive/`** — `majortv-rebuild/` is the pre-rebrand site (with the
+  scraped 2018 original inside it), `manifesto/` and `reel-v1/` are
+  superseded builds of this rebrand, `notes/` holds retired planning files.
+  Nothing here runs; see `archive/README.md`.
