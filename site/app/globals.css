@@ -716,16 +716,27 @@
   width: calc(104px + var(--z, 0.5) * 64px);
   /* and they sit at different heights, so the row never reads as a shelf edge */
   margin-bottom: calc(var(--z, 0.5) * 34px);
+  /* Travel is deliberately modest. At 24px a near cover could slide out
+     from under a cursor that was aiming at it — the depth cue is worth
+     having, but not at the cost of the click. */
   transform: translate3d(
-    calc(var(--px, 0) * (6px + var(--z, 0.5) * 18px)),
-    calc(var(--py, 0) * (4px + var(--z, 0.5) * 12px)),
+    calc(var(--px, 0) * (4px + var(--z, 0.5) * 12px)),
+    calc(var(--py, 0) * (3px + var(--z, 0.5) * 8px)),
     0
   );
   transition: transform 120ms linear;
 }
-/* nearer covers sit in front and carry a heavier shadow */
+/* Nearer covers sit in front and carry a heavier shadow. The cursor's own
+   cover is raised above ALL of them, because the parallax translates each
+   item by up to 24px and the gap is 24px — so without this a "near"
+   neighbour can slide over a "far" cover and swallow the click meant for
+   it. Depth ordering is for the eye; the pointer needs the one it is on. */
 .shelf-item {
   z-index: calc(1 + var(--z, 0) * 10);
+}
+.shelf-item:hover,
+.shelf-item:focus-within {
+  z-index: 30;
 }
 .shelf-item .cover {
   filter: drop-shadow(0 calc(6px + var(--z, 0.5) * 16px) calc(14px + var(--z, 0.5) * 26px) rgba(0, 5, 12, calc(0.35 + var(--z, 0.5) * 0.3)));
@@ -759,7 +770,13 @@
  * author and a proof line, and writing plot summaries for twenty real books
  * would be inventing facts about other people's work.
  */
+/* The panel floats OVER the shelf it describes, and the right-hand covers
+   sit underneath it. Left interactive it swallowed their clicks — the two
+   at the end of the first row were unreachable once anything was pinned.
+   So the panel itself is transparent to the pointer and only its own
+   control takes events. */
 .book-panel {
+  pointer-events: none;
   position: fixed;
   top: 50%;
   right: 0;
@@ -795,6 +812,9 @@
     opacity: 0;
     transform: translateY(6px);
   }
+}
+.book-panel .btn {
+  pointer-events: auto;
 }
 .book-panel-art {
   width: 8.5rem;
@@ -868,7 +888,9 @@
 }
 .jacket-hit {
   position: absolute;
-  inset: 0;
+  /* slightly larger than the jacket: the field drifts under the cursor, and
+     a small cover is a small target without this */
+  inset: -8px;
   z-index: 2;
   background: transparent;
   border: 0;

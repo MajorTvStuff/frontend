@@ -206,12 +206,10 @@ export function Shelf({
         data-reveal="pending"
         className="grid items-center gap-10 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14"
       >
-        <div
-          ref={leadRef}
-          className="reveal tilt-cover w-52 lg:w-full"
-          onPointerEnter={() => openBook(lead)}
-          onPointerLeave={() => closeBook(lead)}
-        >
+        {/* No panel on this one. It is the section's argument, not an item
+            in the shelf, and a popup firing over the claim it sits beside
+            interrupts the one sentence the section exists to make. */}
+        <div ref={leadRef} className="reveal tilt-cover w-52 lg:w-full">
           <Image
             src={`/projects/${lead.slug}.jpg`}
             alt={`${lead.title} — ${lead.credit}`}
