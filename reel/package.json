@@ -1,11 +1,9 @@
 {
-  "name": "major-content-reel",
+  "name": "major-content-reel-ARCHIVED",
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3011",
-    "build": "next build",
-    "start": "next start -p 3011"
+    "archived": "echo \"This build is archived. The live frontend is ../site (npm start there).\" && exit 1"
   },
   "dependencies": {
     "next": "^15.3.3",

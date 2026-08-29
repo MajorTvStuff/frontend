@@ -29,3 +29,5 @@ out/
 
 # graphify tool output
 /graphify-out/
+/site/node_modules/
+/site/.next/
