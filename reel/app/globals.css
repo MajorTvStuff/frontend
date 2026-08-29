@@ -576,7 +576,18 @@
          The rise keeps the weighted curve so it still settles. */
       animation: slate-fade linear both, slate-rise var(--ease-matte) both;
       animation-timeline: --panel, --panel;
-      animation-range: entry 0% entry 55%, entry 0% entry 62%;
+      /* Starts at 22%, not 0%: from the first touched pixel every tile on
+         screen is mid-fade at once, which reads as the whole wall arriving
+         together. Holding it back means a tile stays dark until it is
+         properly entering, then takes its own turn. */
+      animation-range: entry 22% entry 60%, entry 22% entry 68%;
+    }
+
+    /* the two tiles of a row would otherwise fade in unison; the right-hand
+       one waits until the left has landed */
+    .slate-panel:nth-child(2),
+    .slate-panel:nth-child(4) {
+      animation-range: entry 40% entry 78%, entry 40% entry 86%;
     }
 
     .slate-rule i,
