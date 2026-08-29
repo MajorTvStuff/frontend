@@ -569,11 +569,14 @@
     .slate-panel {
       view-timeline-name: --panel;
       view-timeline-axis: block;
-      animation: slate-lift var(--ease-matte) both;
-      animation-timeline: --panel;
-      /* runs from the first sliver of the tile until it is comfortably in
-         view, so the whole arrival is something you watch happen */
-      animation-range: entry 0% entry 60%;
+      /* Two animations, because they want different curves. The FADE is
+         linear so it tracks the scroll one-to-one and is genuinely legible
+         as a fade — on the eased curve it reached two thirds opacity within
+         38px of the tile peeking in, which reads as a snap, not a fade.
+         The rise keeps the weighted curve so it still settles. */
+      animation: slate-fade linear both, slate-rise var(--ease-matte) both;
+      animation-timeline: --panel, --panel;
+      animation-range: entry 0% entry 55%, entry 0% entry 62%;
     }
 
     .slate-rule i,
@@ -631,9 +634,13 @@
   }
 
   /* the tile arrives as a whole... */
-  @keyframes slate-lift {
+  @keyframes slate-fade {
     from {
       opacity: 0;
+    }
+  }
+  @keyframes slate-rise {
+    from {
       transform: translateY(3.5rem) scale(0.94);
     }
   }
