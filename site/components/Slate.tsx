@@ -116,6 +116,8 @@ function Panel({
       ref={tiltRef}
       className={`slate-panel tilt${still ? " slate-panel--still" : ""}`}
       aria-labelledby={`slate-${s.slug}`}
+      onPointerEnter={still ? undefined : onEnter}
+      onPointerLeave={still ? undefined : onLeave}
     >
       <div className="slate-rule" aria-hidden="true">
         <i />
@@ -133,8 +135,6 @@ function Panel({
         data-slug={s.slug}
         data-state={state}
         ref={frameRef}
-        onPointerEnter={still ? undefined : onEnter}
-        onPointerLeave={still ? undefined : onLeave}
       >
         {isActive && s.youtubeId && (
           <div className="slate-video absolute inset-0" inert aria-hidden="true">
@@ -191,7 +191,11 @@ function Panel({
             </button>
           )}
           {!still && state === "art" && !isActive && (
-            <button type="button" className="btn meta-caps" onClick={onPlay} data-touch-only>
+            <button
+              type="button"
+              className={`btn meta-caps${canAuto ? " touch-only" : ""}`}
+              onClick={onPlay}
+            >
               Play trailer
             </button>
           )}
@@ -420,11 +424,10 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
   const hoverIn = useCallback(
     (slug: string) => {
       if (leaveTimer.current) clearTimeout(leaveTimer.current);
-      if (!canAuto) return; // save-data / 2g / reduced motion: use the button
       if (activeRef.current?.slug === slug) return;
       play(slug, false);
     },
-    [canAuto, play],
+    [play],
   );
   const hoverOut = useCallback(
     (slug: string) => {

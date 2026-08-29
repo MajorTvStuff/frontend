@@ -678,7 +678,61 @@
 
 /* touch devices have no hover, so the explicit control is their only way in */
 @media (hover: hover) and (pointer: fine) {
-  .slate-control [data-touch-only] {
+  .slate-control .touch-only {
     display: none;
+  }
+}
+
+/* ---------- the backlist as a field ---------- */
+/*
+ * The back catalogue is twenty years deep and the client asked for it to be
+ * present without being paraded. A uniform grid says "catalogue"; a field of
+ * different sizes at different depths says "archive". Each cover gets a
+ * deterministic depth (--z, 0 far … 1 near) that drives three things at once:
+ * how large it is, how far it sits from the baseline, and how far it travels
+ * with the cursor. Near covers move more than far ones, which is parallax —
+ * the cue the eye reads as space.
+ */
+.shelf-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.75rem 1.5rem;
+}
+.shelf-item {
+  /* far covers ~104px, near covers ~168px */
+  width: calc(104px + var(--z, 0.5) * 64px);
+  /* and they sit at different heights, so the row never reads as a shelf edge */
+  margin-bottom: calc(var(--z, 0.5) * 34px);
+  transform: translate3d(
+    calc(var(--px, 0) * (6px + var(--z, 0.5) * 18px)),
+    calc(var(--py, 0) * (4px + var(--z, 0.5) * 12px)),
+    0
+  );
+  transition: transform 120ms linear;
+}
+/* nearer covers sit in front and carry a heavier shadow */
+.shelf-item {
+  z-index: calc(1 + var(--z, 0) * 10);
+}
+.shelf-item .cover {
+  filter: drop-shadow(0 calc(6px + var(--z, 0.5) * 16px) calc(14px + var(--z, 0.5) * 26px) rgba(0, 5, 12, calc(0.35 + var(--z, 0.5) * 0.3)));
+}
+/* far covers also sit back tonally, so depth reads even without motion */
+.shelf-item .cover {
+  opacity: calc(0.74 + var(--z, 0.5) * 0.26);
+}
+@media (hover: hover) and (pointer: fine) {
+  .shelf-item:hover .cover {
+    opacity: 1;
+  }
+}
+@media (max-width: 639px) {
+  .shelf-field {
+    gap: 1.25rem 1rem;
+  }
+  .shelf-item {
+    width: calc(78px + var(--z, 0.5) * 34px);
+    margin-bottom: calc(var(--z, 0.5) * 18px);
   }
 }

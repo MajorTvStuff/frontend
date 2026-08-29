@@ -63,6 +63,14 @@ function Jacket({
   );
 }
 
+/* A deterministic pseudo-random depth per slug, so the server and the client
+   agree and the scatter never reshuffles between renders. 0 = far, 1 = near. */
+function depthOf(slug: string) {
+  let h = 0;
+  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) % 9973;
+  return (h % 1000) / 1000;
+}
+
 export function Shelf({
   label,
   thesis,
@@ -82,6 +90,11 @@ export function Shelf({
   useReveal(ref);
   const leadRef = useRef<HTMLDivElement | null>(null);
   usePointerSpring(leadRef);
+  // one spring for the whole backlist: every cover reads the same --px/--py
+  // and multiplies it by its own depth, so near covers travel further than
+  // far ones and the field reads as a space rather than a grid
+  const fieldRef = useRef<HTMLDivElement | null>(null);
+  usePointerSpring(fieldRef, { onlyWhileHovered: false });
 
   return (
     <section
@@ -138,21 +151,33 @@ export function Shelf({
         </div>
       </div>
 
-      {/* ————— the backlist: present, not paraded ————— */}
+      {/* ————— the backlist: a field, not a grid ————— */}
       <div className="mt-20 border-t border-line pt-10">
         <h3 className="meta-caps reveal text-faint">
           International &amp; National Bestsellers
         </h3>
-        <div className="mt-8 grid grid-cols-4 items-end gap-4 sm:grid-cols-6 sm:gap-5 lg:grid-cols-8 lg:gap-6">
-          {back.map((p, i) => (
-            <Jacket
-              key={p.slug}
-              p={p}
-              index={i}
-              className="reveal-d"
-              sizes="(min-width: 1024px) 136px, (min-width: 640px) 15vw, 22vw"
-            />
-          ))}
+        <div ref={fieldRef} className="shelf-field mt-10">
+          {back.map((p, i) => {
+            const z = depthOf(p.slug);
+            return (
+              <div
+                key={p.slug}
+                className="shelf-item"
+                style={
+                  {
+                    "--z": z.toFixed(3),
+                    "--d": i,
+                  } as React.CSSProperties
+                }
+              >
+                <Jacket
+                  p={p}
+                  className="reveal-d"
+                  sizes="(min-width: 1024px) 170px, (min-width: 640px) 18vw, 26vw"
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
     </section>
