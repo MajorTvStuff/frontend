@@ -320,7 +320,7 @@ export function Montage({
             <button
               type="button"
               onClick={() => setShowTrailer(false)}
-              className="meta-caps border border-paper/25 bg-screen/70 px-3 py-2 text-paper transition-colors duration-300 hover:border-signal hover:text-signal"
+              className="hero-btn meta-caps border border-paper/25 bg-screen/70 px-3 py-2 text-paper"
             >
               Stop
             </button>
@@ -329,7 +329,7 @@ export function Montage({
             <button
               type="button"
               onClick={replayWithSound}
-              className="meta-caps border border-paper/25 bg-screen/70 px-3 py-2 text-paper transition-colors duration-300 hover:border-signal hover:text-signal"
+              className="hero-btn meta-caps border border-paper/25 bg-screen/70 px-3 py-2 text-paper"
             >
               Replay with sound
             </button>

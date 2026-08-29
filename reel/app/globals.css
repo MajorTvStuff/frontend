@@ -263,24 +263,6 @@
 
 /* ---------- the wall ---------- */
 
-/* caption strip inversion on hover/focus — Radical's move, reversed for
-   the dark ground: the caption flashes light */
-.tile-caption {
-  transition: background-color 0.3s, color 0.3s;
-}
-.tile:hover .tile-caption,
-.tile:focus-visible .tile-caption {
-  background-color: var(--color-paper);
-}
-.tile:hover .tile-title,
-.tile:focus-visible .tile-title {
-  color: var(--color-ink);
-}
-.tile:hover .tile-sub,
-.tile:focus-visible .tile-sub {
-  color: var(--color-harbor);
-}
-
 /* ---------- scroll reveals (zero JS; static without support) ---------- */
 
 @media (prefers-reduced-motion: no-preference) {
@@ -540,12 +522,25 @@
   border: 1px solid var(--color-line);
   padding: 0.5rem 0.75rem;
   background: transparent;
-  transition: color 0.3s, border-color 0.3s;
+  /* 160ms, not 300: a control should answer immediately */
+  transition: color 160ms var(--ease-reveal), border-color 160ms var(--ease-reveal),
+    transform 160ms var(--ease-reveal);
 }
-.slate-btn:hover,
 .slate-btn:focus-visible {
   color: var(--color-signal);
   border-color: var(--color-signal);
+}
+/* hover only where a real pointer exists — on touch, a tap fires :hover and
+   leaves the control stuck in its hovered state */
+@media (hover: hover) and (pointer: fine) {
+  .slate-btn:hover {
+    color: var(--color-signal);
+    border-color: var(--color-signal);
+  }
+}
+/* the press: instant, so the control feels like it heard you */
+.slate-btn:active {
+  transform: scale(0.97);
 }
 
 .slate-out {
@@ -555,12 +550,21 @@
   text-decoration: underline;
   text-decoration-color: var(--color-line);
   text-underline-offset: 4px;
-  transition: color 0.3s, text-decoration-color 0.3s;
+  transition: color 160ms var(--ease-reveal),
+    text-decoration-color 160ms var(--ease-reveal), transform 160ms var(--ease-reveal);
 }
-.slate-out:hover,
 .slate-out:focus-visible {
   color: var(--color-signal);
   text-decoration-color: var(--color-signal);
+}
+@media (hover: hover) and (pointer: fine) {
+  .slate-out:hover {
+    color: var(--color-signal);
+    text-decoration-color: var(--color-signal);
+  }
+}
+.slate-out:active {
+  transform: scale(0.99);
 }
 
 /* ---------- the slate's choreography (scroll-driven, optional) ---------- */
@@ -688,4 +692,23 @@
       transform: scale(1.045);
     }
   }
+}
+
+/* the hero's own controls, same manners as the slate's */
+.hero-btn {
+  transition: color 160ms var(--ease-reveal), border-color 160ms var(--ease-reveal),
+    transform 160ms var(--ease-reveal);
+}
+.hero-btn:focus-visible {
+  border-color: var(--color-signal);
+  color: var(--color-signal);
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-btn:hover {
+    border-color: var(--color-signal);
+    color: var(--color-signal);
+  }
+}
+.hero-btn:active {
+  transform: scale(0.97);
 }
