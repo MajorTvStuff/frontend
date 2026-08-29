@@ -20,6 +20,13 @@ export type Trailer = {
   proof: string;
 };
 
+export type Primer = {
+  eyebrow: string;
+  statement: string;
+  proofs: string[];
+  proofsShort: string[];
+};
+
 /**
  * The hero, in four layers, cut fast — the whole intro lands in ~4.9s.
  *
@@ -34,8 +41,6 @@ export type Trailer = {
  * The caption tracks whatever is actually visible. Reduced motion: no
  * cycling, no flash, no trailer — finished lockup, first frame.
  */
-const HOLD_MS = 5500;
-const CAPTION_LAG_MS = 900;
 const TRAILER_AT_MS = 4900;
 
 /* RG's intro audio (the Oprah clip). Drop the file at either path and the
@@ -44,46 +49,25 @@ const TRAILER_AT_MS = 4900;
 const AUDIO_SOURCES = ["/intro/opener.mp3", "/intro/opener.wav"];
 
 export function Montage({
-  slides,
+  still,
   introLines,
   flash,
   trailer,
+  primer,
 }: {
-  slides: Slide[];
+  still: Slide;
   introLines: string[];
   flash: Slide[];
   trailer?: Trailer;
+  primer: Primer;
 }) {
-  const [index, setIndex] = useState(0);
-  const [captionIndex, setCaptionIndex] = useState(0);
   const [showTrailer, setShowTrailer] = useState(false);
   // bumping `run` remounts every intro layer, restarting their CSS timelines
   const [run, setRun] = useState(0);
   const [audioReady, setAudioReady] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
-  const firstRun = useRef(true);
   const heroRef = useRef<HTMLElement | null>(null);
   const heroVisible = useRef(true);
-
-  // auto-advance only — the reel is ambience, not navigation; it stops
-  // once the trailer owns the frame
-  useEffect(() => {
-    if (showTrailer) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setTimeout(() => setIndex((i) => (i + 1) % slides.length), HOLD_MS);
-    return () => clearTimeout(t);
-  }, [index, slides.length, showTrailer]);
-
-  // the caption follows the image: it flips once the incoming slide
-  // dominates the crossfade, so credit and picture never disagree
-  useEffect(() => {
-    if (firstRun.current) {
-      firstRun.current = false;
-      return;
-    }
-    const t = setTimeout(() => setCaptionIndex(index), CAPTION_LAG_MS);
-    return () => clearTimeout(t);
-  }, [index]);
 
   // afterwards, the trailer plays — once the intro has fully resolved
   // (re-armed on every replay: `run` resets the whole hero timeline)
@@ -164,55 +148,27 @@ export function Montage({
     void a.play().catch(() => {});
   };
 
-  const current = slides[captionIndex];
-  const caption =
-    showTrailer && trailer
-      ? { title: trailer.title, proof: `${trailer.proof} · Trailer` }
-      : { title: current.title, proof: current.proof };
-
   return (
     <section
       ref={heroRef}
       className="relative overflow-hidden"
       style={{ background: "linear-gradient(178deg, #001528 0%, #001d33 60%, #003b59 130%)" }}
     >
-      <h1 className="sr-only">
-        MAJOR CONTENT — TV | FILM | BOOKS. Bridging content and culture with
-        global icons, premium programming, worldwide bestsellers — resonating
-        with the collective majority.
-      </h1>
-
-      <div className="relative h-[68svh] min-h-[480px] w-full sm:h-[84svh]">
-        {/* layer 1 — the ambient reel */}
+      <div className="relative h-[100svh] min-h-[560px] w-full">
+        {/* layer 1 — one still. The ten-slide carousel is gone: nine of its
+            slides never rendered, and it put a 2014 book jacket full-bleed
+            under the brand reveal, which is the opposite of "not loud and
+            proud" about the old catalogue. */}
         <div aria-hidden="true" className="absolute inset-0">
-          {slides.map((s, i) => {
-            const active = i === index;
-            return (
-              <div
-                key={s.slug}
-                className={`absolute inset-0 transition-[opacity,filter,transform] duration-[1600ms] ease-out ${
-                  active
-                    ? "z-10 scale-100 opacity-100 [filter:blur(0px)]"
-                    : "scale-[1.045] opacity-0 [filter:blur(18px)]"
-                }`}
-              >
-                <Image
-                  src={`/projects/${s.slug}.jpg`}
-                  alt=""
-                  width={s.width}
-                  height={s.height}
-                  priority={i < 2}
-                  quality={90}
-                  sizes="100vw"
-                  className={`${
-                    s.fit === "cover"
-                      ? "h-full w-full object-cover"
-                      : "h-full w-full object-contain py-[3svh]"
-                  }${active ? " hero-drift" : ""}`}
-                />
-              </div>
-            );
-          })}
+          <Image
+            src={`/projects/${still.slug}.jpg`}
+            alt=""
+            fill
+            priority
+            quality={90}
+            sizes="100vw"
+            className="hero-drift h-full w-full object-cover"
+          />
         </div>
 
         {/* layer 1b — the trailer, once the intro has resolved */}
@@ -223,13 +179,24 @@ export function Montage({
             inert
           >
             <iframe
-              src={`https://www.youtube-nocookie.com/embed/${trailer.youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.youtubeId}&playsinline=1&rel=0&disablekb=1`}
+              src={`https://www.youtube-nocookie.com/embed/${trailer.youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.youtubeId}&playsinline=1&rel=0&disablekb=1&start=6`}
               title=""
               allow="autoplay; encrypted-media"
               className="pointer-events-none absolute left-1/2 top-1/2 aspect-video min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 border-0"
             />
           </div>
         )}
+
+        {/* a permanent floor: gives the primer ground to stand on and
+            suppresses the poster's own baked-in title art */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[19]"
+          style={{
+            background:
+              "linear-gradient(to top, rgba(0,21,40,.92) 0%, rgba(0,21,40,.72) 22%, rgba(0,21,40,0) 46%)",
+          }}
+        />
 
         {/* film grain over the imagery, under the scrims and type */}
         <div
@@ -259,7 +226,7 @@ export function Montage({
             <div
               key={s.slug}
               style={{ "--i": i } as React.CSSProperties}
-              className="intro-flash absolute inset-0 flex items-center justify-center opacity-0"
+              className="intro-flash absolute inset-0 flex items-start justify-center pt-[8svh] opacity-0"
             >
               <Image
                 src={`/projects/${s.slug}.jpg`}
@@ -269,7 +236,7 @@ export function Montage({
                 quality={90}
                 sizes="45vh"
                 loading="eager"
-                className="h-[64%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
+                className="h-[46%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
               />
             </div>
           ))}
@@ -285,7 +252,7 @@ export function Montage({
             <p
               key={line}
               style={{ "--i": i } as React.CSSProperties}
-              className="intro-line absolute inset-0 flex items-center justify-center px-6 text-center font-light text-intro text-paper opacity-0 [text-shadow:0_2px_22px_rgba(0,18,35,0.95)] [text-wrap:balance]"
+              className="intro-line absolute inset-0 flex items-end justify-center px-6 pb-[16svh] text-center font-light text-intro text-paper opacity-0 [text-shadow:0_2px_22px_rgba(0,18,35,0.95)] [text-wrap:balance]"
             >
               {line}
             </p>
@@ -295,7 +262,7 @@ export function Montage({
         {/* layer 3 — the logo resolves and holds */}
         <div
           key={`logo-${run}`}
-          className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center"
+          className="pointer-events-none absolute inset-0 z-30 flex items-start justify-center pt-[22svh]"
         >
           <Lockup
             animate
@@ -304,19 +271,47 @@ export function Montage({
           />
         </div>
 
-        {/* now playing — ambient label, arrives after the intro */}
-        <p
-          key={`caption-${run}`}
+        {/* THE PRIMER — the page's actual argument, and the fix for the
+            client's "a reference point for folks that didn't get the info
+            search". Real DOM text from the first byte: crawlers, screen
+            readers, reduced-motion visitors and anyone who scrolls at second
+            one all get it. Only its opacity is animated, and it never leaves. */}
+        <div className="hero-primer absolute bottom-[13svh] left-5 z-40 max-w-[680px] pr-5 sm:left-8">
+          <p className="meta-caps text-faint">{primer.eyebrow}</p>
+          <h1 className="mt-3 text-lede font-light text-paper [text-shadow:0_2px_18px_rgba(0,18,35,0.75)]">
+            {primer.statement}
+          </h1>
+          <p className="mt-5 text-strip text-mid">
+            <span className="sm:hidden">
+              {primer.proofsShort.map((t, i) => (
+                <span key={t}>
+                  {i > 0 && <span className="text-signal"> · </span>}
+                  {t}
+                </span>
+              ))}
+            </span>
+            <span className="hidden sm:inline">
+              {primer.proofs.map((t, i) => (
+                <span key={t}>
+                  {i > 0 && <span className="text-signal"> · </span>}
+                  {t}
+                </span>
+              ))}
+            </span>
+          </p>
+        </div>
+
+        {/* a real scroll cue, since the hero now owns the whole viewport */}
+        <div
           aria-hidden="true"
-          className="hero-caption meta-caps absolute bottom-5 left-5 z-40 max-w-[80%] text-paper [text-shadow:0_1px_8px_rgba(0,18,35,0.9)] sm:left-8"
+          className="hero-primer absolute bottom-6 left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2"
         >
-          {caption.title}
-          <span className="mx-2 text-paper/50">·</span>
-          <span className="text-silver">{caption.proof}</span>
-        </p>
+          <span className="meta-caps text-faint">Scroll</span>
+          <span className="block h-7 w-px bg-line" />
+        </div>
 
         {/* controls — sound-on appears only when the intro clip exists */}
-        <div className="absolute right-5 top-5 z-40 flex gap-2 sm:right-8">
+        <div className="absolute bottom-6 right-6 z-40 flex gap-2">
           {showTrailer && (
             <button
               type="button"

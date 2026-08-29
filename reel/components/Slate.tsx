@@ -137,7 +137,12 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
 
   // ---- capability gate, read once (matches how Montage.tsx asks) ----
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const reveal = (el: HTMLElement) => el.setAttribute("data-reveal", "in");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // reduced motion: show everything immediately, no transition
+      panels.current.forEach((el) => el.removeAttribute("data-reveal"));
+      return;
+    }
     const c = (
       navigator as unknown as {
         connection?: { saveData?: boolean; effectiveType?: string };
@@ -154,10 +159,14 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
   // reduced-motion or no-JS visitor gets the finished composition and we
   // only ever hide a tile we are certain we can reveal again.
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const reveal = (el: HTMLElement) => el.setAttribute("data-reveal", "in");
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      // reduced motion: show everything immediately, no transition
+      panels.current.forEach((el) => el.removeAttribute("data-reveal"));
+      return;
+    }
     const els = [...panels.current.values()];
     if (!els.length) return;
-    els.forEach((el) => el.setAttribute("data-reveal", "pending"));
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
@@ -166,7 +175,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
           // tile's intersection entirely and it would stay hidden forever
           const passed = e.boundingClientRect.bottom < 0;
           if (!e.isIntersecting && !passed) continue;
-          (e.target as HTMLElement).setAttribute("data-reveal", "in");
+          reveal(e.target as HTMLElement);
           io.unobserve(e.target);
         }
       },
@@ -186,7 +195,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       els.forEach((el) => {
         if (el.getAttribute("data-reveal") !== "pending") return;
         if (el.getBoundingClientRect().bottom < 0) {
-          el.setAttribute("data-reveal", "in");
+          reveal(el);
           io.unobserve(el);
         } else pending++;
       });
@@ -481,13 +490,23 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
           const isActive = active?.slug === s.slug;
           const still = !s.youtubeId;
           const dur = durations.current.get(s.slug);
-          const fitCover = Math.abs(s.width / s.height - 16 / 9) < 0.02;
+          // every frame fills — pillarboxed key art made the wall look ragged.
+          // Taller sources get their focal band pulled up instead.
+          const pos =
+            Math.abs(s.width / s.height - 16 / 9) < 0.02
+              ? undefined
+              : s.slug === "time-of-essence"
+                ? "50% 20%"
+                : "50% 45%";
 
           return (
             <article
               key={s.slug}
               className={`slate-panel${still ? " slate-panel--still" : ""}`}
               aria-labelledby={`slate-${s.slug}`}
+              /* rendered hidden by the SERVER: setting it after paint meant a
+                 visitor watched the first tile fade away from visible */
+              data-reveal="pending"
               ref={(el) => {
                 if (el) panels.current.set(s.slug, el);
                 else panels.current.delete(s.slug);
@@ -497,7 +516,10 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
                 <i />
               </div>
 
-              <h3 id={`slate-${s.slug}`} className="slate-title display-heavy slate-beat slate-beat-1">
+              <h3
+                id={`slate-${s.slug}`}
+                className="slate-title display-heavy slate-beat slate-beat-1"
+              >
                 {s.title}
               </h3>
 
@@ -538,8 +560,9 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
                   alt={`${s.title}${s.credit ? ` — ${s.credit}` : ""}`}
                   fill
                   quality={82}
-                  sizes="(min-width:1376px) 700px, (min-width:1024px) 52vw, (min-width:640px) 46vw, 100vw"
-                  className={`slate-art ${fitCover ? "object-cover" : "object-contain"} ${
+                  sizes="(min-width:1024px) 46vw, (min-width:640px) 46vw, 100vw"
+                  style={pos ? { objectPosition: pos } : undefined}
+                  className={`slate-art object-cover ${
                     still ? "slate-art--push" : "slate-art--settle"
                   }`}
                 />
@@ -548,18 +571,9 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
                   <i />
                   <i />
                 </div>
-              </div>
 
-              <div className="slate-stub">
-                {s.credit && (
-                  <p className="slate-credit text-cap slate-beat slate-beat-2">
-                    {s.credit}
-                  </p>
-                )}
-                <p className="slate-proof meta-caps slate-beat slate-beat-3">
-                  <Proof proof={s.proof} />
-                </p>
-
+                {/* the transport lives INSIDE the frame now — as a strip of
+                    stub below each tile it cost four times ~137px of page */}
                 <div className="slate-transport slate-beat slate-beat-4">
                   <p
                     className="slate-state meta-caps"
@@ -574,17 +588,6 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
                         ? `Trailer · ${clock(dur)}`
                         : "Trailer · Muted"}
                   </p>
-
-                  <div className="slate-rail" aria-hidden="true">
-                    {!still && (
-                      <i
-                        ref={(el) => {
-                          if (el) fills.current.set(s.slug, el);
-                          else fills.current.delete(s.slug);
-                        }}
-                      />
-                    )}
-                  </div>
 
                   <div className="slate-control">
                     {!still && st === "live" && !active?.manual && (
@@ -615,19 +618,36 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
                       </button>
                     )}
                   </div>
-                </div>
 
-                {s.trailer && (
+                  <div className="slate-rail" aria-hidden="true">
+                    {!still && (
+                      <i
+                        ref={(el) => {
+                          if (el) fills.current.set(s.slug, el);
+                          else fills.current.delete(s.slug);
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* one line of metadata, not five */}
+              <div className="slate-stub">
+                <p className="slate-credit text-cap slate-beat slate-beat-2">
+                  {s.credit && <>{s.credit} · </>}
+                  <Proof proof={s.proof} />
+                </p>
+
+                {/* only the tile with nothing to play sends you elsewhere */}
+                {still && s.trailer && (
                   <a
                     className="slate-out meta-caps slate-beat slate-beat-5"
                     href={s.trailer}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    {still
-                      ? "Watch on Facebook"
-                      : "Watch the trailer on YouTube"}{" "}
-                    <span aria-hidden="true">↗</span>
+                    Watch on Facebook <span aria-hidden="true">↗</span>
                   </a>
                 )}
               </div>

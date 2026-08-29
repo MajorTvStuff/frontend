@@ -53,6 +53,9 @@ export default function RootLayout({
   return (
     <html lang="en" className={grotesk.variable}>
       <body>
+        <noscript>
+          <style>{`[data-reveal="pending"]{opacity:1!important;transform:none!important}`}</style>
+        </noscript>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
@@ -61,7 +64,7 @@ export default function RootLayout({
         {/* beta watermark — the one div to delete at launch */}
         <div
           aria-hidden="true"
-          className="meta-caps pointer-events-none fixed bottom-3 right-3 z-50 border border-line bg-band/90 px-2.5 py-1.5 !text-[0.6rem] text-silver print:hidden"
+          className="meta-caps pointer-events-none fixed bottom-3 left-3 z-50 border border-line bg-band/90 px-2.5 py-1.5 !text-[0.6rem] text-silver print:hidden"
         >
           Beta MVP
         </div>
