@@ -98,6 +98,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
   const activeRef = useRef<{ slug: string; manual: boolean } | null>(null);
   const prevActive = useRef<{ slug: string; manual: boolean } | null>(null);
   const playable = useRef<string[]>([]);
+  const panels = useRef(new Map<string, HTMLElement>());
   const dwellTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const setState = useCallback((slug: string, s: State) => {
@@ -146,6 +147,66 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
     if (c?.effectiveType === "2g" || c?.effectiveType === "slow-2g") return;
     setCanAuto(true);
   }, []);
+
+  // ---- the reveal: fires when a tile makes contact with the screen ----
+  // Not tied to scroll position: it plays once, at its own speed, and does
+  // not unwind when you scroll back up. The resting state is visible, so a
+  // reduced-motion or no-JS visitor gets the finished composition and we
+  // only ever hide a tile we are certain we can reveal again.
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const els = [...panels.current.values()];
+    if (!els.length) return;
+    els.forEach((el) => el.setAttribute("data-reveal", "pending"));
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          // reveal on contact — or if the tile is already ABOVE the fold,
+          // because a jump (anchor link, End key, a hard fling) can skip a
+          // tile's intersection entirely and it would stay hidden forever
+          const passed = e.boundingClientRect.bottom < 0;
+          if (!e.isIntersecting && !passed) continue;
+          (e.target as HTMLElement).setAttribute("data-reveal", "in");
+          io.unobserve(e.target);
+        }
+      },
+      // a little inside the fold, so it fires on real contact rather than on
+      // the first hairline of the tile
+      { rootMargin: "0px 0px -12% 0px", threshold: 0.01 },
+    );
+    els.forEach((el) => io.observe(el));
+
+    // A jump straight down the page (End key, anchor link, a hard fling)
+    // takes a tile from below the fold to above it without ever crossing a
+    // threshold, so the observer never fires and the tile would stay hidden
+    // for good. Sweep any still-pending tile that is now behind us.
+    let frame = 0;
+    const sweep = () => {
+      let pending = 0;
+      els.forEach((el) => {
+        if (el.getAttribute("data-reveal") !== "pending") return;
+        if (el.getBoundingClientRect().bottom < 0) {
+          el.setAttribute("data-reveal", "in");
+          io.unobserve(el);
+        } else pending++;
+      });
+      if (!pending) window.removeEventListener("scroll", onScroll);
+    };
+    const onScroll = () => {
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        sweep();
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    return () => {
+      io.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, [shows]);
 
   // ---- observer A: approach -> warm the connection, once, then stop ----
   useEffect(() => {
@@ -427,6 +488,10 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
               key={s.slug}
               className={`slate-panel${still ? " slate-panel--still" : ""}`}
               aria-labelledby={`slate-${s.slug}`}
+              ref={(el) => {
+                if (el) panels.current.set(s.slug, el);
+                else panels.current.delete(s.slug);
+              }}
             >
               <div className="slate-rule" aria-hidden="true">
                 <i />

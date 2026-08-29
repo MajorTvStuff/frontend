@@ -56,6 +56,8 @@
   /* the reveal: nearly linear so the rise tracks the scroll the whole way
      up, with just enough ease at the end to land rather than stop */
   --ease-reveal: cubic-bezier(0.4, 0.4, 0.6, 1);
+  /* strong ease-out: entrances start fast so they feel responsive */
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
 
   --radius-*: initial;
   --radius-none: 0;
@@ -140,7 +142,10 @@
 }
 
 /* ------------------------------------------------------------------ *
- *  THE INTRO — RG's word-flow sequence at reel pace, over the live
+ *  THE INTRO — RG's word-flow sequence, cut FAST (he asked for a sick
+ *  quick hero): the whole sequence lands in ~4.9s instead of 10.6s. Same
+ *  six lines, same covers, same logo build — half the running time, so
+ *  the cuts carry the energy instead of the dwell. Over the live
  *  carousel (whose blur/fade transitions live in the Montage
  *  component). Six lines breathe in and out on a heavy scrim, "That's"
  *  resolves into the logo build, the scrim relaxes, the caption
@@ -149,10 +154,10 @@
  * ------------------------------------------------------------------ */
 
 @media (prefers-reduced-motion: no-preference) {
-  /* lines: ~1.15s cadence, done ~8.2s */
+  /* lines: 0.58s cadence, done ~4.0s — fast cuts, not a slow read */
   .intro-line {
-    animation: intro-line 1.55s var(--ease-weighted) both;
-    animation-delay: calc(var(--i) * 1.15s + 0.45s);
+    animation: intro-line 0.85s var(--ease-weighted) both;
+    animation-delay: calc(var(--i) * 0.58s + 0.25s);
   }
   @keyframes intro-line {
     0% { opacity: 0; transform: translateY(0.5rem); }
@@ -163,7 +168,7 @@
 
   /* heavy scrim holds through the word flow, then lets the reel through */
   .intro-scrim {
-    animation: intro-scrim 10.6s linear both;
+    animation: intro-scrim 4.9s linear both;
   }
   @keyframes intro-scrim {
     0% { opacity: 1; }
@@ -173,21 +178,21 @@
 
   /* the caption waits for the intro to resolve */
   .hero-caption {
-    animation: logo-fade 0.9s var(--ease-weighted) 10.4s both;
+    animation: logo-fade 0.6s var(--ease-weighted) 4.7s both;
   }
 
   /* logo build resolves out of "That's" (~8s) */
   .logo-wings {
-    animation: logo-fade 0.6s var(--ease-weighted) 8s both;
+    animation: logo-fade 0.35s var(--ease-weighted) 3.5s both;
   }
   .logo-letters {
-    animation: logo-letters 1.5s var(--ease-weighted) 8.5s both;
+    animation: logo-letters 0.85s var(--ease-weighted) 3.75s both;
   }
   .logo-shift {
-    animation: logo-shift 1.5s var(--ease-weighted) 8.5s both;
+    animation: logo-shift 0.85s var(--ease-weighted) 3.75s both;
   }
   .logo-descriptor {
-    animation: logo-descriptor 0.8s var(--ease-weighted) 9.8s both;
+    animation: logo-descriptor 0.45s var(--ease-weighted) 4.4s both;
   }
 
   @keyframes logo-fade {
@@ -214,8 +219,8 @@
      while "Worldwide Bestsellers" reads (4.0s–7.6s), gone before the logo.
      Alternating tilt gives the cuts editorial energy. */
   .intro-flash {
-    animation: intro-flash 0.62s var(--ease-weighted) both;
-    animation-delay: calc(var(--i) * 0.6s + 4s);
+    animation: intro-flash 0.4s var(--ease-weighted) both;
+    animation-delay: calc(var(--i) * 0.36s + 1.5s);
   }
   .intro-flash:nth-child(odd) img {
     rotate: -1.4deg;
@@ -232,7 +237,7 @@
 
   /* the lockup lands with weight, on the same 8s beat as its build */
   .logo-settle {
-    animation: logo-settle 1.6s var(--ease-weighted) 8s both;
+    animation: logo-settle 0.9s var(--ease-weighted) 3.5s both;
   }
   @keyframes logo-settle {
     from { transform: scale(1.06); }
@@ -567,130 +572,88 @@
   transform: scale(0.99);
 }
 
-/* ---------- the slate's choreography (scroll-driven, optional) ---------- */
+/* ---------- the slate reveal — TRIGGERED, not scrubbed ---------- */
+/*
+ * Each tile plays its reveal ONCE when it makes contact with the screen,
+ * at its own speed. It is not tied to scroll position, so it does not run
+ * backwards when you scroll up, does not race when you flick, and — unlike
+ * a scroll timeline — it works in Firefox and Safari too.
+ *
+ * The resting state is VISIBLE. Only JS, and only when motion is allowed,
+ * marks a tile "pending" (hidden) before revealing it. So no-JS and
+ * reduced-motion visitors simply get the finished composition.
+ */
 
+.slate-panel[data-reveal] {
+  transition: opacity 620ms var(--ease-out-strong),
+    transform 620ms var(--ease-out-strong);
+}
+.slate-panel[data-reveal="pending"] {
+  opacity: 0;
+  transform: translateY(3rem);
+}
+.slate-panel[data-reveal="in"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* the rule draws itself as the tile lands */
+.slate-panel[data-reveal] .slate-rule i {
+  transition: transform 620ms var(--ease-matte) 60ms;
+}
+.slate-panel[data-reveal="pending"] .slate-rule i {
+  transform: scaleX(0);
+}
+
+/* the gate opens a beat later */
+.slate-panel[data-reveal] .slate-gate i {
+  transition: transform 720ms var(--ease-matte) 140ms;
+}
+.slate-panel[data-reveal="pending"] .slate-gate i {
+  transform: scaleY(1);
+}
+
+/* and the key art settles out of a slight push-in */
+.slate-panel[data-reveal] .slate-art--settle {
+  transition: transform 900ms var(--ease-matte) 100ms;
+}
+.slate-panel[data-reveal="pending"] .slate-art--settle {
+  transform: scale(1.05);
+}
+
+/* the lines inside cascade in behind it — 70ms apart, short enough to read
+   as one gesture rather than a queue */
+.slate-panel[data-reveal] .slate-beat {
+  transition: opacity 520ms var(--ease-out-strong),
+    transform 520ms var(--ease-out-strong);
+}
+.slate-panel[data-reveal="pending"] .slate-beat {
+  opacity: 0;
+  transform: translateY(1.25rem);
+}
+.slate-panel[data-reveal] .slate-beat-1 { transition-delay: 120ms; }
+.slate-panel[data-reveal] .slate-beat-2 { transition-delay: 190ms; }
+.slate-panel[data-reveal] .slate-beat-3 { transition-delay: 260ms; }
+.slate-panel[data-reveal] .slate-beat-4 { transition-delay: 330ms; }
+.slate-panel[data-reveal] .slate-beat-5 { transition-delay: 400ms; }
+
+/* the one tile that never dissolves keeps drifting under the scroll — this
+   one IS continuous, so it stays on a scroll timeline */
 @media (prefers-reduced-motion: no-preference) {
   @supports (animation-timeline: view()) {
-    /* one named timeline per tile; every beat inside reads it, so a 15px
-       state line is never given a 15px entry range of its own */
     .slate-panel {
       view-timeline-name: --panel;
       view-timeline-axis: block;
-      /* Two animations, because they want different curves. The FADE is
-         linear so it tracks the scroll one-to-one and is genuinely legible
-         as a fade — on the eased curve it reached two thirds opacity within
-         38px of the tile peeking in, which reads as a snap, not a fade.
-         The rise keeps the weighted curve so it still settles. */
-      animation: slate-fade linear both, slate-rise var(--ease-reveal) both;
-      animation-timeline: --panel, --panel;
-      /* Starts at 22%, not 0%: from the first touched pixel every tile on
-         screen is mid-fade at once, which reads as the whole wall arriving
-         together. Holding it back means a tile stays dark until it is
-         properly entering, then takes its own turn. */
-      animation-range: entry 22% entry 64%, entry 22% entry 64%;
     }
-
-    /* the two tiles of a row would otherwise fade in unison; the right-hand
-       one waits until the left has landed */
-    .slate-panel:nth-child(2),
-    .slate-panel:nth-child(4) {
-      animation-range: entry 40% entry 82%, entry 40% entry 82%;
-    }
-
-    .slate-rule i,
-    .slate-gate i,
-    .slate-art--settle,
-    .slate-beat {
-      animation-timeline: --panel;
-      animation-fill-mode: both;
-    }
-
-    .slate-rule i {
-      animation-name: slate-draw;
-      animation-range: entry 4% entry 34%;
-      animation-timing-function: var(--ease-matte);
-    }
-    .slate-gate i {
-      animation-name: slate-gate;
-      animation-range: entry 10% entry 58%;
-      animation-timing-function: var(--ease-matte);
-    }
-    .slate-art--settle {
-      animation-name: slate-settle;
-      animation-range: entry 10% entry 64%;
-      animation-timing-function: var(--ease-matte);
-    }
-
-    /* the cascade: each line of the tile arrives a beat after the last, so
-       reading down a tile and scrolling into it are the same motion */
-    .slate-beat {
-      animation-name: slate-pop;
-      animation-timing-function: var(--ease-reveal);
-    }
-    .slate-beat-1 {
-      animation-range: entry 8% entry 46%;
-    }
-    .slate-beat-2 {
-      animation-range: entry 22% entry 60%;
-    }
-    .slate-beat-3 {
-      animation-range: entry 28% entry 66%;
-    }
-    .slate-beat-4 {
-      animation-range: entry 34% entry 72%;
-    }
-    .slate-beat-5 {
-      animation-range: entry 40% entry 78%;
-    }
-
-    /* the one tile that never dissolves keeps moving under the scroll */
     .slate-art--push {
       animation: slate-push linear both;
       animation-timeline: --panel;
       animation-range: cover 0% cover 100%;
     }
   }
-
-  /* the tile arrives as a whole... */
-  @keyframes slate-fade {
-    from {
-      opacity: 0;
-    }
-  }
-  @keyframes slate-rise {
-    from {
-      transform: translateY(6rem);
-    }
-  }
-  /* ...and each line inside pops in after it, on the overshoot curve */
-  @keyframes slate-pop {
-    from {
-      opacity: 0;
-      transform: translateY(2.5rem);
-    }
-  }
-  @keyframes slate-draw {
-    from {
-      transform: scaleX(0);
-    }
-  }
-  @keyframes slate-gate {
-    from {
-      transform: scaleY(1);
-    }
-  }
-  @keyframes slate-settle {
-    from {
-      transform: scale(1.06);
-    }
-  }
   @keyframes slate-push {
-    from {
-      transform: scale(1);
-    }
-    to {
-      transform: scale(1.045);
-    }
+    from { transform: scale(1); }
+    to { transform: scale(1.045); }
   }
 }
 

@@ -21,7 +21,8 @@ export type Trailer = {
 };
 
 /**
- * The hero, in four layers:
+ * The hero, in four layers, cut fast — the whole intro lands in ~4.9s.
+ *
  * 1. An ambient carousel of the slate — no controls, it just plays.
  *    Slides melt into each other (blur + fade + zoom settle).
  * 2. RG's word-flow sequence over a heavy scrim, with book covers
@@ -35,7 +36,7 @@ export type Trailer = {
  */
 const HOLD_MS = 5500;
 const CAPTION_LAG_MS = 900;
-const TRAILER_AT_MS = 10600;
+const TRAILER_AT_MS = 4900;
 
 /* RG's intro audio (the Oprah clip). Drop the file at either path and the
    "Replay with sound" control appears on its own — no code change. Browsers
