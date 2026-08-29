@@ -569,11 +569,11 @@
     .slate-panel {
       view-timeline-name: --panel;
       view-timeline-axis: block;
-      animation: slate-pop var(--ease-weighted) both;
+      animation: slate-lift var(--ease-matte) both;
       animation-timeline: --panel;
-      /* lands well before the cue band arms the player at ~53%, so a
-         tile is never mid-pop when its trailer paints */
-      animation-range: entry 8% entry 52%;
+      /* runs from the first sliver of the tile until it is comfortably in
+         view, so the whole arrival is something you watch happen */
+      animation-range: entry 0% entry 60%;
     }
 
     .slate-rule i,
@@ -586,35 +586,40 @@
 
     .slate-rule i {
       animation-name: slate-draw;
-      animation-range: entry 4% entry 26%;
+      animation-range: entry 4% entry 34%;
       animation-timing-function: var(--ease-matte);
     }
     .slate-gate i {
       animation-name: slate-gate;
-      animation-range: entry 10% entry 48%;
+      animation-range: entry 10% entry 58%;
       animation-timing-function: var(--ease-matte);
     }
     .slate-art--settle {
       animation-name: slate-settle;
-      animation-range: entry 10% entry 52%;
+      animation-range: entry 10% entry 64%;
       animation-timing-function: var(--ease-matte);
     }
 
+    /* the cascade: each line of the tile arrives a beat after the last, so
+       reading down a tile and scrolling into it are the same motion */
     .slate-beat {
-      animation-name: scroll-rise;
+      animation-name: slate-pop;
       animation-timing-function: var(--ease-weighted);
     }
+    .slate-beat-1 {
+      animation-range: entry 8% entry 46%;
+    }
     .slate-beat-2 {
-      animation-range: entry 20% entry 52%;
+      animation-range: entry 22% entry 60%;
     }
     .slate-beat-3 {
-      animation-range: entry 24% entry 56%;
+      animation-range: entry 28% entry 66%;
     }
     .slate-beat-4 {
-      animation-range: entry 28% entry 60%;
+      animation-range: entry 34% entry 72%;
     }
     .slate-beat-5 {
-      animation-range: entry 32% entry 64%;
+      animation-range: entry 40% entry 78%;
     }
 
     /* the one tile that never dissolves keeps moving under the scroll */
@@ -625,11 +630,18 @@
     }
   }
 
-  /* the pop: overshoot ease against a scale is what makes it land */
+  /* the tile arrives as a whole... */
+  @keyframes slate-lift {
+    from {
+      opacity: 0;
+      transform: translateY(3.5rem) scale(0.94);
+    }
+  }
+  /* ...and each line inside pops in after it, on the overshoot curve */
   @keyframes slate-pop {
     from {
       opacity: 0;
-      transform: translateY(4.5rem) scale(0.86);
+      transform: translateY(1.5rem);
     }
   }
   @keyframes slate-draw {

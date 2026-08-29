@@ -90,6 +90,9 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
   const durations = useRef(new Map<string, number>());
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const retiring = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // the slug whose player has been retired: its iframe lives on ~820ms while
+  // the poster comes back, and its ticks must not rewrite a settled panel
+  const retired = useRef<string | null>(null);
   // the scatter puts two tiles side by side, so more than one can sit in the
   // cue band at once. These make "one at a time" a queue, not a race.
   const activeRef = useRef<{ slug: string; manual: boolean } | null>(null);
@@ -119,6 +122,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       renderer process and stops the stream; pausing does neither. */
   const retire = useCallback(
     (slug: string, next: State = "played") => {
+      retired.current = slug;
       setState(slug, next);
       if (retiring.current) clearTimeout(retiring.current);
       retiring.current = setTimeout(() => {
@@ -201,6 +205,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       // re-check: the dwell is exactly the window in which things change
       if (activeRef.current || played.current.has(pick)) return;
       played.current.add(pick);
+      retired.current = null;
       activeRef.current = { slug: pick, manual: false };
       claimPlayer("slate");
       setActive({ slug: pick, manual: false });
@@ -274,13 +279,14 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
     if (!el) return;
     const io = new IntersectionObserver(
       ([e]) => {
-        if (!e.isIntersecting) retire(slug);
+        // Keep playing while a decent part of the tile is still on screen.
+        // Retiring on cue-band exit (the middle 40%) cut every trailer off
+        // after about a second; retiring only on FULL exit starved the tiles
+        // below. A visibility floor gives a long watch and still hands over
+        // in time for the next tile's moment.
+        if (e.intersectionRatio < 0.35) retire(slug);
       },
-      // retire on leaving the CUE BAND, not the viewport: a trailer runs for
-      // minutes and a reader passes the wall in seconds, so holding the
-      // player until full exit means the tiles below never get their moment.
-      // Each tile plays while it owns the middle of the screen, then hands on.
-      { threshold: 0, rootMargin: "-30% 0px -30% 0px" },
+      { threshold: [0, 0.35, 0.6] },
     );
     io.observe(el);
     const onHide = () => {
@@ -299,6 +305,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
     const slug = active.slug;
     let started = false;
     let extended = false;
+    let done = false;
     // YouTube reports playerState only when it CHANGES; the ~4/sec ticks
     // that follow carry currentTime alone. So the state has to be latched —
     // testing it against the same message that carries the timecode means
@@ -325,6 +332,9 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
         return;
       }
       if (d?.event !== "infoDelivery" || !d.info) return;
+      // retired: the iframe lives on ~820ms while the poster returns, but its
+      // ticks must not rewrite "Playing ..." over a panel showing REPLAY
+      if (done || retired.current === slug) return;
       const { playerState, currentTime, duration } = d.info;
 
       // any signal at all means slow, not blocked
@@ -358,9 +368,15 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
         if (fill)
           fill.style.transform = `scaleX(${Math.min(1, currentTime / dur)})`;
         // pre-empt the end screen: rel=0 still allows same-channel cards
-        if (dur - currentTime <= 0.4) retire(slug);
+        if (dur - currentTime <= 0.4) {
+          done = true;
+          retire(slug);
+        }
       }
-      if (playerState === 0) retire(slug);
+      if (playerState === 0) {
+        done = true;
+        retire(slug);
+      }
     };
 
     window.addEventListener("message", onMessage);
@@ -386,6 +402,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       dwellTimer.current = null;
     }
     setState(slug, "art");
+    retired.current = null;
     activeRef.current = { slug, manual: true };
     claimPlayer("slate");
     setActive({ slug, manual: true });
@@ -415,7 +432,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
                 <i />
               </div>
 
-              <h3 id={`slate-${s.slug}`} className="slate-title display-heavy">
+              <h3 id={`slate-${s.slug}`} className="slate-title display-heavy slate-beat slate-beat-1">
                 {s.title}
               </h3>
 
