@@ -3,6 +3,7 @@
 import { useRef } from "react";
 import Image from "next/image";
 import { useReveal } from "@/lib/reveal";
+import { usePointerSpring } from "@/lib/pointer";
 import type { Project } from "@/lib/content";
 
 export type Cover = Project & { width: number; height: number };
@@ -33,19 +34,27 @@ function Jacket({
 }: {
   p: Cover;
   sizes: string;
+  /** the reveal class — it rides the WRAPPER, because the tilt owns the
+      image's transform and two rules on one property cancel each other */
   className: string;
   caption?: boolean;
   index?: number;
 }) {
+  const ref = useRef<HTMLDivElement | null>(null);
+  usePointerSpring(ref);
   return (
-    <div style={index === undefined ? undefined : ({ "--d": index } as React.CSSProperties)}>
+    <div
+      ref={ref}
+      className={`tilt-cover ${className}`}
+      style={index === undefined ? undefined : ({ "--d": index } as React.CSSProperties)}
+    >
       <Image
         src={`/projects/${p.slug}.jpg`}
         alt={`${p.title}${p.credit ? ` — ${p.credit}` : ""}`}
         width={p.width}
         height={p.height}
         sizes={sizes}
-        className={className}
+        className={p.medium === "book" && caption ? "cover-lift h-auto w-full" : "cover h-auto w-full"}
       />
       {caption && p.credit && (
         <p className="meta-caps mt-3 text-mid">{p.credit}</p>
@@ -71,6 +80,8 @@ export function Shelf({
 }) {
   const ref = useRef<HTMLElement | null>(null);
   useReveal(ref);
+  const leadRef = useRef<HTMLDivElement | null>(null);
+  usePointerSpring(leadRef);
 
   return (
     <section
@@ -80,7 +91,7 @@ export function Shelf({
     >
       {/* ————— the claim, beside the book that proves it ————— */}
       <div className="grid items-center gap-10 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14">
-        <div className="reveal w-52 lg:w-full">
+        <div ref={leadRef} className="reveal tilt-cover w-52 lg:w-full">
           <Image
             src={`/projects/${lead.slug}.jpg`}
             alt={`${lead.title} — ${lead.credit}`}
@@ -120,7 +131,7 @@ export function Shelf({
               p={p}
               index={i}
               caption
-              className="cover-cut cover-lift h-auto w-full"
+              className="cover-cut"
               sizes="(min-width: 1024px) 226px, (min-width: 640px) 18vw, 30vw"
             />
           ))}
@@ -138,7 +149,7 @@ export function Shelf({
               key={p.slug}
               p={p}
               index={i}
-              className="reveal-d cover h-auto w-full"
+              className="reveal-d"
               sizes="(min-width: 1024px) 136px, (min-width: 640px) 15vw, 22vw"
             />
           ))}

@@ -3,7 +3,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Lockup } from "@/components/Lockup";
-import { usePointerParallax } from "@/lib/pointer";
 
 export type Cover = {
   slug: string;
@@ -65,7 +64,6 @@ export function Hero({
   const [audioReady, setAudioReady] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const heroRef = useRef<HTMLElement | null>(null);
-  usePointerParallax(heroRef);
 
   // probe for the clip — the control exists only if a playable file is there
   useEffect(() => {
@@ -110,7 +108,7 @@ export function Hero({
         {/* the still. One image, not a ten-slide carousel: nine of those
             never rendered, and it put a decade-old book jacket full-bleed
             under the brand reveal. */}
-        <div aria-hidden="true" className="plane-wrap absolute inset-0">
+        <div aria-hidden="true" className="absolute inset-0">
           <Image
             key={`still-${run}`}
             src={`/projects/${still.slug}.jpg`}
@@ -172,7 +170,7 @@ export function Hero({
                 quality={90}
                 sizes="45vh"
                 loading="eager"
-                className="plane-fore h-[42%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
+                className="h-[42%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
               />
             </div>
           ))}
@@ -204,7 +202,7 @@ export function Hero({
           <Lockup
             animate
             bright
-            className="logo-settle plane-mid w-[min(28rem,66vw)] [filter:drop-shadow(0_2px_22px_rgba(0,18,35,0.95))_drop-shadow(0_0_6px_rgba(0,18,35,0.7))]"
+            className="logo-settle w-[min(28rem,66vw)] [filter:drop-shadow(0_2px_22px_rgba(0,18,35,0.95))_drop-shadow(0_0_6px_rgba(0,18,35,0.7))]"
           />
         </div>
 

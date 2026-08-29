@@ -640,30 +640,40 @@
 
 /* ---------- pointer physics ---------- */
 /*
- * Decorative parallax: the hero's planes lag the cursor on a spring, so the
- * frame has depth and weight instead of tracking the mouse rigidly. Only
- * transforms, only where a real pointer exists, and lib/pointer.ts refuses
- * to run at all under reduced motion — --px/--py simply stay 0 and every
- * plane sits exactly where it was authored.
+ * The cards below the hero lean toward the cursor. lib/pointer.ts springs
+ * --px/--py rather than writing the mouse position straight in, so a tile
+ * has momentum and settles instead of tracking rigidly — the difference
+ * between physics and a readout.
+ *
+ * Transform-only, and the hook refuses to run without a fine pointer or
+ * under reduced motion, in which case --px/--py stay 0 and every card sits
+ * exactly where it was authored.
  */
-.plane-back {
-  transform: translate3d(calc(var(--px, 0) * -14px), calc(var(--py, 0) * -10px), 0);
+
+.tilt {
+  transform-style: preserve-3d;
 }
-.plane-mid {
-  transform: translate3d(calc(var(--px, 0) * 10px), calc(var(--py, 0) * 7px), 0);
+.tilt .slate-frame {
+  transform: perspective(1100px) rotateY(calc(var(--px, 0) * 3.2deg))
+    rotateX(calc(var(--py, 0) * -2.4deg)) translateY(calc(var(--py, 0) * -3px))
+    scale(calc(1 + (abs(var(--px, 0)) + abs(var(--py, 0))) * 0.004));
+  transition: box-shadow 300ms var(--ease-out-strong);
 }
-.plane-fore {
-  transform: translate3d(calc(var(--px, 0) * 22px), calc(var(--py, 0) * 15px), 0)
-    rotate(calc(var(--px, 0) * 0.6deg));
+/* the title leans with its tile, a beat further */
+.tilt .slate-title {
+  transform: translate3d(calc(var(--px, 0) * 5px), calc(var(--py, 0) * 3px), 0);
 }
-/* the drift animation owns .hero-drift's transform, so the parallax rides on
-   a wrapper instead of fighting it for the same property */
-.hero-drift.plane-back {
-  transform: none;
+
+/* the jackets lean the same way, and lift a little as they do */
+.tilt-cover img {
+  transform: perspective(900px) rotateY(calc(var(--px, 0) * 5deg))
+    rotateX(calc(var(--py, 0) * -4deg)) translateY(calc(var(--py, 0) * -4px));
+  transition: filter 300ms var(--ease-out-strong);
 }
-.plane-wrap {
-  transform: translate3d(calc(var(--px, 0) * -14px), calc(var(--py, 0) * -10px), 0);
-  will-change: transform;
+@media (hover: hover) and (pointer: fine) {
+  .tilt-cover:hover img {
+    filter: drop-shadow(0 26px 52px rgba(0, 5, 12, 0.7));
+  }
 }
 
 /* touch devices have no hover, so the explicit control is their only way in */

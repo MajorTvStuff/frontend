@@ -1,28 +1,33 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, type RefObject } from "react";
 
 /**
- * Spring-follow the pointer.
+ * Spring-follow the pointer across an element.
  *
  * Tying a visual directly to mouse position feels artificial because it has
  * no weight — the element snaps wherever the cursor is. Interpolating toward
  * the target each frame gives it momentum and settle, which is what makes it
  * read as physics rather than as a readout.
  *
- * Decorative only, so it is gated to real pointers, disabled under reduced
- * motion, and writes nothing but a transform on elements that opt in through
- * a CSS custom property.
+ * Writes two custom properties, --px and --py, each -1..1 from the element's
+ * own centre. The CSS decides what to do with them, so one hook serves a
+ * tilting card, a drifting cover and anything else.
+ *
+ * Decorative only: gated to real pointers, dead under reduced motion,
+ * transform-only, and the rAF loop parks itself as soon as the spring
+ * settles rather than running forever.
  */
-export function usePointerParallax(ref: React.RefObject<HTMLElement | null>) {
+export function usePointerSpring(
+  ref: RefObject<HTMLElement | null>,
+  { onlyWhileHovered = true }: { onlyWhileHovered?: boolean } = {},
+) {
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
 
-    // target (where the cursor is) and current (where the spring has got to),
-    // both normalised to -1..1 from the element's centre
     let tx = 0;
     let ty = 0;
     let cx = 0;
@@ -32,9 +37,9 @@ export function usePointerParallax(ref: React.RefObject<HTMLElement | null>) {
     let frame = 0;
     let idle = 0;
 
-    // a light spring: stiff enough to keep up, damped enough not to wobble
-    const STIFF = 0.055;
-    const DAMP = 0.82;
+    // stiff enough to keep up, damped enough not to wobble
+    const STIFF = 0.06;
+    const DAMP = 0.8;
 
     const tick = () => {
       vx = (vx + (tx - cx) * STIFF) * DAMP;
@@ -43,17 +48,16 @@ export function usePointerParallax(ref: React.RefObject<HTMLElement | null>) {
       cy += vy;
       el.style.setProperty("--px", cx.toFixed(4));
       el.style.setProperty("--py", cy.toFixed(4));
-      // stop the loop once it has settled and the cursor has stopped moving
-      const still =
-        Math.abs(tx - cx) < 0.0006 &&
-        Math.abs(ty - cy) < 0.0006 &&
-        Math.abs(vx) < 0.0006 &&
-        Math.abs(vy) < 0.0006;
-      if (still && ++idle > 6) {
+      const settled =
+        Math.abs(tx - cx) < 0.0008 &&
+        Math.abs(ty - cy) < 0.0008 &&
+        Math.abs(vx) < 0.0008 &&
+        Math.abs(vy) < 0.0008;
+      if (settled && ++idle > 4) {
         frame = 0;
         return;
       }
-      if (!still) idle = 0;
+      if (!settled) idle = 0;
       frame = requestAnimationFrame(tick);
     };
     const wake = () => {
@@ -66,18 +70,21 @@ export function usePointerParallax(ref: React.RefObject<HTMLElement | null>) {
       ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
       wake();
     };
-    const onLeave = () => {
+    const rest = () => {
       tx = 0;
       ty = 0;
       wake();
     };
 
-    window.addEventListener("pointermove", onMove, { passive: true });
-    document.addEventListener("pointerleave", onLeave);
+    const target: HTMLElement | Window = onlyWhileHovered ? el : window;
+    target.addEventListener("pointermove", onMove as EventListener, {
+      passive: true,
+    });
+    el.addEventListener("pointerleave", rest);
     return () => {
-      window.removeEventListener("pointermove", onMove);
-      document.removeEventListener("pointerleave", onLeave);
+      target.removeEventListener("pointermove", onMove as EventListener);
+      el.removeEventListener("pointerleave", rest);
       if (frame) cancelAnimationFrame(frame);
     };
-  }, [ref]);
+  }, [ref, onlyWhileHovered]);
 }

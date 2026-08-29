@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { claimPlayer, releasePlayer, onPlayerChange } from "@/lib/player-bus";
 import { useReveal } from "@/lib/reveal";
+import { usePointerSpring } from "@/lib/pointer";
 
 export type Show = {
   slug: string;
@@ -98,6 +99,9 @@ function Panel({
   onLeave: () => void;
   canAuto: boolean;
 }) {
+  const tiltRef = useRef<HTMLElement | null>(null);
+  usePointerSpring(tiltRef);
+
   const still = !s.youtubeId;
   // every frame fills — pillarboxed key art made the wall read as ragged
   const pos =
@@ -109,7 +113,8 @@ function Panel({
 
   return (
     <article
-      className={`slate-panel${still ? " slate-panel--still" : ""}`}
+      ref={tiltRef}
+      className={`slate-panel tilt${still ? " slate-panel--still" : ""}`}
       aria-labelledby={`slate-${s.slug}`}
     >
       <div className="slate-rule" aria-hidden="true">
