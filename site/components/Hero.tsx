@@ -194,7 +194,7 @@ export function Hero({
           className="pointer-events-none absolute inset-0 z-[19]"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,21,40,.92) 0%, rgba(0,21,40,.72) 22%, rgba(0,21,40,0) 46%)",
+              "linear-gradient(to top, rgba(0,21,40,.96) 0%, rgba(0,21,40,.88) 26%, rgba(0,21,40,.62) 46%, rgba(0,21,40,0) 68%)",
           }}
         />
 
@@ -275,11 +275,13 @@ export function Hero({
           key={`primer-${run}`}
           className="hero-primer absolute bottom-[13svh] left-5 z-40 max-w-[680px] pr-5 sm:left-8"
         >
-          <p className="meta-caps text-faint">{primer.eyebrow}</p>
+          <p className="meta-caps text-mid [text-shadow:0_1px_10px_rgba(0,18,35,0.95)]">
+            {primer.eyebrow}
+          </p>
           <h1 className="mt-3 text-lede font-light text-paper [text-shadow:0_2px_18px_rgba(0,18,35,0.75)]">
             {primer.statement}
           </h1>
-          <p className="mt-5 text-strip text-mid">
+          <p className="mt-5 text-strip text-mid [text-shadow:0_1px_10px_rgba(0,18,35,0.95)]">
             <span className="sm:hidden">
               {primer.proofsShort.map((t, i) => (
                 <span key={t}>
@@ -302,7 +304,7 @@ export function Hero({
         {/* the hero owns the viewport, so it owes the visitor a cue */}
         <div
           aria-hidden="true"
-          className="hero-primer absolute bottom-6 left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2"
+          className="hero-primer absolute bottom-6 left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2 [text-shadow:0_1px_10px_rgba(0,18,35,0.95)]"
         >
           <span className="meta-caps text-faint">Scroll</span>
           <span className="block h-7 w-px bg-line" />

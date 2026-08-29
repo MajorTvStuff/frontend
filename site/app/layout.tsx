@@ -53,9 +53,16 @@ export default function RootLayout({
   return (
     <html lang="en" className={grotesk.variable}>
       <body>
-        {/* with no JS, nothing may stay hidden waiting for a reveal */}
+        {/*
+          With no JS nothing may stay hidden — but this must be SCOPED to the
+          reveal classes. A blanket `*{transform:none}` inverts three resting
+          states that are deliberately collapsed: the gate blades rest at
+          scaleY(0) and would become opaque panels sealing every show poster
+          shut, the progress rail rests at scaleX(0) and would read as "fully
+          watched" on all four, and the grain veil would go to full strength.
+        */}
         <noscript>
-          <style>{`[data-reveal="pending"] *{opacity:1!important;transform:none!important}`}</style>
+          <style>{`[data-reveal="pending"] .reveal,[data-reveal="pending"] .reveal-d,[data-reveal="pending"] .cover-cut{opacity:1!important;transform:none!important}[data-reveal="pending"] .slate-gate i{transform:scaleY(0)!important}[data-reveal="pending"] .slate-rail i{transform:scaleX(0)!important}[data-reveal="pending"] .slate-rule i{transform:scaleX(1)!important}[data-reveal="pending"] .slate-art--settle{transform:none!important}`}</style>
         </noscript>
         <a
           href="#main"

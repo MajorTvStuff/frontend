@@ -96,7 +96,7 @@ export default function Home() {
         <Lockup tone="light" className="w-28 sm:w-32" />
         <a
           href={`mailto:${site.contact.email}`}
-          className="btn meta-caps text-paper"
+          className="btn meta-caps bg-screen/80 text-paper backdrop-blur-sm"
         >
           Contact
         </a>

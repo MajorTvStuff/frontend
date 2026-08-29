@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { claimPlayer, releasePlayer } from "@/lib/player-bus";
+import { claimPlayer, releasePlayer, onPlayerChange } from "@/lib/player-bus";
 import { useReveal } from "@/lib/reveal";
 
 export type Show = {
@@ -269,6 +269,25 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       }, RETIRE_MS);
     },
     [setState],
+  );
+
+  // The bus has to be listened to, not only shouted into. The hero's own
+  // 4.9s timer can fire AFTER the slate has claimed the player — it then
+  // mounts a second embed and, without this, the slate never hears about it
+  // and two videos decode at once for as long as the visitor stays put.
+  useEffect(
+    () =>
+      onPlayerChange((who) => {
+        if (who === "slate") return;
+        if (!activeRef.current) return;
+        const slug = activeRef.current.slug;
+        activeRef.current = null;
+        setStates((st) =>
+          st[slug] === "live" ? { ...st, [slug]: "played" } : st,
+        );
+        setActive(null);
+      }),
+    [],
   );
 
   // capability gate, read once

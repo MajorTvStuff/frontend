@@ -118,8 +118,8 @@
     *::before,
     *::after {
       animation: none !important;
-      transition-property: color, background-color, border-color,
-        text-decoration-color, opacity !important;
+      transition-property:
+        color, background-color, border-color, text-decoration-color, opacity !important;
       transition-duration: 160ms !important;
     }
   }
@@ -392,56 +392,63 @@
 }
 
 /* ---------- controls ---------- */
-
-.btn {
-  color: var(--color-mid);
-  border: 1px solid var(--color-line);
-  padding: 0.5rem 0.75rem;
-  background: transparent;
-  /* 160ms, not 300: a control should answer immediately */
-  transition:
-    color 160ms var(--ease-out-strong),
-    border-color 160ms var(--ease-out-strong),
-    transform 160ms var(--ease-out-strong);
-}
-.btn:focus-visible {
-  color: var(--color-signal);
-  border-color: var(--color-signal);
-}
-/* hover only where a real pointer exists — on touch, a tap fires :hover and
-   leaves the control stuck looking hovered */
-@media (hover: hover) and (pointer: fine) {
-  .btn:hover {
+/*
+ * These live in @layer components on purpose. Declared outside a layer they
+ * outrank every Tailwind utility, so `text-paper bg-screen/70` on a button
+ * silently lost to the class's own colour and transparent background — the
+ * header CTA was rendering as 11px steel on the bare trailer at 1.03:1.
+ */
+@layer components {
+  .btn {
+    color: var(--color-mid);
+    border: 1px solid var(--color-line);
+    padding: 0.5rem 0.75rem;
+    background: transparent;
+    /* 160ms, not 300: a control should answer immediately */
+    transition:
+      color 160ms var(--ease-out-strong),
+      border-color 160ms var(--ease-out-strong),
+      transform 160ms var(--ease-out-strong);
+  }
+  .btn:focus-visible {
     color: var(--color-signal);
     border-color: var(--color-signal);
   }
-}
-.btn:active {
-  transform: scale(0.97);
-}
+  /* hover only where a real pointer exists — on touch, a tap fires :hover and
+   leaves the control stuck looking hovered */
+  @media (hover: hover) and (pointer: fine) {
+    .btn:hover {
+      color: var(--color-signal);
+      border-color: var(--color-signal);
+    }
+  }
+  .btn:active {
+    transform: scale(0.97);
+  }
 
-.link {
-  color: var(--color-paper);
-  text-decoration: underline;
-  text-decoration-color: var(--color-line);
-  text-underline-offset: 4px;
-  transition:
-    color 160ms var(--ease-out-strong),
-    text-decoration-color 160ms var(--ease-out-strong),
-    transform 160ms var(--ease-out-strong);
-}
-.link:focus-visible {
-  color: var(--color-signal);
-  text-decoration-color: var(--color-signal);
-}
-@media (hover: hover) and (pointer: fine) {
-  .link:hover {
+  .link {
+    color: var(--color-paper);
+    text-decoration: underline;
+    text-decoration-color: var(--color-line);
+    text-underline-offset: 4px;
+    transition:
+      color 160ms var(--ease-out-strong),
+      text-decoration-color 160ms var(--ease-out-strong),
+      transform 160ms var(--ease-out-strong);
+  }
+  .link:focus-visible {
     color: var(--color-signal);
     text-decoration-color: var(--color-signal);
   }
-}
-.link:active {
-  transform: scale(0.99);
+  @media (hover: hover) and (pointer: fine) {
+    .link:hover {
+      color: var(--color-signal);
+      text-decoration-color: var(--color-signal);
+    }
+  }
+  .link:active {
+    transform: scale(0.99);
+  }
 }
 
 /* ---------- the slate ---------- */
