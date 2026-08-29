@@ -19,12 +19,15 @@ export type Show = {
 /**
  * THE SLATE — four shows, four trailer frames.
  *
- * Each tile reveals on contact, its frame opening on a projector gate, and
- * plays its trailer muted when it reaches the middle of the screen. The
- * contract: each show autoplays AT MOST ONCE per page load, and AT MOST ONE
- * iframe exists in the document at any moment — the hero included, which is
- * why the two coordinate through the player bus rather than through
- * geometry.
+ * Each tile reveals on contact, its frame opening on a projector gate. HOVER
+ * a tile and its trailer plays, muted, in place; leave and the key art comes
+ * back. Playing is the visitor's decision, not the scroll position's — which
+ * also means no trailer ever starts somewhere they were not looking.
+ *
+ * AT MOST ONE iframe exists in the document at any moment — the hero
+ * included, which is why the two coordinate through the player bus rather
+ * than through geometry. Touch devices have no hover, so they get the
+ * explicit Play control instead.
  *
  * The frame carries its own transport: a timecode and an accent rail that
  * fills as the trailer plays and then HOLDS where it stopped, so a glance
@@ -76,6 +79,8 @@ function Panel({
   onHandshake,
   onStop,
   onPlay,
+  onEnter,
+  onLeave,
   canAuto,
 }: {
   s: Show;
@@ -89,6 +94,8 @@ function Panel({
   onHandshake: () => void;
   onStop: () => void;
   onPlay: () => void;
+  onEnter: () => void;
+  onLeave: () => void;
   canAuto: boolean;
 }) {
   const still = !s.youtubeId;
@@ -121,6 +128,8 @@ function Panel({
         data-slug={s.slug}
         data-state={state}
         ref={frameRef}
+        onPointerEnter={still ? undefined : onEnter}
+        onPointerLeave={still ? undefined : onLeave}
       >
         {isActive && s.youtubeId && (
           <div className="slate-video absolute inset-0" inert aria-hidden="true">
@@ -162,7 +171,7 @@ function Panel({
         </div>
 
         <p className="slate-state meta-caps" ref={lineRef}>
-          {still ? "Still" : "Trailer · Muted"}
+          {still ? "Still" : "Trailer · Hover to play"}
         </p>
 
         <div className="slate-control">
@@ -176,8 +185,8 @@ function Panel({
               Replay
             </button>
           )}
-          {!still && state === "art" && !canAuto && !isActive && (
-            <button type="button" className="btn meta-caps" onClick={onPlay}>
+          {!still && state === "art" && !isActive && (
+            <button type="button" className="btn meta-caps" onClick={onPlay} data-touch-only>
               Play trailer
             </button>
           )}
@@ -222,7 +231,6 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
 
   // play-once guard: a REF, never state — StrictMode's second effect pass
   // runs before a state update flushes and both would read an empty set
-  const played = useRef<Set<string>>(new Set());
   const frames = useRef(new Map<string, HTMLElement>());
   const lines = useRef(new Map<string, HTMLElement>());
   const fills = useRef(new Map<string, HTMLElement>());
@@ -230,8 +238,6 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
   const iframe = useRef<HTMLIFrameElement | null>(null);
   const activeRef = useRef<{ slug: string; manual: boolean } | null>(null);
   const prevActive = useRef<{ slug: string; manual: boolean } | null>(null);
-  const playable = useRef<string[]>([]);
-  const dwellTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const retiring = useRef<ReturnType<typeof setTimeout> | null>(null);
   // the slug whose player retired: its iframe lives on ~820ms while the
   // poster returns, and its ticks must not rewrite a settled panel
@@ -302,114 +308,6 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
     if (c?.effectiveType === "2g" || c?.effectiveType === "slow-2g") return;
     setCanAuto(true);
   }, []);
-
-  /** Arm the most-centred unplayed tile, but only when nothing is playing.
-      Two tiles share the cue band in this layout; they queue rather than
-      trading the player back and forth a second at a time. The band is
-      measured fresh, because a tile that crossed it while another played has
-      already had its observer callback and will never get another. */
-  const schedule = useCallback(() => {
-    if (activeRef.current || dwellTimer.current) return;
-    const vh = window.innerHeight;
-    const bandTop = vh * 0.3;
-    const bandBottom = vh * 0.7;
-    let best: string | null = null;
-    let bestD = Infinity;
-    playable.current.forEach((slug) => {
-      if (played.current.has(slug)) return;
-      const el = frames.current.get(slug);
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      if (r.bottom <= bandTop || r.top >= bandBottom) return;
-      const d = Math.abs(r.top + r.height / 2 - vh / 2);
-      if (d < bestD) {
-        bestD = d;
-        best = slug;
-      }
-    });
-    if (!best) return;
-    const pick: string = best;
-    dwellTimer.current = setTimeout(() => {
-      dwellTimer.current = null;
-      if (activeRef.current || played.current.has(pick)) return;
-      played.current.add(pick);
-      retired.current = null;
-      activeRef.current = { slug: pick, manual: false };
-      claimPlayer("slate");
-      setActive({ slug: pick, manual: false });
-    }, DWELL_MS);
-  }, []);
-
-  // watch the cue band, and re-check as the page moves
-  useEffect(() => {
-    if (!canAuto) return;
-    const list = shows.filter((s) => s.youtubeId);
-    playable.current = list.map((s) => s.slug);
-    if (!list.length) return;
-
-    let io: IntersectionObserver | null = null;
-    const arm = () => {
-      io = new IntersectionObserver(() => schedule(), {
-        rootMargin: "-30% 0px -30% 0px",
-        threshold: 0,
-      });
-      list.forEach((sh) => {
-        const el = frames.current.get(sh.slug);
-        if (el && io) io.observe(el);
-      });
-    };
-    const ric = (
-      window as unknown as { requestIdleCallback?: (cb: () => void) => number }
-    ).requestIdleCallback;
-    const handle = ric ? ric(arm) : setTimeout(arm, 1);
-
-    let frame = 0;
-    const onScroll = () => {
-      if (frame) return;
-      frame = requestAnimationFrame(() => {
-        frame = 0;
-        schedule();
-      });
-    };
-    window.addEventListener("scroll", onScroll, { passive: true });
-
-    return () => {
-      if (!ric) clearTimeout(handle as ReturnType<typeof setTimeout>);
-      io?.disconnect();
-      window.removeEventListener("scroll", onScroll);
-      if (frame) cancelAnimationFrame(frame);
-      if (dwellTimer.current) clearTimeout(dwellTimer.current);
-      dwellTimer.current = null;
-    };
-  }, [canAuto, shows, schedule]);
-
-  // when the player frees up, whatever owns the band gets its turn
-  useEffect(() => {
-    if (!active) schedule();
-  }, [active, schedule]);
-
-  // keep playing while a decent part of the tile is still on screen: cutting
-  // at the cue band's edge ended every trailer after about a second, and
-  // holding until full exit starved the tiles below
-  useEffect(() => {
-    if (!active) return;
-    const slug = active.slug;
-    const el = frames.current.get(slug);
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        if (e.intersectionRatio < 0.35) retire(slug);
-      },
-      { threshold: [0, 0.35, 0.6] },
-    );
-    io.observe(el);
-    const onHide = () => document.hidden && retire(slug);
-    document.addEventListener("visibilitychange", onHide);
-    return () => {
-      io.disconnect();
-      document.removeEventListener("visibilitychange", onHide);
-    };
-  }, [active, retire]);
 
   // the player's readout, watchdog, and end pre-emption
   useEffect(() => {
@@ -496,22 +394,42 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
     );
   }, []);
 
-  /** Every deliberate play is the full player: controls, sound, captions. */
-  const playManual = useCallback(
-    (slug: string) => {
-      played.current.add(slug);
+  /** Start a tile. `manual` is a deliberate click, which earns the real
+      player: controls, sound and captions. Hover gets muted ambience. */
+  const play = useCallback(
+    (slug: string, manual: boolean) => {
       if (retiring.current) clearTimeout(retiring.current);
-      if (dwellTimer.current) {
-        clearTimeout(dwellTimer.current);
-        dwellTimer.current = null;
-      }
       setState(slug, "art");
       retired.current = null;
-      activeRef.current = { slug, manual: true };
+      activeRef.current = { slug, manual };
       claimPlayer("slate");
-      setActive({ slug, manual: true });
+      setActive({ slug, manual });
     },
     [setState],
+  );
+
+  /* Hover in, play; hover out, put the picture back. A short leave delay
+     stops a cursor crossing the gap between two tiles from tearing the
+     player down and building it again. */
+  const leaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverIn = useCallback(
+    (slug: string) => {
+      if (leaveTimer.current) clearTimeout(leaveTimer.current);
+      if (!canAuto) return; // save-data / 2g / reduced motion: use the button
+      if (activeRef.current?.slug === slug) return;
+      play(slug, false);
+    },
+    [canAuto, play],
+  );
+  const hoverOut = useCallback(
+    (slug: string) => {
+      if (leaveTimer.current) clearTimeout(leaveTimer.current);
+      leaveTimer.current = setTimeout(() => {
+        if (activeRef.current?.slug === slug && !activeRef.current.manual)
+          retire(slug);
+      }, 180);
+    },
+    [retire],
   );
 
   return (
@@ -536,7 +454,9 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
             iframeRef={iframe}
             onHandshake={handshake}
             onStop={() => retire(s.slug)}
-            onPlay={() => playManual(s.slug)}
+            onPlay={() => play(s.slug, true)}
+            onEnter={() => hoverIn(s.slug)}
+            onLeave={() => hoverOut(s.slug)}
             frameRef={(el) => {
               if (el) frames.current.set(s.slug, el);
               else frames.current.delete(s.slug);

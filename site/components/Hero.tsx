@@ -3,16 +3,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { Lockup } from "@/components/Lockup";
-import { claimPlayer, releasePlayer, onPlayerChange } from "@/lib/player-bus";
+import { usePointerParallax } from "@/lib/pointer";
 
 export type Cover = {
   slug: string;
   width: number;
   height: number;
-};
-
-export type Trailer = {
-  youtubeId: string;
 };
 
 export type Primer = {
@@ -26,8 +22,17 @@ export type Primer = {
  * THE HERO — an overture, and then an argument.
  *
  * The intro performs: six lines cut at a 0.58s cadence, six book covers
- * hard-cutting behind them ("quick and explosive"), the logo building out
- * of the last word, and the trailer taking the frame at 4.9s.
+ * hard-cutting behind them ("quick and explosive"), and the logo building
+ * out of the last word onto the DRIVE frame.
+ *
+ * There is deliberately NO video here. A YouTube embed paints its own
+ * transport controls over the picture even while it reports playing, wears
+ * the uploader's watermark, and burns in auto-captions — none of which we
+ * can style away from outside the iframe, and all of which landed on the
+ * brand's first screen. The footage lives on the slate instead, where a
+ * visitor asks for it by hovering. When the client sends a hosted MP4 this
+ * becomes a muted <video> with no third-party surface at all, and the
+ * ambient hero film comes straight back.
  *
  * But the intro is NOT load-bearing. Underneath it, present from the first
  * byte, is the primer: what this company is, and six tokens of proof. A
@@ -39,8 +44,6 @@ export type Primer = {
  * folks that didn't get the info search."
  */
 
-const TRAILER_AT_MS = 4900;
-
 /* The intro clip. Drop a file at either path and the sound control appears
    on its own — browsers block autoplaying audio, so it only ever plays from
    the button's tap. */
@@ -50,59 +53,19 @@ export function Hero({
   still,
   introLines,
   flash,
-  trailer,
   primer,
 }: {
   still: Cover;
   introLines: string[];
   flash: Cover[];
-  trailer?: Trailer;
   primer: Primer;
 }) {
-  const [showTrailer, setShowTrailer] = useState(false);
   // bumping `run` remounts every intro layer, restarting their CSS timelines
   const [run, setRun] = useState(0);
   const [audioReady, setAudioReady] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const heroRef = useRef<HTMLElement | null>(null);
-  const heroVisible = useRef(true);
-
-  // the trailer arrives once the intro has resolved, and only if the hero is
-  // still on screen (re-armed on every replay: `run` resets the timeline)
-  useEffect(() => {
-    if (!trailer) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const t = setTimeout(() => {
-      if (heroVisible.current) setShowTrailer(true);
-    }, TRAILER_AT_MS);
-    return () => clearTimeout(t);
-  }, [trailer, run]);
-
-  // whoever else takes the player wins: the slate claims it as you scroll
-  // into the wall, and the hero lets go on the spot
-  useEffect(() => onPlayerChange((who) => who !== "hero" && setShowTrailer(false)), []);
-
-  useEffect(() => {
-    if (showTrailer) claimPlayer("hero");
-    else releasePlayer("hero");
-    return () => releasePlayer("hero");
-  }, [showTrailer]);
-
-  // the hero's player is destroyed when the hero leaves, so it cannot keep
-  // decoding off-screen behind the slate's own trailers
-  useEffect(() => {
-    const el = heroRef.current;
-    if (!el) return;
-    const io = new IntersectionObserver(
-      ([e]) => {
-        heroVisible.current = e.isIntersecting;
-        if (!e.isIntersecting) setShowTrailer(false);
-      },
-      { threshold: 0 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
+  usePointerParallax(heroRef);
 
   // probe for the clip — the control exists only if a playable file is there
   useEffect(() => {
@@ -129,7 +92,6 @@ export function Hero({
   const replayWithSound = useCallback(() => {
     const a = audioRef.current;
     if (!a) return;
-    setShowTrailer(false);
     setRun((r) => r + 1);
     a.currentTime = 0;
     void a.play().catch(() => {});
@@ -148,7 +110,7 @@ export function Hero({
         {/* the still. One image, not a ten-slide carousel: nine of those
             never rendered, and it put a decade-old book jacket full-bleed
             under the brand reveal. */}
-        <div aria-hidden="true" className="absolute inset-0">
+        <div aria-hidden="true" className="plane-wrap absolute inset-0">
           <Image
             key={`still-${run}`}
             src={`/projects/${still.slug}.jpg`}
@@ -160,27 +122,6 @@ export function Hero({
             className="hero-drift h-full w-full object-cover"
           />
         </div>
-
-        {/* the footage, once the intro has resolved. start=6 so the resting
-            frame is the film itself and never a network bumper. */}
-        {showTrailer && trailer && (
-          <div
-            aria-hidden="true"
-            inert
-            className="trailer-in absolute inset-0 z-[15] overflow-hidden opacity-0"
-          >
-            <iframe
-              src={`https://www.youtube-nocookie.com/embed/${trailer.youtubeId}?autoplay=1&mute=1&controls=0&loop=1&playlist=${trailer.youtubeId}&playsinline=1&rel=0&disablekb=1&start=6&cc_load_policy=0&iv_load_policy=3`}
-              title=""
-              allow="autoplay; encrypted-media"
-              /* scaled past the frame on purpose: the embed paints its own title
-                 bar and transport controls at its edges, and this is ambience
-                 the visitor never touches. Cropping them out is the only way
-                 to keep a third party's chrome off the brand's first screen. */
-              className="pointer-events-none absolute left-1/2 top-1/2 aspect-video min-h-full min-w-full -translate-x-1/2 -translate-y-1/2 scale-[1.35] border-0"
-            />
-          </div>
-        )}
 
         <div
           aria-hidden="true"
@@ -231,7 +172,7 @@ export function Hero({
                 quality={90}
                 sizes="45vh"
                 loading="eager"
-                className="h-[42%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
+                className="plane-fore h-[42%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
               />
             </div>
           ))}
@@ -263,7 +204,7 @@ export function Hero({
           <Lockup
             animate
             bright
-            className="logo-settle w-[min(28rem,66vw)] [filter:drop-shadow(0_2px_22px_rgba(0,18,35,0.95))_drop-shadow(0_0_6px_rgba(0,18,35,0.7))]"
+            className="logo-settle plane-mid w-[min(28rem,66vw)] [filter:drop-shadow(0_2px_22px_rgba(0,18,35,0.95))_drop-shadow(0_0_6px_rgba(0,18,35,0.7))]"
           />
         </div>
 
@@ -311,15 +252,6 @@ export function Hero({
         </div>
 
         <div className="absolute bottom-6 right-6 z-40 flex gap-2">
-          {showTrailer && (
-            <button
-              type="button"
-              onClick={() => setShowTrailer(false)}
-              className="btn meta-caps bg-screen/70 text-paper"
-            >
-              Stop
-            </button>
-          )}
           {audioReady && (
             <button
               type="button"

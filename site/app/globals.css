@@ -637,3 +637,38 @@
 .cover-lift {
   filter: drop-shadow(0 18px 40px rgba(0, 5, 12, 0.55));
 }
+
+/* ---------- pointer physics ---------- */
+/*
+ * Decorative parallax: the hero's planes lag the cursor on a spring, so the
+ * frame has depth and weight instead of tracking the mouse rigidly. Only
+ * transforms, only where a real pointer exists, and lib/pointer.ts refuses
+ * to run at all under reduced motion — --px/--py simply stay 0 and every
+ * plane sits exactly where it was authored.
+ */
+.plane-back {
+  transform: translate3d(calc(var(--px, 0) * -14px), calc(var(--py, 0) * -10px), 0);
+}
+.plane-mid {
+  transform: translate3d(calc(var(--px, 0) * 10px), calc(var(--py, 0) * 7px), 0);
+}
+.plane-fore {
+  transform: translate3d(calc(var(--px, 0) * 22px), calc(var(--py, 0) * 15px), 0)
+    rotate(calc(var(--px, 0) * 0.6deg));
+}
+/* the drift animation owns .hero-drift's transform, so the parallax rides on
+   a wrapper instead of fighting it for the same property */
+.hero-drift.plane-back {
+  transform: none;
+}
+.plane-wrap {
+  transform: translate3d(calc(var(--px, 0) * -14px), calc(var(--py, 0) * -10px), 0);
+  will-change: transform;
+}
+
+/* touch devices have no hover, so the explicit control is their only way in */
+@media (hover: hover) and (pointer: fine) {
+  .slate-control [data-touch-only] {
+    display: none;
+  }
+}

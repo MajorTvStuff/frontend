@@ -1,5 +1,5 @@
 import { site, projects, project, projectDims, youtubeId } from "@/lib/content";
-import type { Cover, Primer, Trailer } from "@/components/Hero";
+import type { Cover, Primer } from "@/components/Hero";
 import { Hero } from "@/components/Hero";
 import type { Show } from "@/components/Slate";
 import { Slate } from "@/components/Slate";
@@ -57,10 +57,6 @@ const jacket = (slug: string): Jacket => ({
 
 export default function Home() {
   const f = site.founder;
-  const drive = project("drive");
-  const driveId = youtubeId(drive.trailer);
-  const trailer: Trailer | undefined = driveId ? { youtubeId: driveId } : undefined;
-
   const shows: Show[] = projects
     .filter((p) => p.medium === "show")
     .map((p) => ({
@@ -107,7 +103,6 @@ export default function Home() {
           still={cover("drive")}
           introLines={site.introLines}
           flash={FLASH.map(cover)}
-          trailer={trailer}
           primer={primer}
         />
 

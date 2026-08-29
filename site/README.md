@@ -51,3 +51,17 @@ trailer machinery all originate there and were carried forward.
 Open questions for the client live in `../MAJOR-CONTENT-CONCEPTS.md` (Q11-Q13
 are the newest: the cover priority list, the Oprah clip, and a hosted trailer
 file — the DRIVE link in his copy doc is a watermarked fan re-upload).
+
+## Planned
+
+See `../ROADMAP.md` for the full list (detail pages, a catalog page, nav,
+TOS/privacy, and what is blocked on the client).
+
+- **Per-title detail pages.** Clicking a show or a book opens a full
+  breakdown of that title. Everything we hold verbatim can be built today —
+  title, credit, network/publisher, proof line, trailer, jacket. The one
+  thing that is BLOCKED is the client's own role on each title (EP,
+  packager, literary rep, publisher…): we do not have it, and it is exactly
+  the kind of fact that must never be inferred from a credit line. Logged as
+  Q14 in `../MAJOR-CONTENT-CONCEPTS.md`; the pages ship without a role field
+  until he sends one per title.

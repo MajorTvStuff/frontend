@@ -246,6 +246,28 @@ slate expands. Worth putting in front of RG as an option.
     the footage, which is now visible in the hero. An official file or
     official link fixes that.
 
+14. **Per-title detail pages** — planned: clicking any show or book opens a
+    full breakdown of that title. We can already build the parts we hold
+    verbatim (title, author/credit, network or publisher, the proof line,
+    the trailer, the jacket). What we DON'T have, and won't invent, is
+    **your role on each one** — EP, packager, literary rep, publisher,
+    something else. Send a line per title and we'll add it; until then the
+    pages ship without it rather than guessing. Same question for anything
+    else you'd want on a detail page: synopsis, year, co-producers, awards
+    detail.
+
+15. **Catalog page, navigation, and the legal pages** — planned (see
+    `ROADMAP.md`). The catalog is the full 24-title slate on its own page,
+    filterable by TV | FILM vs BOOKS, with the detail pages of Q14 hanging
+    off it; a nav arrives with it, since a nav bar on a one-page site is
+    just furniture. Terms of Service and a Privacy Policy get linked from
+    the footer. One note on the privacy policy: it has to describe what the
+    site actually does. Today that is genuinely nothing — no analytics, no
+    cookies of ours, no forms, no accounts — which makes for a short, honest
+    document. If you want a contact form or any analytics later, the policy
+    needs writing before that ships, and a lawyer should review it either
+    way; we can draft it accurately but we are not your counsel.
+
 ---
 
 *Assets received and inventoried: 24 book covers, 6 pieces of show key art,
