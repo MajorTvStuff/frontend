@@ -748,3 +748,134 @@
     margin-bottom: calc(var(--z, 0.5) * 18px);
   }
 }
+
+/* ---------- the book panel ---------- */
+/*
+ * Slides in from the right when a jacket is hovered, focused or tapped, and
+ * stays while the reader moves along the shelf — the contents swap rather
+ * than the panel flying out and back in over every gap.
+ *
+ * It carries no synopsis on purpose: the content files hold a title, an
+ * author and a proof line, and writing plot summaries for twenty real books
+ * would be inventing facts about other people's work.
+ */
+.book-panel {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  z-index: 45;
+  width: min(22rem, 84vw);
+  padding: 2rem 1.75rem 1.75rem;
+  background: color-mix(in oklab, var(--color-panel) 92%, black);
+  border-left: 1px solid var(--color-line);
+  box-shadow: -30px 0 60px rgba(0, 5, 12, 0.55);
+  transform: translate(100%, -50%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 420ms var(--ease-out-strong),
+    opacity 260ms linear,
+    visibility 0s linear 420ms;
+}
+.book-panel.is-open {
+  transform: translate(0, -50%);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    transform 420ms var(--ease-out-strong),
+    opacity 200ms linear,
+    visibility 0s;
+}
+/* the contents cross-fade as the reader moves from jacket to jacket */
+.book-panel-inner {
+  animation: panel-swap 260ms var(--ease-out-strong) both;
+}
+@keyframes panel-swap {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+}
+.book-panel-art {
+  width: 8.5rem;
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  filter: drop-shadow(0 16px 34px rgba(0, 5, 12, 0.6));
+}
+.book-panel-todo {
+  font-size: var(--text-strip);
+  line-height: 1.5;
+  color: var(--color-todo-text, #ffd666);
+  border-left: 2px solid currentColor;
+  padding-left: 0.75rem;
+}
+/* on a phone the panel is a bottom sheet — a 22rem rail would cover the
+   shelf it is describing */
+@media (max-width: 639px) {
+  .book-panel {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+    padding: 1.25rem;
+    border-left: 0;
+    border-top: 1px solid var(--color-line);
+    transform: translate(0, 100%);
+    box-shadow: 0 -20px 40px rgba(0, 5, 12, 0.55);
+  }
+  .book-panel.is-open {
+    transform: translate(0, 0);
+  }
+  .book-panel-inner {
+    display: grid;
+    grid-template-columns: 4.5rem 1fr;
+    gap: 1rem;
+    align-items: center;
+    width: 100%;
+  }
+  .book-panel-art {
+    width: 4.5rem;
+    grid-row: span 6;
+  }
+  .book-panel .mt-6,
+  .book-panel .mt-8 {
+    margin-top: 0.375rem;
+  }
+  .book-panel-close {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .book-panel {
+    transition: opacity 160ms linear, visibility 0s linear 160ms;
+    transform: translate(0, -50%);
+  }
+  .book-panel.is-open {
+    transform: translate(0, -50%);
+    transition: opacity 160ms linear, visibility 0s;
+  }
+  .book-panel-inner {
+    animation: none;
+  }
+}
+/* the whole jacket is the control; the button is its hit area and its
+   accessible name, so keyboard and touch reach the panel too */
+.tilt-cover {
+  position: relative;
+}
+.jacket-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.jacket-hit:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+}

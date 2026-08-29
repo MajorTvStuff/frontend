@@ -246,8 +246,14 @@ slate expands. Worth putting in front of RG as an option.
     the footage, which is now visible in the hero. An official file or
     official link fixes that.
 
-14. **Per-title detail pages** — planned: clicking any show or book opens a
-    full breakdown of that title. We can already build the parts we hold
+14. **Per-title detail pages, and the book synopses** — a panel now slides in
+    when you hover a jacket on the shelf, and it carries the title, the
+    author and the proof line, because that is everything the copy doc gives
+    us per book. **It has no synopsis, and we will not write one** — plot
+    summaries for twenty real published books are facts about other people's
+    work. Send one paragraph per title and the panel has a home for it
+    immediately; the same paragraph feeds the detail pages below.
+    Clicking any show or book then opens a full breakdown of that title. We can already build the parts we hold
     verbatim (title, author/credit, network or publisher, the proof line,
     the trailer, the jacket). What we DON'T have, and won't invent, is
     **your role on each one** — EP, packager, literary rep, publisher,

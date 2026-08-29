@@ -1,9 +1,10 @@
 "use client";
 
-import { useRef } from "react";
+import { useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import { useReveal } from "@/lib/reveal";
 import { usePointerSpring } from "@/lib/pointer";
+import { BookPanel } from "@/components/BookPanel";
 import type { Project } from "@/lib/content";
 
 export type Cover = Project & { width: number; height: number };
@@ -31,6 +32,8 @@ function Jacket({
   className,
   caption,
   index,
+  onOpen,
+  onClose,
 }: {
   p: Cover;
   sizes: string;
@@ -39,6 +42,8 @@ function Jacket({
   className: string;
   caption?: boolean;
   index?: number;
+  onOpen: (p: Cover) => void;
+  onClose: (p: Cover) => void;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   usePointerSpring(ref);
@@ -47,7 +52,21 @@ function Jacket({
       ref={ref}
       className={`tilt-cover ${className}`}
       style={index === undefined ? undefined : ({ "--d": index } as React.CSSProperties)}
+      onPointerEnter={() => onOpen(p)}
+      onPointerLeave={() => onClose(p)}
     >
+      <button
+        type="button"
+        className="jacket-hit"
+        onFocus={() => onOpen(p)}
+        onBlur={() => onClose(p)}
+        onClick={() => onOpen(p)}
+      >
+        <span className="sr-only">
+          {p.title}
+          {p.credit ? ` — ${p.credit}` : ""}. {p.proof}.
+        </span>
+      </button>
       <Image
         src={`/projects/${p.slug}.jpg`}
         alt={`${p.title}${p.credit ? ` — ${p.credit}` : ""}`}
@@ -100,6 +119,36 @@ export function Shelf({
   const fieldRef = useRef<HTMLDivElement | null>(null);
   usePointerSpring(fieldRef, { onlyWhileHovered: false });
 
+  /* The panel stays put while the reader moves along the shelf and only
+     leaves once they have actually left — a short close delay stops it
+     flying out and back in over every gap between two jackets. */
+  const [shown, setShown] = useState<Cover | null>(null);
+  const [open, setOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // which jacket is currently claiming the panel. Leave and enter fire in an
+  // order that is not guaranteed when the pointer crosses straight from one
+  // jacket to the next, so a pending close checks whether it is still the
+  // one being left before it acts — otherwise moving along the shelf closes
+  // the panel instead of swapping its contents.
+  const claim = useRef<string | null>(null);
+
+  const openBook = useCallback((p: Cover) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    claim.current = p.slug;
+    setShown(p);
+    setOpen(true);
+  }, []);
+
+  const closeBook = useCallback((p?: Cover) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    const leaving = p?.slug;
+    closeTimer.current = setTimeout(() => {
+      if (leaving && claim.current !== leaving) return; // someone else has it
+      claim.current = null;
+      setOpen(false);
+    }, 220);
+  }, []);
+
   return (
     <section className="mx-auto max-w-[1320px] px-5 pb-14 pt-24 sm:px-8">
       {/* ————— the claim, beside the book that proves it ————— */}
@@ -108,7 +157,12 @@ export function Shelf({
         data-reveal="pending"
         className="grid items-center gap-10 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14"
       >
-        <div ref={leadRef} className="reveal tilt-cover w-52 lg:w-full">
+        <div
+          ref={leadRef}
+          className="reveal tilt-cover w-52 lg:w-full"
+          onPointerEnter={() => openBook(lead)}
+          onPointerLeave={() => closeBook(lead)}
+        >
           <Image
             src={`/projects/${lead.slug}.jpg`}
             alt={`${lead.title} — ${lead.credit}`}
@@ -154,6 +208,8 @@ export function Shelf({
               caption
               className="cover-cut"
               sizes="(min-width: 1024px) 226px, (min-width: 640px) 18vw, 30vw"
+              onOpen={openBook}
+              onClose={closeBook}
             />
           ))}
         </div>
@@ -186,12 +242,16 @@ export function Shelf({
                   p={p}
                   className="reveal-d"
                   sizes="(min-width: 1024px) 170px, (min-width: 640px) 18vw, 26vw"
+                  onOpen={openBook}
+                  onClose={closeBook}
                 />
               </div>
             );
           })}
         </div>
       </div>
+
+      <BookPanel book={shown} open={open} onClose={() => setOpen(false)} />
     </section>
   );
 }

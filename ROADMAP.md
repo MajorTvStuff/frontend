@@ -6,6 +6,17 @@ something only RG can provide.
 
 ---
 
+## 0. Book synopses — BLOCKED, and the site is already built for them
+
+Hovering a jacket on the shelf slides in a panel with the title, the author
+and the proof line. That is everything the content files hold per book.
+
+**It carries no synopsis on purpose.** Writing plot summaries for twenty real
+published books would be inventing facts about other people's work, which is
+the same rule that keeps RG's role off the detail pages. The slot exists in
+the markup and shows a pending note in the beta (`NEXT_PUBLIC_SHOW_TODOS`);
+send one paragraph per title and it fills in with no further work.
+
 ## 1. Per-title detail pages
 
 Clicking any show or book opens a full breakdown of that title.
