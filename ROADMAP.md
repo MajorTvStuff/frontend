@@ -17,6 +17,20 @@ the same rule that keeps RG's role off the detail pages. The slot exists in
 the markup and shows a pending note in the beta (`NEXT_PUBLIC_SHOW_TODOS`);
 send one paragraph per title and it fills in with no further work.
 
+## 0b. Decide whether the shelf popup survives
+
+Flagged for removal: the hover/pin panel on **The shelf — BOOKS**. It is
+built and working (hover to preview, click to pin, Escape to release), but
+it may not earn its place once the per-title detail pages below exist —
+two ways to look at the same book is one too many, and the panel currently
+has no synopsis to justify itself.
+
+Decide together with item 1: either the panel becomes the fast preview and
+the detail page the full record, or the panel goes and clicking a jacket
+navigates straight to its page. **Do not remove it before that call** —
+it is the only place a book's author and proof currently appear together
+for the backlist.
+
 ## 1. Per-title detail pages
 
 Clicking any show or book opens a full breakdown of that title.
@@ -50,9 +64,24 @@ Catalog, Contact. It should stay out of the hero's way — the current header
 floats over the hero with no background, so a real nav needs either a scrim
 or a scroll-triggered solid state.
 
-## 4. Terms of Service and Privacy Policy
+## 4. Terms of Service and Privacy Policy — DRAFTED, needs review
 
-For legality, and both linked from the footer.
+Both pages exist at `/terms` and `/privacy` and are linked from the footer
+on every page.
+
+They describe what this site ACTUALLY does rather than repeating a generic
+template: no analytics, no cookies of ours, no forms, no accounts, and one
+third party — the YouTube embed, which loads only after a visitor asks for
+a trailer, from youtube-nocookie.com. The terms also carry an unsolicited
+material clause, which matters more than usual for a company that receives
+pitches.
+
+Every fact only the company can supply is a visible dashed placeholder:
+registered name, address, jurisdiction, governing law, hosting provider,
+privacy contact. A review banner shows while NEXT_PUBLIC_SHOW_TODOS is on.
+
+**Still required before launch: a lawyer reads both.** We wrote accurate
+descriptions of the build; that is not legal advice.
 
 The privacy policy has to describe what the site actually does, which today
 is: no analytics, no cookies set by us, no forms, no accounts. If a YouTube

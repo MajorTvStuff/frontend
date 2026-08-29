@@ -179,9 +179,17 @@ export default function Home() {
 
         <footer className="mx-auto flex max-w-[1320px] flex-wrap items-end justify-between gap-8 px-5 py-12 sm:px-8">
           <Lockup tone="light" className="w-36 opacity-80" />
-          <p className="meta-caps text-mid">
-            {site.verticals} · © {new Date().getFullYear()} Major Content
-          </p>
+          <div className="flex flex-wrap items-center gap-x-6 gap-y-2">
+            <a href="/terms" className="link meta-caps">
+              Terms
+            </a>
+            <a href="/privacy" className="link meta-caps">
+              Privacy
+            </a>
+            <p className="meta-caps text-mid">
+              {site.verticals} · © {new Date().getFullYear()} Major Content
+            </p>
+          </div>
         </footer>
       </main>
     </>

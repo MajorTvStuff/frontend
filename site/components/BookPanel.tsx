@@ -19,15 +19,17 @@ import type { Cover } from "@/components/Shelf";
 export function BookPanel({
   book,
   open,
+  pinned,
   onClose,
 }: {
   book: Cover | null;
   open: boolean;
+  pinned: boolean;
   onClose: () => void;
 }) {
   return (
     <aside
-      className={`book-panel${open && book ? " is-open" : ""}`}
+      className={`book-panel${open && book ? " is-open" : ""}${pinned ? " is-pinned" : ""}`}
       aria-live="polite"
       aria-hidden={!open || !book}
     >
@@ -45,7 +47,7 @@ export function BookPanel({
           </div>
 
           <p className="meta-caps mt-6 text-faint">
-            {book.proof.includes("#1") ? "The shelf" : "The shelf"}
+            {pinned ? "Pinned" : "The shelf"}
           </p>
           <h3 className="display-heavy mt-2 text-h2 leading-tight text-paper">
             {book.title}
@@ -68,7 +70,7 @@ export function BookPanel({
             className="btn meta-caps mt-8 book-panel-close"
             onClick={onClose}
           >
-            Close
+            {pinned ? "Unpin" : "Close"}
           </button>
         </div>
       )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useReveal } from "@/lib/reveal";
 import { usePointerSpring } from "@/lib/pointer";
@@ -34,6 +34,8 @@ function Jacket({
   index,
   onOpen,
   onClose,
+  onLock,
+  locked,
 }: {
   p: Cover;
   sizes: string;
@@ -44,13 +46,17 @@ function Jacket({
   index?: number;
   onOpen: (p: Cover) => void;
   onClose: (p: Cover) => void;
+  onLock: (p: Cover) => void;
+  locked: boolean;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   usePointerSpring(ref);
+  // a short press that plays on click, so the lock is felt as well as seen
+  const [pressing, setPressing] = useState(false);
   return (
     <div
       ref={ref}
-      className={`tilt-cover ${className}`}
+      className={`tilt-cover ${className}${locked ? " is-locked" : ""}${pressing ? " is-pressing" : ""}`}
       style={index === undefined ? undefined : ({ "--d": index } as React.CSSProperties)}
       onPointerEnter={() => onOpen(p)}
       onPointerLeave={() => onClose(p)}
@@ -58,13 +64,19 @@ function Jacket({
       <button
         type="button"
         className="jacket-hit"
+        aria-pressed={locked}
         onFocus={() => onOpen(p)}
         onBlur={() => onClose(p)}
-        onClick={() => onOpen(p)}
+        onClick={() => {
+          setPressing(true);
+          window.setTimeout(() => setPressing(false), 420);
+          onLock(p);
+        }}
       >
         <span className="sr-only">
           {p.title}
-          {p.credit ? ` — ${p.credit}` : ""}. {p.proof}.
+          {p.credit ? ` — ${p.credit}` : ""}. {p.proof}.{" "}
+          {locked ? "Pinned. Activate to unpin." : "Activate to pin."}
         </span>
       </button>
       <Image
@@ -131,8 +143,15 @@ export function Shelf({
   // one being left before it acts — otherwise moving along the shelf closes
   // the panel instead of swapping its contents.
   const claim = useRef<string | null>(null);
+  /* Clicking a jacket PINS the panel: it stops following the cursor and stays
+     on that book until it is unpinned. Hovering is a glance; pinning is a
+     decision, and the two should not fight each other. */
+  const [pinned, setPinned] = useState<string | null>(null);
+  const pinnedRef = useRef<string | null>(null);
+  pinnedRef.current = pinned;
 
   const openBook = useCallback((p: Cover) => {
+    if (pinnedRef.current) return; // pinned: a passing cursor must not steal it
     if (closeTimer.current) clearTimeout(closeTimer.current);
     claim.current = p.slug;
     setShown(p);
@@ -140,6 +159,7 @@ export function Shelf({
   }, []);
 
   const closeBook = useCallback((p?: Cover) => {
+    if (pinnedRef.current) return;
     if (closeTimer.current) clearTimeout(closeTimer.current);
     const leaving = p?.slug;
     closeTimer.current = setTimeout(() => {
@@ -148,6 +168,32 @@ export function Shelf({
       setOpen(false);
     }, 220);
   }, []);
+
+  const lockBook = useCallback((p: Cover) => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setPinned((cur) => {
+      const next = cur === p.slug ? null : p.slug;
+      pinnedRef.current = next;
+      return next;
+    });
+    claim.current = p.slug;
+    setShown(p);
+    setOpen(true);
+  }, []);
+
+  const unpin = useCallback(() => {
+    pinnedRef.current = null;
+    setPinned(null);
+    setOpen(false);
+  }, []);
+
+  // Escape lets go of a pinned panel
+  useEffect(() => {
+    if (!pinned) return;
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && unpin();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [pinned, unpin]);
 
   return (
     <section className="mx-auto max-w-[1320px] px-5 pb-14 pt-24 sm:px-8">
@@ -210,6 +256,8 @@ export function Shelf({
               sizes="(min-width: 1024px) 226px, (min-width: 640px) 18vw, 30vw"
               onOpen={openBook}
               onClose={closeBook}
+              onLock={lockBook}
+              locked={pinned === p.slug}
             />
           ))}
         </div>
@@ -244,6 +292,8 @@ export function Shelf({
                   sizes="(min-width: 1024px) 170px, (min-width: 640px) 18vw, 26vw"
                   onOpen={openBook}
                   onClose={closeBook}
+                  onLock={lockBook}
+                  locked={pinned === p.slug}
                 />
               </div>
             );
@@ -251,7 +301,7 @@ export function Shelf({
         </div>
       </div>
 
-      <BookPanel book={shown} open={open} onClose={() => setOpen(false)} />
+      <BookPanel book={shown} open={open} pinned={!!pinned} onClose={unpin} />
     </section>
   );
 }
