@@ -53,6 +53,9 @@
   --ease-weighted: cubic-bezier(0.3, 1.06, 0.32, 1);
   /* no overshoot — a shutter and a scale-settle must not bounce */
   --ease-matte: cubic-bezier(0.16, 0.84, 0.28, 1);
+  /* the reveal: nearly linear so the rise tracks the scroll the whole way
+     up, with just enough ease at the end to land rather than stop */
+  --ease-reveal: cubic-bezier(0.4, 0.4, 0.6, 1);
 
   --radius-*: initial;
   --radius-none: 0;
@@ -574,20 +577,20 @@
          as a fade — on the eased curve it reached two thirds opacity within
          38px of the tile peeking in, which reads as a snap, not a fade.
          The rise keeps the weighted curve so it still settles. */
-      animation: slate-fade linear both, slate-rise var(--ease-matte) both;
+      animation: slate-fade linear both, slate-rise var(--ease-reveal) both;
       animation-timeline: --panel, --panel;
       /* Starts at 22%, not 0%: from the first touched pixel every tile on
          screen is mid-fade at once, which reads as the whole wall arriving
          together. Holding it back means a tile stays dark until it is
          properly entering, then takes its own turn. */
-      animation-range: entry 22% entry 60%, entry 22% entry 68%;
+      animation-range: entry 22% entry 64%, entry 22% entry 64%;
     }
 
     /* the two tiles of a row would otherwise fade in unison; the right-hand
        one waits until the left has landed */
     .slate-panel:nth-child(2),
     .slate-panel:nth-child(4) {
-      animation-range: entry 40% entry 78%, entry 40% entry 86%;
+      animation-range: entry 40% entry 82%, entry 40% entry 82%;
     }
 
     .slate-rule i,
@@ -618,7 +621,7 @@
        reading down a tile and scrolling into it are the same motion */
     .slate-beat {
       animation-name: slate-pop;
-      animation-timing-function: var(--ease-weighted);
+      animation-timing-function: var(--ease-reveal);
     }
     .slate-beat-1 {
       animation-range: entry 8% entry 46%;
@@ -652,14 +655,14 @@
   }
   @keyframes slate-rise {
     from {
-      transform: translateY(3.5rem) scale(0.94);
+      transform: translateY(6rem);
     }
   }
   /* ...and each line inside pops in after it, on the overshoot curve */
   @keyframes slate-pop {
     from {
       opacity: 0;
-      transform: translateY(1.5rem);
+      transform: translateY(2.5rem);
     }
   }
   @keyframes slate-draw {
