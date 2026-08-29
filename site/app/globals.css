@@ -668,8 +668,11 @@
     scale(calc(1 + (abs(var(--px, 0)) + abs(var(--py, 0))) * 0.004));
   transition: box-shadow 300ms var(--ease-out-strong);
 }
-/* the title leans with its tile, a beat further */
-.tilt .slate-title {
+/* the title leans with its tile, a beat further. It rides an inner span so
+   it never inherits the heading's own reveal transition (560ms + the row's
+   stagger), which would make cursor tracking arrive a second late. */
+.tilt .tilt-follow {
+  display: inline-block;
   transform: translate3d(calc(var(--px, 0) * 5px), calc(var(--py, 0) * 3px), 0);
 }
 

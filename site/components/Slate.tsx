@@ -100,7 +100,7 @@ function Panel({
   canAuto: boolean;
 }) {
   const tiltRef = useRef<HTMLElement | null>(null);
-  usePointerSpring(tiltRef);
+  usePointerSpring(tiltRef, { onlyWhileHovered: false });
   // each tile owns its own reveal: revealing the whole section at once put
   // four tiles in the visitor's face simultaneously
   useReveal(tiltRef);
@@ -131,7 +131,11 @@ function Panel({
         id={`slate-${s.slug}`}
         className="slate-title display-heavy reveal reveal-2"
       >
-        {s.title}
+        {/* the tilt rides this span, not the heading: the heading is a
+            .reveal element and would otherwise apply the reveal's 560ms
+            transform transition — plus the row's stagger delay — to the
+            cursor tracking, which made the right-hand titles feel dead */}
+        <span className="tilt-follow">{s.title}</span>
       </h3>
 
       <div
