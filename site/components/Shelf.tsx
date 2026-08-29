@@ -86,8 +86,12 @@ export function Shelf({
   front: Cover[];
   back: Cover[];
 }) {
-  const ref = useRef<HTMLElement | null>(null);
-  useReveal(ref);
+  const claimRef = useRef<HTMLDivElement | null>(null);
+  const frontRef = useRef<HTMLDivElement | null>(null);
+  const backRef = useRef<HTMLDivElement | null>(null);
+  useReveal(claimRef);
+  useReveal(frontRef);
+  useReveal(backRef);
   const leadRef = useRef<HTMLDivElement | null>(null);
   usePointerSpring(leadRef);
   // one spring for the whole backlist: every cover reads the same --px/--py
@@ -97,13 +101,13 @@ export function Shelf({
   usePointerSpring(fieldRef, { onlyWhileHovered: false });
 
   return (
-    <section
-      ref={ref}
-      data-reveal="pending"
-      className="mx-auto max-w-[1320px] px-5 pb-14 pt-24 sm:px-8"
-    >
+    <section className="mx-auto max-w-[1320px] px-5 pb-14 pt-24 sm:px-8">
       {/* ————— the claim, beside the book that proves it ————— */}
-      <div className="grid items-center gap-10 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14">
+      <div
+        ref={claimRef}
+        data-reveal="pending"
+        className="grid items-center gap-10 lg:grid-cols-[340px_minmax(0,1fr)] lg:gap-14"
+      >
         <div ref={leadRef} className="reveal tilt-cover w-52 lg:w-full">
           <Image
             src={`/projects/${lead.slug}.jpg`}
@@ -135,7 +139,11 @@ export function Shelf({
       </div>
 
       {/* ————— the front table: the names you already know ————— */}
-      <div className="mt-20 border-t border-line pt-10">
+      <div
+        ref={frontRef}
+        data-reveal="pending"
+        className="mt-20 border-t border-line pt-10"
+      >
         <h3 className="meta-caps reveal text-mid">New York Times Bestsellers</h3>
         <div className="mt-8 grid grid-cols-3 items-end gap-6 sm:grid-cols-5 sm:gap-8">
           {front.map((p, i) => (
@@ -152,7 +160,11 @@ export function Shelf({
       </div>
 
       {/* ————— the backlist: a field, not a grid ————— */}
-      <div className="mt-20 border-t border-line pt-10">
+      <div
+        ref={backRef}
+        data-reveal="pending"
+        className="mt-20 border-t border-line pt-10"
+      >
         <h3 className="meta-caps reveal text-faint">
           International &amp; National Bestsellers
         </h3>

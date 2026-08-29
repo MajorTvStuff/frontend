@@ -169,13 +169,16 @@
   transform: translateY(1.25rem);
 }
 [data-reveal="in"] .reveal-2 {
-  transition-delay: 90ms;
+  transition-delay: calc(90ms + var(--tile-wait, 0ms));
 }
 [data-reveal="in"] .reveal-3 {
-  transition-delay: 180ms;
+  transition-delay: calc(180ms + var(--tile-wait, 0ms));
 }
 [data-reveal="in"] .reveal-4 {
-  transition-delay: 270ms;
+  transition-delay: calc(270ms + var(--tile-wait, 0ms));
+}
+[data-reveal="in"] .reveal {
+  transition-delay: var(--tile-wait, 0ms);
 }
 
 /* the backlist arrives as a soft cascade — --d capped so the last cover is
@@ -604,15 +607,21 @@
   margin-top: 1rem;
 }
 
-/* the slate's own reveal, on the same triggered contract as everything else */
+/* the slate's own reveal, on the same triggered contract as everything else.
+   Each tile carries its own data-reveal, so it arrives when IT arrives — and
+   the right-hand tile of a row waits a beat longer, because two frames
+   opening at once is the thing that reads as "too much at me". */
+.slate-panel:nth-child(even) {
+  --tile-wait: 450ms;
+}
 [data-reveal="in"] .slate-rule i {
-  transition: transform 620ms var(--ease-matte) 60ms;
+  transition: transform 620ms var(--ease-matte) calc(60ms + var(--tile-wait, 0ms));
 }
 [data-reveal="pending"] .slate-rule i {
   transform: scaleX(0);
 }
 [data-reveal="in"] .slate-gate i {
-  transition: transform 720ms var(--ease-matte) 140ms;
+  transition: transform 720ms var(--ease-matte) calc(140ms + var(--tile-wait, 0ms));
 }
 [data-reveal="pending"] .slate-gate i {
   transform: scaleY(1);
@@ -620,7 +629,7 @@
 [data-reveal="in"] .slate-art--settle {
   transition:
     opacity 760ms var(--ease-matte),
-    transform 900ms var(--ease-matte) 100ms;
+    transform 900ms var(--ease-matte) calc(100ms + var(--tile-wait, 0ms));
 }
 [data-reveal="pending"] .slate-art--settle {
   transform: scale(1.05);

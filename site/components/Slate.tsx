@@ -101,6 +101,9 @@ function Panel({
 }) {
   const tiltRef = useRef<HTMLElement | null>(null);
   usePointerSpring(tiltRef);
+  // each tile owns its own reveal: revealing the whole section at once put
+  // four tiles in the visitor's face simultaneously
+  useReveal(tiltRef);
 
   const still = !s.youtubeId;
   // every frame fills — pillarboxed key art made the wall read as ragged
@@ -115,6 +118,7 @@ function Panel({
     <article
       ref={tiltRef}
       className={`slate-panel tilt${still ? " slate-panel--still" : ""}`}
+      data-reveal="pending"
       aria-labelledby={`slate-${s.slug}`}
       onPointerEnter={still ? undefined : onEnter}
       onPointerLeave={still ? undefined : onLeave}
@@ -235,8 +239,8 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
   const [states, setStates] = useState<Record<string, State>>({});
   const [canAuto, setCanAuto] = useState(false);
 
-  const sectionRef = useRef<HTMLElement | null>(null);
-  useReveal(sectionRef);
+  const headRef = useRef<HTMLElement | null>(null);
+  useReveal(headRef);
 
   // play-once guard: a REF, never state — StrictMode's second effect pass
   // runs before a state update flushes and both would read an empty set
@@ -442,7 +446,7 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
 
   return (
     <section
-      ref={sectionRef}
+      ref={headRef}
       data-reveal="pending"
       className="mx-auto max-w-[1320px] px-5 pt-20 sm:px-8"
     >
