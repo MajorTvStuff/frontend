@@ -97,12 +97,46 @@ function Jacket({
   );
 }
 
-/* A deterministic pseudo-random depth per slug, so the server and the client
-   agree and the scatter never reshuffles between renders. 0 = far, 1 = near. */
-function depthOf(slug: string) {
-  let h = 0;
-  for (let i = 0; i < slug.length; i++) h = (h * 31 + slug.charCodeAt(i)) % 9973;
-  return (h % 1000) / 1000;
+/* Deterministic pseudo-randomness per slug, so the server and the client
+   agree and the scatter never reshuffles between renders. */
+function hash(slug: string, salt = 0) {
+  let h = 2166136261 ^ salt;
+  for (let i = 0; i < slug.length; i++) {
+    h ^= slug.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return ((h >>> 0) % 10000) / 10000;
+}
+
+const COLS = 5;
+
+/**
+ * Scatter the backlist across a field instead of stacking it in rows.
+ *
+ * Pure random placement collides; a grid reads as a grid. So: a coarse grid
+ * supplies the skeleton — which guarantees nothing overlaps — and every
+ * cover is then thrown off its cell by up to a third of a cell in each
+ * direction, given its own size, and tipped a few degrees. By the time all
+ * three vary together there is no row left to read, but also no pile-up.
+ */
+function scatter(slug: string, i: number, count: number) {
+  const rows = Math.ceil(count / COLS);
+  const row = Math.floor(i / COLS);
+  const col = i % COLS;
+  // A short last row must still span the full width, or the field empties
+  // out on one side — 14 books over five columns leaves the bottom right
+  // bare unless the last four are spread across the whole width instead.
+  const inThisRow = Math.min(COLS, count - row * COLS);
+  const cx = ((col + 0.5) / inThisRow) * 100;
+  const cy = ((row + 0.5) / rows) * 100;
+  const jx = (hash(slug, 1) - 0.5) * (100 / inThisRow) * 0.6;
+  const jy = (hash(slug, 2) - 0.5) * (100 / rows) * 0.26;
+  return {
+    x: Math.min(90, Math.max(10, cx + jx)),
+    y: Math.min(88, Math.max(12, cy + jy)),
+    z: hash(slug, 3),
+    tilt: (hash(slug, 4) - 0.5) * 7,
+  };
 }
 
 export function Shelf({
@@ -275,22 +309,25 @@ export function Shelf({
         </h3>
         <div ref={fieldRef} className="shelf-field mt-10">
           {back.map((p, i) => {
-            const z = depthOf(p.slug);
+            const s = scatter(p.slug, i, back.length);
             return (
               <div
                 key={p.slug}
                 className="shelf-item"
                 style={
                   {
-                    "--z": z.toFixed(3),
+                    "--z": s.z.toFixed(3),
                     "--d": i,
+                    "--tilt": `${s.tilt.toFixed(2)}deg`,
+                    left: `${s.x.toFixed(2)}%`,
+                    top: `${s.y.toFixed(2)}%`,
                   } as React.CSSProperties
                 }
               >
                 <Jacket
                   p={p}
                   className="reveal-d"
-                  sizes="(min-width: 1024px) 170px, (min-width: 640px) 18vw, 26vw"
+                  sizes="(min-width: 1024px) 176px, (min-width: 640px) 140px, 104px"
                   onOpen={openBook}
                   onClose={closeBook}
                   onLock={lockBook}

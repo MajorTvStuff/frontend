@@ -166,7 +166,7 @@ export default function Home() {
                   <Confirm q={site.contact.emailConfirm}>
                     <a
                       href={`mailto:${site.contact.email}`}
-                      className="link display-heavy text-h2 decoration-signal decoration-2 underline-offset-8"
+                      className="link contact-email display-heavy decoration-signal decoration-2 underline-offset-8"
                     >
                       {site.contact.email}
                     </a>
