@@ -32,7 +32,10 @@ export function LegalPage({
         </Link>
       </header>
 
-      <main id="main" className="mx-auto max-w-[860px] px-5 pb-24 pt-10 sm:px-8">
+      <main
+        id="main"
+        className="mx-auto max-w-[860px] px-5 pb-24 pt-10 sm:px-8"
+      >
         <h1 className="display-heavy text-h2 text-paper">{title}</h1>
         <p className="meta-caps mt-3 text-faint">Last updated {updated}</p>
 
@@ -62,7 +65,7 @@ export function LegalPage({
           Privacy
         </Link>
         <p className="meta-caps text-mid">
-          {site.verticals} · © {new Date().getFullYear()} Major Content
+          {site.verticals} · © {new Date().getFullYear()} {site.legal.entity}
         </p>
       </footer>
     </>

@@ -43,8 +43,12 @@
     "leverage": "Publishing is the leverage for production."
   },
   "contact": {
-    "email": "info@majorcontent.com",
-    "emailConfirm": "Contact email for the new brand not yet provided — placeholder pending RG (question 5 in MAJOR-CONTENT-CONCEPTS.md)."
+    "email": "rgarcia@majortvproductions.com"
+  },
+  "legal": {
+    "note": "Supplied by the client 2026-09-07. The legal entity behind the MAJOR CONTENT brand; used by the terms, privacy and copyright notices.",
+    "entity": "Major TV, Inc.",
+    "jurisdiction": "New Jersey"
   },
   "icons": [
     "Jennifer Lopez",

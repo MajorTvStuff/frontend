@@ -7,7 +7,6 @@ import type { Cover as Jacket } from "@/components/Shelf";
 import { Shelf } from "@/components/Shelf";
 import { Reveal } from "@/components/Reveal";
 import { Lockup } from "@/components/Lockup";
-import { Confirm } from "@/components/Confirm";
 
 /**
  * The argument, in the order a cold visitor needs it:
@@ -163,14 +162,12 @@ export default function Home() {
               </p>
               <div className="mt-10 border-t border-paper/15 pt-8">
                 <p className="reveal reveal-3">
-                  <Confirm q={site.contact.emailConfirm}>
-                    <a
-                      href={`mailto:${site.contact.email}`}
-                      className="link contact-email display-heavy decoration-signal decoration-2 underline-offset-8"
-                    >
-                      {site.contact.email}
-                    </a>
-                  </Confirm>
+                  <a
+                    href={`mailto:${site.contact.email}`}
+                    className="link contact-email display-heavy decoration-signal decoration-2 underline-offset-8"
+                  >
+                    {site.contact.email}
+                  </a>
                 </p>
               </div>
             </div>
@@ -186,8 +183,11 @@ export default function Home() {
             <a href="/privacy" className="link meta-caps">
               Privacy
             </a>
+            {/* the copyright names the company, not the brand — MAJOR
+                CONTENT is what Major TV, Inc. publishes under */}
             <p className="meta-caps text-mid">
-              {site.verticals} · © {new Date().getFullYear()} Major Content
+              {site.verticals} · © {new Date().getFullYear()}{" "}
+              {site.legal.entity}
             </p>
           </div>
         </footer>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
+import { site } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Privacy — MAJOR CONTENT",
@@ -72,8 +73,10 @@ export default function Privacy() {
         delete personal information a business holds about you, and to object to
         certain processing. Because this site collects nothing, in practice this
         applies only to email you have sent us. Write to{" "}
-        <span className="ph">[privacy contact address]</span> and we will
-        respond within the period the applicable law requires.
+        <a href={`mailto:${site.contact.email}`} className="link">
+          {site.contact.email}
+        </a>{" "}
+        and we will respond within the period the applicable law requires.
       </p>
 
       <h2>Changes</h2>
@@ -85,9 +88,14 @@ export default function Privacy() {
 
       <h2>Who we are</h2>
       <p>
-        <span className="ph">
-          [Registered company name, address and jurisdiction]
-        </span>
+        This site is published by {site.legal.entity}, a{" "}
+        {site.legal.jurisdiction} company, under the name MAJOR CONTENT. The
+        controller of any personal information described on this page is{" "}
+        {site.legal.entity}, and it can be reached at{" "}
+        <a href={`mailto:${site.contact.email}`} className="link">
+          {site.contact.email}
+        </a>
+        . <span className="ph">[registered office address]</span>
       </p>
     </LegalPage>
   );

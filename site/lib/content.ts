@@ -37,7 +37,14 @@ const Site = z.object({
   positioning: z
     .object({ note: z.string(), continuity: z.string(), leverage: z.string() })
     .optional(),
-  contact: z.object({ email: z.string(), emailConfirm: z.string() }),
+  contact: z.object({ email: z.string() }),
+  /** The company behind the brand. Terms, privacy and the copyright notices
+      all read it from here so there is one place to correct it. */
+  legal: z.object({
+    note: z.string(),
+    entity: z.string(),
+    jurisdiction: z.string(),
+  }),
   icons: z.array(z.string()).optional(),
 });
 

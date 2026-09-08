@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { LegalPage } from "@/components/LegalPage";
+import { site } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Terms — MAJOR CONTENT",
@@ -12,11 +13,11 @@ export default function Terms() {
     <LegalPage title="Terms of Use" updated="August 2026">
       <h2>What this site is</h2>
       <p>
-        This site is published by{" "}
-        <span className="ph">[registered company name]</span> to describe its
-        work. It is informational. Nothing on it is an offer, a solicitation for
-        investment, or a promise of representation, and no agreement is formed
-        by reading it or by writing to the address shown.
+        This site is published by {site.legal.entity}, a{" "}
+        {site.legal.jurisdiction} company, under the name MAJOR CONTENT, to
+        describe its work. It is informational. Nothing on it is an offer, a
+        solicitation for investment, or a promise of representation, and no
+        agreement is formed by reading it or by writing to the address shown.
       </p>
 
       <h2>Unsolicited material</h2>
@@ -68,9 +69,10 @@ export default function Terms() {
 
       <h2>Governing law</h2>
       <p>
-        These terms are governed by the laws of{" "}
-        <span className="ph">[state or country]</span>, and the courts of{" "}
-        <span className="ph">[jurisdiction]</span> have exclusive jurisdiction.
+        These terms are governed by the laws of the State of{" "}
+        {site.legal.jurisdiction}, without regard to its conflict of laws rules,
+        and the state and federal courts sitting in {site.legal.jurisdiction}{" "}
+        have exclusive jurisdiction.
       </p>
 
       <h2>Changes</h2>

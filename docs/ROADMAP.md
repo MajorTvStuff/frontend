@@ -76,9 +76,23 @@ a trailer, from youtube-nocookie.com. The terms also carry an unsolicited
 material clause, which matters more than usual for a company that receives
 pitches.
 
-Every fact only the company can supply is a visible dashed placeholder:
-registered name, address, jurisdiction, governing law, hosting provider,
-privacy contact. A review banner shows while NEXT_PUBLIC_SHOW_TODOS is on.
+RG supplied the company details 2026-09-07: the entity is **Major TV, Inc.**,
+a **New Jersey** company, and the contact is **rgarcia@majortvproductions.com**.
+Both live in `site/content/site.json` (`legal.entity`, `legal.jurisdiction`,
+`contact.email`), so the terms, the privacy page and the copyright notice all
+read them from one place. Governing law and forum are now New Jersey, and the
+copyright line names the company rather than the brand.
+
+**Two placeholders remain, both on /privacy:** the hosting provider (unknown
+until we pick a host — see item on GoDaddy in the client asks) and the
+registered office address. A review banner shows while NEXT_PUBLIC_SHOW_TODOS
+is on.
+
+**One thing to put to RG:** the site brands as MAJOR CONTENT but the entity is
+Major TV, Inc. Both pages currently say the site is published by Major TV, Inc.
+"under the name MAJOR CONTENT", which describes what is happening without
+claiming a registered DBA. If MAJOR CONTENT is a registered trade name, or a
+separate entity is being formed, the wording should follow that instead.
 
 **Still required before launch: a lawyer reads both.** We wrote accurate
 descriptions of the build; that is not legal advice.
