@@ -6,8 +6,11 @@ import { useReveal } from "@/lib/reveal";
 import { usePointerSpring } from "@/lib/pointer";
 import { BookPanel } from "@/components/BookPanel";
 import type { Project } from "@/lib/content";
+import type { ClumpItem } from "@/lib/clump";
 
 export type Cover = Project & { width: number; height: number };
+/** a backlist cover with its place in the clump (see lib/clump.ts) */
+export type Placed = Cover & ClumpItem;
 
 /**
  * THE LEVERAGE, AND THE SHELF THAT PROVES IT.
@@ -19,11 +22,13 @@ export type Cover = Project & { width: number; height: number };
  * Bestseller that proves it. The claim arrives exactly where a visitor is
  * asking why a production company gets to be good at this.
  *
- * Below it the books read as a ladder — 340 / 226 / 136 — instead of twenty
- * interchangeable thumbnails: present, but plainly the back catalogue, which
- * is what the client asked for ("not loud and proud, but not throw them
- * away"). No titles anywhere: the AUTHOR is the proof, and naming authors is
- * what makes the icons band below land as recognition rather than a new list.
+ * Below it the front table holds the five names you know at 226px, and the
+ * rest gather in a round, tight clump — a word cloud of jackets, placed by
+ * lib/clump.ts on the server — present, but plainly the back catalogue,
+ * which is what the client asked for ("not loud and proud, but not throw
+ * them away"). No titles anywhere: the AUTHOR is the proof, and naming
+ * authors is what makes the icons band below land as recognition rather
+ * than a new list.
  */
 
 function Jacket({
@@ -55,7 +60,11 @@ function Jacket({
     <div
       ref={ref}
       className={`tilt-cover ${className}${locked ? " is-locked" : ""}`}
-      style={index === undefined ? undefined : ({ "--d": index } as React.CSSProperties)}
+      style={
+        index === undefined
+          ? undefined
+          : ({ "--d": index } as React.CSSProperties)
+      }
       onPointerEnter={() => onOpen(p)}
       onPointerLeave={() => onClose(p)}
     >
@@ -97,48 +106,6 @@ function Jacket({
   );
 }
 
-/* Deterministic pseudo-randomness per slug, so the server and the client
-   agree and the scatter never reshuffles between renders. */
-function hash(slug: string, salt = 0) {
-  let h = 2166136261 ^ salt;
-  for (let i = 0; i < slug.length; i++) {
-    h ^= slug.charCodeAt(i);
-    h = Math.imul(h, 16777619);
-  }
-  return ((h >>> 0) % 10000) / 10000;
-}
-
-const COLS = 5;
-
-/**
- * Scatter the backlist across a field instead of stacking it in rows.
- *
- * Pure random placement collides; a grid reads as a grid. So: a coarse grid
- * supplies the skeleton — which guarantees nothing overlaps — and every
- * cover is then thrown off its cell by up to a third of a cell in each
- * direction, given its own size, and tipped a few degrees. By the time all
- * three vary together there is no row left to read, but also no pile-up.
- */
-function scatter(slug: string, i: number, count: number) {
-  const rows = Math.ceil(count / COLS);
-  const row = Math.floor(i / COLS);
-  const col = i % COLS;
-  // A short last row must still span the full width, or the field empties
-  // out on one side — 14 books over five columns leaves the bottom right
-  // bare unless the last four are spread across the whole width instead.
-  const inThisRow = Math.min(COLS, count - row * COLS);
-  const cx = ((col + 0.5) / inThisRow) * 100;
-  const cy = ((row + 0.5) / rows) * 100;
-  const jx = (hash(slug, 1) - 0.5) * (100 / inThisRow) * 0.6;
-  const jy = (hash(slug, 2) - 0.5) * (100 / rows) * 0.26;
-  return {
-    x: Math.min(90, Math.max(10, cx + jx)),
-    y: Math.min(88, Math.max(12, cy + jy)),
-    z: hash(slug, 3),
-    tilt: (hash(slug, 4) - 0.5) * 7,
-  };
-}
-
 export function Shelf({
   label,
   thesis,
@@ -146,13 +113,16 @@ export function Shelf({
   lead,
   front,
   back,
+  fieldPx,
 }: {
   label: string;
   thesis?: string;
   lede?: string;
   lead: Cover;
   front: Cover[];
-  back: Cover[];
+  back: Placed[];
+  /** the field width at which the largest backlist cover is full size */
+  fieldPx: number;
 }) {
   const claimRef = useRef<HTMLDivElement | null>(null);
   const frontRef = useRef<HTMLDivElement | null>(null);
@@ -279,7 +249,9 @@ export function Shelf({
         data-reveal="pending"
         className="mt-20 border-t border-line pt-10"
       >
-        <h3 className="meta-caps reveal text-mid">New York Times Bestsellers</h3>
+        <h3 className="meta-caps reveal text-mid">
+          New York Times Bestsellers
+        </h3>
         <div className="mt-8 grid grid-cols-3 items-end gap-6 sm:grid-cols-5 sm:gap-8">
           {front.map((p, i) => (
             <Jacket
@@ -298,7 +270,7 @@ export function Shelf({
         </div>
       </div>
 
-      {/* ————— the backlist: a field, not a grid ————— */}
+      {/* ————— the backlist: a clump, not a grid ————— */}
       <div
         ref={backRef}
         data-reveal="pending"
@@ -307,35 +279,39 @@ export function Shelf({
         <h3 className="meta-caps reveal text-faint">
           International &amp; National Bestsellers
         </h3>
-        <div ref={fieldRef} className="shelf-field mt-10">
-          {back.map((p, i) => {
-            const s = scatter(p.slug, i, back.length);
-            return (
-              <div
-                key={p.slug}
-                className="shelf-item"
-                style={
-                  {
-                    "--z": s.z.toFixed(3),
-                    "--d": i,
-                    "--tilt": `${s.tilt.toFixed(2)}deg`,
-                    left: `${s.x.toFixed(2)}%`,
-                    top: `${s.y.toFixed(2)}%`,
-                  } as React.CSSProperties
-                }
-              >
-                <Jacket
-                  p={p}
-                  className="reveal-d"
-                  sizes="(min-width: 1024px) 176px, (min-width: 640px) 140px, 104px"
-                  onOpen={openBook}
-                  onClose={closeBook}
-                  onLock={lockBook}
-                  locked={pinned === p.slug}
-                />
-              </div>
-            );
-          })}
+        {/* a square field, centred; every size inside it is a percentage of
+            its width, so the whole clump scales as one object */}
+        <div
+          ref={fieldRef}
+          className="shelf-field mt-10"
+          style={{ "--field-max": `${fieldPx}px` } as React.CSSProperties}
+        >
+          {back.map((p, i) => (
+            <div
+              key={p.slug}
+              className="shelf-item"
+              style={
+                {
+                  "--z": p.z,
+                  "--d": i,
+                  "--tilt": `${p.tilt}deg`,
+                  "--w": `${p.w}%`,
+                  left: `${p.x}%`,
+                  top: `${p.y}%`,
+                } as React.CSSProperties
+              }
+            >
+              <Jacket
+                p={p}
+                className="reveal-d"
+                sizes="(min-width: 1024px) 176px, (min-width: 768px) 140px, 104px"
+                onOpen={openBook}
+                onClose={closeBook}
+                onLock={lockBook}
+                locked={pinned === p.slug}
+              />
+            </div>
+          ))}
         </div>
       </div>
 

@@ -615,13 +615,15 @@
   --tile-wait: 450ms;
 }
 [data-reveal="in"] .slate-rule i {
-  transition: transform 620ms var(--ease-matte) calc(60ms + var(--tile-wait, 0ms));
+  transition: transform 620ms var(--ease-matte)
+    calc(60ms + var(--tile-wait, 0ms));
 }
 [data-reveal="pending"] .slate-rule i {
   transform: scaleX(0);
 }
 [data-reveal="in"] .slate-gate i {
-  transition: transform 720ms var(--ease-matte) calc(140ms + var(--tile-wait, 0ms));
+  transition: transform 720ms var(--ease-matte)
+    calc(140ms + var(--tile-wait, 0ms));
 }
 [data-reveal="pending"] .slate-gate i {
   transform: scaleY(1);
@@ -707,25 +709,32 @@
  */
 .shelf-field {
   position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 10.5;
-  /* a tipped cover at the edge would otherwise widen the page */
-  overflow-x: clip;
-  /* the scatter tips covers a few degrees; give the field room for it */
-  overflow: visible;
+  /* A square, centred: the clump is round, so the field it sits in is too.
+     --field-max (set by the component) is the width at which the largest
+     cover is 160px; below it the field shrinks with the viewport and
+     everything inside scales with it, because every size in here is a
+     percentage of the field, not a pixel count. */
+  width: min(100%, var(--field-max, 892px));
+  aspect-ratio: 1 / 1;
+  margin-inline: auto;
+  /* the parallax below is measured in cqw, so it scales with the field too */
+  container-type: inline-size;
 }
 .shelf-item {
   position: absolute;
-  /* far covers ~104px, near covers ~152px. A jacket is half again as tall
-     as it is wide, so this is the number that decides whether the pile
-     stays legible or turns into a heap. */
-  width: calc(104px + var(--z, 0.5) * 48px);
-  /* centre on the scattered point, drift with the cursor, and sit at its
-     own angle — one transform, because three rules would cancel */
+  /* set per cover by lib/clump.ts: roughly 12-18% of the field by depth,
+     122-160px at full size. A jacket is half again as tall as it is wide,
+     so this is the number that decides whether the clump stays legible or
+     turns into a heap. */
+  width: var(--w, 15%);
+  /* centre on the placed point, drift with the cursor, and sit at its own
+     angle — one transform, because three rules would cancel. The drift is
+     4-16px at full size (near covers travel further than far ones) and the
+     packing keeps 16px between neighbours, so no two covers can meet. */
   transform: translate(-50%, -50%)
     translate3d(
-      calc(var(--px, 0) * (4px + var(--z, 0.5) * 12px)),
-      calc(var(--py, 0) * (3px + var(--z, 0.5) * 8px)),
+      calc(var(--px, 0) * (0.45cqw + var(--z, 0.5) * 1.35cqw)),
+      calc(var(--py, 0) * (0.34cqw + var(--z, 0.5) * 0.9cqw)),
       0
     )
     rotate(var(--tilt, 0deg));
@@ -751,18 +760,18 @@
     opacity: 1;
   }
 }
-/* The scatter needs width. Five columns across a 350px phone gives cells
-   narrower than the covers themselves (measured: 11 overlapping pairs at up
-   to 57%), a 704px tablet is not much better (15 pairs at 30%), and even a
-   960px field overlaps and pushes covers past its own edge. So
-   below 1280px the covers flow instead, keeping their varied sizes and
-   their tilt but giving up absolute placement — `position: static` makes
+/* The clump scales down cleanly to a tablet (a 704px field still gives
+   96-126px covers and a 12px gap), but below that the covers would be too
+   small to press or to read. So phones flow instead, keeping their varied
+   sizes and their tilt but giving up placement — `position: static` makes
    the inline left/top inert, so one set of server-computed coordinates
    serves both layouts with no second code path. */
-@media (max-width: 1279px) {
+@media (max-width: 767px) {
   .shelf-field {
     position: static;
+    width: 100%;
     aspect-ratio: auto;
+    container-type: normal;
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
@@ -781,9 +790,8 @@
       rotate(var(--tilt, 0deg));
   }
 }
-/* tablets flow too, just larger — five scatter columns need more width than
-   a 704px field has before the covers start stacking on each other */
-@media (min-width: 640px) and (max-width: 1279px) {
+/* small tablets flow too, just larger */
+@media (min-width: 640px) and (max-width: 767px) {
   .shelf-field {
     gap: 2rem 1.75rem;
   }
@@ -902,12 +910,16 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .book-panel {
-    transition: opacity 160ms linear, visibility 0s linear 160ms;
+    transition:
+      opacity 160ms linear,
+      visibility 0s linear 160ms;
     transform: translate(0, -50%);
   }
   .book-panel.is-open {
     transform: translate(0, -50%);
-    transition: opacity 160ms linear, visibility 0s;
+    transition:
+      opacity 160ms linear,
+      visibility 0s;
   }
   .book-panel-inner {
     animation: none;

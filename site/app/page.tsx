@@ -1,4 +1,5 @@
 import { site, projects, project, projectDims, youtubeId } from "@/lib/content";
+import { clump } from "@/lib/clump";
 import type { Cover, Primer } from "@/components/Hero";
 import { Hero } from "@/components/Hero";
 import type { Show } from "@/components/Slate";
@@ -70,9 +71,16 @@ export default function Home() {
 
   const lead = jacket(LEAD);
   const shown = new Set([LEAD, ...FRONT]);
-  const back = projects
+  const backlist = projects
     .filter((p) => p.medium === "book" && !shown.has(p.slug))
     .map((p) => jacket(p.slug));
+  /* The clump is computed here, once, on the server, and travels to the
+     client as plain numbers — so no two renders can disagree about where a
+     cover sits, and the packing code never ships to the browser. */
+  const field = clump(
+    backlist.map((p) => ({ slug: p.slug, aspect: p.width / p.height })),
+  );
+  const back = backlist.map((p, i) => ({ ...p, ...field.items[i] }));
 
   /* Every string is verbatim client copy or a mechanical slice of one: the
      statement is company[0] up to its list of formats; the proof tokens are
@@ -114,6 +122,7 @@ export default function Home() {
           lead={lead}
           front={FRONT.map(jacket)}
           back={back}
+          fieldPx={field.fieldPx}
         />
 
         {/* the network, as names — the densest "cool info" on the page */}
