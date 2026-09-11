@@ -720,26 +720,44 @@
   /* the parallax below is measured in cqw, so it scales with the field too */
   container-type: inline-size;
 }
+/* the covers' box — the same box as the field, so their percentages read the
+   same; on phones it is also the thing the camera moves */
+.shelf-scene {
+  position: absolute;
+  inset: 0;
+}
 .shelf-item {
   position: absolute;
+  /* placed by lib/clump.ts, as percentages of the field */
+  left: calc(var(--x, 50) * 1%);
+  top: calc(var(--y, 50) * 1%);
   /* set per cover by lib/clump.ts: roughly 12-18% of the field by depth,
      122-160px at full size. A jacket is half again as tall as it is wide,
      so this is the number that decides whether the clump stays legible or
      turns into a heap. */
   width: var(--w, 15%);
-  /* centre on the placed point, drift with the cursor, and sit at its own
-     angle — one transform, because three rules would cancel. The drift is
-     4-16px at full size (near covers travel further than far ones) and the
-     packing keeps 16px between neighbours, so no two covers can meet. */
-  transform: translate(-50%, -50%)
-    translate3d(
-      calc(var(--px, 0) * (0.45cqw + var(--z, 0.5) * 1.35cqw)),
-      calc(var(--py, 0) * (0.34cqw + var(--z, 0.5) * 0.9cqw)),
-      0
-    )
-    rotate(var(--tilt, 0deg));
+  /* centre on the placed point and sit at its own angle. The cursor drift
+     is added below, inside a guard: it is measured in container units, and
+     an engine without them would drop this whole declaration — the centring
+     and the tilt with it — rather than just the drift. */
+  transform: translate(-50%, -50%) rotate(var(--tilt, 0deg));
   transition: transform 120ms linear;
   z-index: calc(1 + var(--z, 0) * 10);
+}
+@supports (width: 1cqw) {
+  .shelf-item {
+    /* drift with the cursor — one transform, because three rules would
+       cancel. The drift is 4-16px at full size (near covers travel further
+       than far ones) and the packing keeps 16px between neighbours, so no
+       two covers can meet. */
+    transform: translate(-50%, -50%)
+      translate3d(
+        calc(var(--px, 0) * (0.45cqw + var(--z, 0.5) * 1.35cqw)),
+        calc(var(--py, 0) * (0.34cqw + var(--z, 0.5) * 0.9cqw)),
+        0
+      )
+      rotate(var(--tilt, 0deg));
+  }
 }
 /* the cursor's own cover outranks the depth order: depth is for the eye, the
    pointer needs the one it is actually on */
@@ -761,63 +779,209 @@
   }
 }
 /* ------------------------------------------------------------------ *
- *  THE PHONE STAGE — below 768px the clump is a window you pinch into.
- *  The clump scales down cleanly to a tablet (a 704px field still gives
- *  96-126px covers and a 12px gap), but on a 350px phone every cover is a
- *  thumbnail. So the hint above the field says pinch, and lib/stage.ts
- *  writes --s (scale) and --tx/--ty (camera, px) as the fingers move. The
- *  CSS decides what depth means: a near cover (high --z) zooms harder and
- *  travels further than a far one — the same thing the cursor parallax
- *  does on desktop, and what a pile of jackets does when you lean in.
- *  Zoom is about the centre of the field so the sums stay continuous
- *  while the fingers move; the camera offset carries the point under the
- *  fingers along.
+ *  THE PHONE STAGE — below 768px the field is a 3D scene seen from the
+ *  front, and the fingers move the camera.
+ *
+ *  The clump scales down cleanly to a tablet, but on a 350px phone every
+ *  cover is a thumbnail, and a phone has no cursor for the parallax to
+ *  follow. So each cover sits at its own depth (--Z, from the same --z that
+ *  sets its size), the field gets perspective, and lib/stage.ts writes the
+ *  camera as it moves: --dz dolly, --tx/--ty pan, --rx/--ry drag tilt,
+ *  --gx/--gy device tilt. A drag leans the camera, so near covers slide one
+ *  way and far covers the other, like a model turned in the hand. A pinch
+ *  dollies INTO the pile: covers the camera passes fade out (--o) and stop
+ *  taking taps, and a depth of field (--blur) narrows as you go, so a pinch
+ *  isolates one layer at a time.
+ *
+ *  At rest none of this shows: each cover's resting place is pre-divided by
+ *  its foreshortening (Shelf.tsx), so the scene projects to exactly the
+ *  flat clump until the camera moves. Before anyone touches it, the scene
+ *  sweeps once by itself — the depth is the invitation.
+ *
+ *  The hint and the stage share ONE breakpoint, in px, on purpose: a rem
+ *  breakpoint moves with the visitor's font size and would let the hint
+ *  show where the stage is not.
  * ------------------------------------------------------------------ */
+@property --arx {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+@property --ary {
+  syntax: "<angle>";
+  inherits: false;
+  initial-value: 0deg;
+}
+.stage-hint {
+  display: none;
+}
 @media (max-width: 767px) {
   .shelf-field {
-    --s: 1;
+    --dz: 0px;
     --tx: 0px;
     --ty: 0px;
-    /* a window: once zoomed the clump is larger than its frame */
-    overflow: hidden;
+    --rx: 0deg;
+    --ry: 0deg;
+    --gx: 0deg;
+    --gy: 0deg;
+    /* the whole window must always be on screen: a window taller than the
+       viewport that owns the drag would trap the page (landscape phones).
+       The first line is the fallback for engines without svh. */
+    width: min(100%, var(--field-max, 892px));
+    width: min(100%, var(--field-max, 892px), calc(100svh - 7rem));
+    /* the camera sits this far in front of the middle layer (set by the
+       component from STAGE.P, so the maths in stage.ts and here agree) */
+    perspective: var(--P, 600px);
+    perspective-origin: 50% 50%;
+    /* a window: dollied in, the pile is larger than its frame. clip, not
+       hidden — hidden makes a scroll container, and focusing a cover
+       projected past the edge would scroll the window out from under the
+       camera */
+    overflow: clip;
     outline: 1px solid var(--color-line);
     outline-offset: -1px;
     /* at overview the page still scrolls through the field, so a full-width
-       square never traps a thumb; zoomed, the field owns the drag */
+       square never traps a thumb; dollied in, stage.ts switches this to none
+       (inline) — and only while the whole window fits on screen */
     touch-action: pan-y;
   }
-  .shelf-field[data-zoomed="true"] {
-    touch-action: none;
+  .shelf-scene {
+    /* the sweep animates these; an engine that cannot register them keeps
+       them at 0 and gets no sweep (see has-prop) */
+    --arx: 0deg;
+    --ary: 0deg;
+    transform-style: preserve-3d;
+    /* The scene's own plane takes part in the 3D sorting, and anything
+       behind it cannot be tapped. So the scene sits one --depth BACK and
+       every cover sits --depth forward of where its depth says (below): the
+       world is unchanged, and no cover is ever behind the plane it lives
+       in. The origin's third value keeps the lean pivoting on the middle
+       layer, not on the back wall; its first two keep the pivot under the
+       FRAME centre once panned — a lean about the pile's own centre would
+       change the magnification of what is in the frame. */
+    transform-origin: calc(50% - var(--tx)) calc(50% - var(--ty))
+      var(--depth, 190px);
+    /* dolly and pan, then the lean — drag tilt, device tilt and the attract
+       sweep simply add */
+    transform: translate3d(
+        var(--tx),
+        var(--ty),
+        calc(var(--dz) - var(--depth, 190px))
+      )
+      rotateX(calc(var(--rx) + var(--gx) + var(--arx, 0deg)))
+      rotateY(calc(var(--ry) + var(--gy) + var(--ary, 0deg)));
+    will-change: transform;
+  }
+  /* the invitation: one slow sweep of the camera once half the window is on
+     screen (is-seen, from the hook's observer), on an engine that can
+     animate a registered property (has-prop), until the first deliberate
+     touch (is-touched) — which inherits the sweep's pose rather than
+     dropping it. Reduced motion removes it with every other animation. */
+  [data-reveal="in"]
+    .shelf-field.is-seen.has-prop:not(.is-touched)
+    .shelf-scene {
+    animation: stage-attract 3.2s var(--ease-matte) 0.4s 1 both;
+  }
+  /* a finger is down: the sweep holds its pose under the drag, and carries
+     on if the browser takes the touch for a page scroll */
+  [data-reveal="in"] .shelf-field.is-seen.has-prop.is-held .shelf-scene {
+    animation-play-state: paused;
+  }
+  @keyframes stage-attract {
+    0%,
+    100% {
+      --ary: 0deg;
+      --arx: 0deg;
+    }
+    30% {
+      --ary: -8deg;
+      --arx: 3deg;
+    }
+    70% {
+      --ary: 8deg;
+      --arx: -3deg;
+    }
   }
   .shelf-item {
-    /* depth: a near cover zooms up to a quarter harder and travels up to a
-       third further than the middle of the pile; a far one, the reverse */
-    --sz: calc(1 + (var(--s, 1) - 1) * (1 + 0.5 * (var(--z, 0.5) - 0.5)));
-    --pz: calc(1 + 0.6 * (var(--z, 0.5) - 0.5));
+    /* each cover at its own depth, resting where the foreshortening at that
+       depth projects it back onto the flat clump */
+    left: calc(var(--lx, 50) * 1%);
+    top: calc(var(--ly, 50) * 1%);
+    width: calc(var(--lw, 15) * 1%);
+    /* --Z is the cover's depth in the world; + --depth puts it in front of
+       the scene's plane (see .shelf-scene) */
     transform: translate(-50%, -50%)
-      translate(
-        calc(
-          (var(--x, 50) - 50) * (var(--sz) - 1) * 1cqw + var(--tx, 0px) *
-            var(--pz)
-        ),
-        calc(
-          (var(--y, 50) - 50) * (var(--sz) - 1) * 1cqw + var(--ty, 0px) *
-            var(--pz)
-        )
-      )
-      scale(var(--sz)) rotate(var(--tilt, 0deg));
-    /* direct manipulation: the finger is the animation */
+      translate3d(0, 0, calc(var(--Z, 0px) + var(--depth, 190px)))
+      rotate(var(--tilt, 0deg));
+    /* a cover the camera is passing fades — written per cover by stage.ts
+       from its distance to the camera */
+    opacity: var(--o, 1);
     transition: none;
   }
-  /* the programmatic moves — double-tap, reset, the spring back — ease */
-  .shelf-field.is-animating .shelf-item {
-    transition: transform 420ms var(--ease-out-strong);
+  /* the depth of field only exists once the camera has moved in: no blur
+     surfaces at overview, where fourteen of them would be paid for nothing */
+  .shelf-field[data-zoomed="true"] .shelf-item {
+    filter: blur(var(--blur, 0px));
+  }
+  /* the desktop drop-shadow is a filter re-run every frame a cover moves;
+     on the stage every cover moves every frame, so it becomes a box shadow,
+     rasterised once */
+  .shelf-item .cover {
+    filter: none;
+    box-shadow: 0 8px 24px rgba(0, 5, 12, 0.55);
+  }
+  /* a cover the camera is passing stops taking taps as soon as it is no
+     longer solid; once it has gone it leaves the tab order and the paint */
+  .shelf-item[data-passing="true"] {
+    pointer-events: none;
+  }
+  .shelf-item[data-gone="true"] {
+    visibility: hidden;
+  }
+  /* the hint, above the window, in the same breakpoint as the stage */
+  .stage-hint {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-top: 1rem;
+    color: var(--color-paper);
+  }
+  .stage-hint[data-state="done"] {
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 560ms var(--ease-out-strong),
+      visibility 0s linear 560ms;
+  }
+  .stage-hint-dot {
+    flex: none;
+    width: 0.5rem;
+    height: 0.5rem;
+    border-radius: 999px;
+    background: var(--color-signal);
+    /* a handful of pulses to catch the eye, then still */
+    animation: hint-pulse 1.6s ease-in-out 8;
+  }
+  .stage-hint[data-state="done"] .stage-hint-dot {
+    animation: none;
+  }
+  @keyframes hint-pulse {
+    0%,
+    100% {
+      opacity: 0.35;
+      transform: scale(0.8);
+    }
+    50% {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
   .stage-reset {
     position: absolute;
     top: 0.75rem;
     right: 0.75rem;
     z-index: 40;
+    min-height: 44px;
   }
 }
 
@@ -925,9 +1089,9 @@
   .book-panel .mt-8 {
     margin-top: 0.375rem;
   }
-  .book-panel-close {
-    display: none;
-  }
+  /* the close button stays: on a phone it is the one sure way to let a
+     pinned book go (Escape needs a keyboard, and the pinned cover itself may
+     have been panned out of the window or passed by the camera) */
 }
 @media (prefers-reduced-motion: reduce) {
   .book-panel {

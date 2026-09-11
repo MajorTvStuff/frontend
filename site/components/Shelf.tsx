@@ -4,7 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useReveal } from "@/lib/reveal";
 import { usePointerSpring } from "@/lib/pointer";
-import { useZoomStage } from "@/lib/stage";
+import { STAGE, depthOf, foreshorten, useDepthStage } from "@/lib/stage";
 import { BookPanel } from "@/components/BookPanel";
 import type { Project } from "@/lib/content";
 import type { ClumpItem } from "@/lib/clump";
@@ -138,9 +138,6 @@ export function Shelf({
   // far ones and the field reads as a space rather than a grid
   const fieldRef = useRef<HTMLDivElement | null>(null);
   usePointerSpring(fieldRef, { onlyWhileHovered: false });
-  // phones have no cursor to follow, so the field becomes a window you pinch
-  // into instead — same depth, driven by the fingers (see lib/stage.ts)
-  const stage = useZoomStage(fieldRef);
 
   /* The panel stays put while the reader moves along the shelf and only
      leaves once they have actually left — a short close delay stops it
@@ -198,13 +195,40 @@ export function Shelf({
     setOpen(false);
   }, []);
 
-  // Escape lets go of a pinned panel
+  // phones have no cursor to follow, so the field becomes a 3D scene with a
+  // camera the fingers move instead — same depth, more of it (lib/stage.ts).
+  // A tap on empty ground lets a pinned panel go, which on a phone is the
+  // one way to do it that needs no target.
+  const stage = useDepthStage(fieldRef, {
+    onGroundTap: () => {
+      if (pinnedRef.current) unpin();
+    },
+  });
+  const { reset: resetCamera, zoomed } = stage;
+  const resetStage = useCallback(() => {
+    resetCamera();
+    unpin();
+  }, [resetCamera, unpin]);
+
+  // Escape lets go of a pinned panel, or brings the camera back
   useEffect(() => {
-    if (!pinned) return;
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && unpin();
+    if (!pinned && !zoomed) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape") return;
+      if (pinnedRef.current) unpin();
+      else resetCamera();
+    };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [pinned, unpin]);
+  }, [pinned, zoomed, unpin, resetCamera]);
+
+  // the phone stage spaces the covers evenly in depth by their size rank —
+  // the biggest nearest — so the back layer is really at the back
+  const depthRank = new Map(
+    [...back]
+      .sort((a, b) => a.z - b.z || a.slug.localeCompare(b.slug))
+      .map((p, i) => [p.slug, i] as const),
+  );
 
   return (
     <section className="mx-auto max-w-[1320px] px-5 pb-14 pt-24 sm:px-8">
@@ -283,63 +307,96 @@ export function Shelf({
         <h3 className="meta-caps reveal text-faint">
           International &amp; National Bestsellers
         </h3>
-        {/* phones: the clump is a window — say so before it arrives. The
-            hint reveals with the heading, ahead of the covers, and steps
-            back once the visitor has used it. */}
+        {/* phones: say it before the covers arrive — it reveals with the
+            heading, ahead of the cascade — and step it down as the visitor
+            learns: after a drag only the pinch is left to discover, after a
+            pinch it goes. It stays aria-hidden: it describes a two-finger
+            affordance assistive tech cannot use, and the covers themselves
+            are ordinary buttons. Shown only where the stage is, in the same
+            px query as the stage. */}
         <p
-          className="reveal reveal-2 meta-caps mt-4 text-faint md:hidden"
-          style={stage.touched ? { opacity: 0 } : undefined}
-          aria-hidden={stage.touched}
+          className="stage-hint reveal reveal-2 meta-caps"
+          data-state={stage.hint}
+          aria-hidden="true"
         >
-          Pinch to zoom in <span className="text-signal">·</span> drag to look
-          around
+          <span className="stage-hint-dot" />
+          <span>Pinch to zoom in</span>
+          {stage.hint === "full" && (
+            <>
+              <span className="text-signal">·</span>
+              <span>drag to look around</span>
+            </>
+          )}
         </p>
         {/* a square field, centred; every size inside it is a percentage of
-            its width, so the whole clump scales as one object */}
+            its width, so the whole clump scales as one object. On phones the
+            field gains perspective and the scene inside it carries the
+            camera (lib/stage.ts). */}
         <div
           ref={fieldRef}
           className="shelf-field mt-10"
-          style={{ "--field-max": `${fieldPx}px` } as React.CSSProperties}
+          style={
+            {
+              "--field-max": `${fieldPx}px`,
+              "--P": `${STAGE.P}px`,
+              "--depth": `${STAGE.DEPTH}px`,
+            } as React.CSSProperties
+          }
         >
-          {back.map((p, i) => (
-            <div
-              key={p.slug}
-              className="shelf-item"
-              style={
-                {
-                  "--z": p.z,
-                  "--d": i,
-                  "--tilt": `${p.tilt}deg`,
-                  "--w": `${p.w}%`,
-                  // unitless copies for the phone stage's depth maths
-                  "--x": p.x,
-                  "--y": p.y,
-                  left: `${p.x}%`,
-                  top: `${p.y}%`,
-                } as React.CSSProperties
-              }
-            >
-              <Jacket
-                p={p}
-                className="reveal-d"
-                sizes="(min-width: 1024px) 176px, (min-width: 768px) 140px, 104px"
-                onOpen={openBook}
-                onClose={closeBook}
-                onLock={lockBook}
-                locked={pinned === p.slug}
-              />
-            </div>
-          ))}
-          {/* the way back out, once the field owns the drag */}
+          {/* the way back out, once the field owns the drag — first in the
+              tab order, before fourteen covers, and 44px tall for a thumb */}
           {stage.zoomed && (
             <button
               type="button"
               className="btn meta-caps stage-reset bg-screen/80 text-paper backdrop-blur-sm"
-              onClick={stage.reset}
+              onClick={resetStage}
             >
               Reset view
             </button>
           )}
+          <div className="shelf-scene">
+            {back.map((p, i) => {
+              /* phones: each cover sits at its own depth, and its resting
+                 place is pre-divided by the foreshortening at that depth, so
+                 the scene projects to exactly the flat clump until the
+                 camera moves — the depth is there, it only shows when asked */
+              const Z = depthOf(depthRank.get(p.slug) ?? 0, back.length);
+              const f = foreshorten(Z);
+              return (
+                <div
+                  key={p.slug}
+                  className="shelf-item"
+                  style={
+                    {
+                      "--z": p.z,
+                      "--d": i,
+                      "--tilt": `${p.tilt}deg`,
+                      "--x": p.x,
+                      "--y": p.y,
+                      "--w": `${p.w}%`,
+                      "--Z": `${Z.toFixed(1)}px`,
+                      "--lx": (50 + (p.x - 50) / f).toFixed(3),
+                      "--ly": (50 + (p.y - 50) / f).toFixed(3),
+                      "--lw": (p.w / f).toFixed(3),
+                    } as React.CSSProperties
+                  }
+                >
+                  <Jacket
+                    p={p}
+                    className="reveal-d"
+                    // phones ask for what the dolly can show, not the rest
+                    // size: the isolated layer is the last thing that
+                    // should be soft
+                    sizes="(min-width: 1024px) 176px, (min-width: 768px) 140px, 45vw"
+                    onOpen={openBook}
+                    onClose={closeBook}
+                    onLock={lockBook}
+                    locked={pinned === p.slug}
+                  />
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
 
