@@ -31,3 +31,7 @@ out/
 /graphify-out/
 /site/node_modules/
 /site/.next/
+# verification builds and throwaway dev servers keep their own output
+# directory so they can never poison the dev server's .next (see
+# site/next.config.ts)
+/site/.next-*/
