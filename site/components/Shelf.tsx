@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import { useReveal } from "@/lib/reveal";
 import { usePointerSpring } from "@/lib/pointer";
+import { useZoomStage } from "@/lib/stage";
 import { BookPanel } from "@/components/BookPanel";
 import type { Project } from "@/lib/content";
 import type { ClumpItem } from "@/lib/clump";
@@ -137,6 +138,9 @@ export function Shelf({
   // far ones and the field reads as a space rather than a grid
   const fieldRef = useRef<HTMLDivElement | null>(null);
   usePointerSpring(fieldRef, { onlyWhileHovered: false });
+  // phones have no cursor to follow, so the field becomes a window you pinch
+  // into instead — same depth, driven by the fingers (see lib/stage.ts)
+  const stage = useZoomStage(fieldRef);
 
   /* The panel stays put while the reader moves along the shelf and only
      leaves once they have actually left — a short close delay stops it
@@ -279,6 +283,17 @@ export function Shelf({
         <h3 className="meta-caps reveal text-faint">
           International &amp; National Bestsellers
         </h3>
+        {/* phones: the clump is a window — say so before it arrives. The
+            hint reveals with the heading, ahead of the covers, and steps
+            back once the visitor has used it. */}
+        <p
+          className="reveal reveal-2 meta-caps mt-4 text-faint md:hidden"
+          style={stage.touched ? { opacity: 0 } : undefined}
+          aria-hidden={stage.touched}
+        >
+          Pinch to zoom in <span className="text-signal">·</span> drag to look
+          around
+        </p>
         {/* a square field, centred; every size inside it is a percentage of
             its width, so the whole clump scales as one object */}
         <div
@@ -296,6 +311,9 @@ export function Shelf({
                   "--d": i,
                   "--tilt": `${p.tilt}deg`,
                   "--w": `${p.w}%`,
+                  // unitless copies for the phone stage's depth maths
+                  "--x": p.x,
+                  "--y": p.y,
                   left: `${p.x}%`,
                   top: `${p.y}%`,
                 } as React.CSSProperties
@@ -312,6 +330,16 @@ export function Shelf({
               />
             </div>
           ))}
+          {/* the way back out, once the field owns the drag */}
+          {stage.zoomed && (
+            <button
+              type="button"
+              className="btn meta-caps stage-reset bg-screen/80 text-paper backdrop-blur-sm"
+              onClick={stage.reset}
+            >
+              Reset view
+            </button>
+          )}
         </div>
       </div>
 

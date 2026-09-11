@@ -760,43 +760,64 @@
     opacity: 1;
   }
 }
-/* The clump scales down cleanly to a tablet (a 704px field still gives
-   96-126px covers and a 12px gap), but below that the covers would be too
-   small to press or to read. So phones flow instead, keeping their varied
-   sizes and their tilt but giving up placement — `position: static` makes
-   the inline left/top inert, so one set of server-computed coordinates
-   serves both layouts with no second code path. */
+/* ------------------------------------------------------------------ *
+ *  THE PHONE STAGE — below 768px the clump is a window you pinch into.
+ *  The clump scales down cleanly to a tablet (a 704px field still gives
+ *  96-126px covers and a 12px gap), but on a 350px phone every cover is a
+ *  thumbnail. So the hint above the field says pinch, and lib/stage.ts
+ *  writes --s (scale) and --tx/--ty (camera, px) as the fingers move. The
+ *  CSS decides what depth means: a near cover (high --z) zooms harder and
+ *  travels further than a far one — the same thing the cursor parallax
+ *  does on desktop, and what a pile of jackets does when you lean in.
+ *  Zoom is about the centre of the field so the sums stay continuous
+ *  while the fingers move; the camera offset carries the point under the
+ *  fingers along.
+ * ------------------------------------------------------------------ */
 @media (max-width: 767px) {
   .shelf-field {
-    position: static;
-    width: 100%;
-    aspect-ratio: auto;
-    container-type: normal;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: flex-end;
-    gap: 1.5rem 1.25rem;
+    --s: 1;
+    --tx: 0px;
+    --ty: 0px;
+    /* a window: once zoomed the clump is larger than its frame */
+    overflow: hidden;
+    outline: 1px solid var(--color-line);
+    outline-offset: -1px;
+    /* at overview the page still scrolls through the field, so a full-width
+       square never traps a thumb; zoomed, the field owns the drag */
+    touch-action: pan-y;
+  }
+  .shelf-field[data-zoomed="true"] {
+    touch-action: none;
   }
   .shelf-item {
-    position: static;
-    width: calc(78px + var(--z, 0.5) * 34px);
-    margin-bottom: calc(var(--z, 0.5) * 20px);
-    transform: translate3d(
-        calc(var(--px, 0) * 3px),
-        calc(var(--py, 0) * 2px),
-        0
+    /* depth: a near cover zooms up to a quarter harder and travels up to a
+       third further than the middle of the pile; a far one, the reverse */
+    --sz: calc(1 + (var(--s, 1) - 1) * (1 + 0.5 * (var(--z, 0.5) - 0.5)));
+    --pz: calc(1 + 0.6 * (var(--z, 0.5) - 0.5));
+    transform: translate(-50%, -50%)
+      translate(
+        calc(
+          (var(--x, 50) - 50) * (var(--sz) - 1) * 1cqw + var(--tx, 0px) *
+            var(--pz)
+        ),
+        calc(
+          (var(--y, 50) - 50) * (var(--sz) - 1) * 1cqw + var(--ty, 0px) *
+            var(--pz)
+        )
       )
-      rotate(var(--tilt, 0deg));
+      scale(var(--sz)) rotate(var(--tilt, 0deg));
+    /* direct manipulation: the finger is the animation */
+    transition: none;
   }
-}
-/* small tablets flow too, just larger */
-@media (min-width: 640px) and (max-width: 767px) {
-  .shelf-field {
-    gap: 2rem 1.75rem;
+  /* the programmatic moves — double-tap, reset, the spring back — ease */
+  .shelf-field.is-animating .shelf-item {
+    transition: transform 420ms var(--ease-out-strong);
   }
-  .shelf-item {
-    width: calc(104px + var(--z, 0.5) * 44px);
+  .stage-reset {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 40;
   }
 }
 
