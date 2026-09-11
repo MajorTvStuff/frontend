@@ -568,6 +568,22 @@
 .slate-frame[data-state="live"] .slate-state {
   color: var(--color-paper);
 }
+/*
+ * A deliberate play is the real YouTube player, and it draws its own
+ * transport across the bottom of the frame — the same 48px our timecode and
+ * rail occupy. Two transports in one strip is unreadable, so while it is up
+ * ours stands down and the player's is the only one; the rail keeps counting
+ * underneath and is there again, holding its mark, the moment it stops.
+ * The one control that is still ours, Stop, steps above the player's bar.
+ */
+.slate-frame[data-manual="true"] .slate-state,
+.slate-frame[data-manual="true"] .slate-rail {
+  opacity: 0;
+  transition: opacity 200ms linear;
+}
+.slate-frame[data-manual="true"] .slate-control {
+  bottom: 56px;
+}
 .slate-control {
   position: absolute;
   right: 12px;
@@ -582,6 +598,32 @@
   height: 2px;
   background: var(--color-line);
   overflow: hidden;
+  /* a readout, not a control: it must not eat the tap at the frame's edge */
+  pointer-events: none;
+}
+/* the phone's hover — the whole frame is the tap target. It sits above the
+   key art and the gate and below the transport, and the component renders it
+   only while there is nothing playing, so the player's own controls take the
+   taps from then on. */
+.slate-hit {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+/* It belongs to the FINGER, not to the absence of a mouse: a touchscreen
+   laptop has both, matches the hover query, and would otherwise be left with
+   hover wording and a tile that ignores taps. Only a machine with no coarse
+   pointer at all loses it — and an engine too old to parse this keeps it,
+   which merely means clicking the frame plays the trailer. */
+@media (hover: hover) and (pointer: fine) and (not (any-pointer: coarse)) {
+  .slate-hit {
+    display: none;
+  }
 }
 .slate-rail i {
   display: block;
@@ -690,8 +732,23 @@
   }
 }
 
-/* touch devices have no hover, so the explicit control is their only way in */
+/*
+ * Touch is the default here, and a real mouse opts out — the same direction
+ * as `.touch-only`, so a page rendered before the media query is evaluated
+ * shows the touch affordance rather than instructions nobody can follow.
+ */
+.on-hover {
+  display: none;
+}
 @media (hover: hover) and (pointer: fine) {
+  /* a mouse has hover, so it gets the hover wording, the hover control, and
+     no tap target over the key art */
+  .on-hover {
+    display: inline;
+  }
+  .on-touch {
+    display: none;
+  }
   .slate-control .touch-only {
     display: none;
   }

@@ -20,15 +20,23 @@ export type Show = {
 /**
  * THE SLATE — four shows, four trailer frames.
  *
- * Each tile reveals on contact, its frame opening on a projector gate. HOVER
- * a tile and its trailer plays, muted, in place; leave and the key art comes
- * back. Playing is the visitor's decision, not the scroll position's — which
- * also means no trailer ever starts somewhere they were not looking.
+ * Each tile reveals on contact, its frame opening on a projector gate.
+ *
+ * With a mouse, HOVER a tile and its trailer plays, muted and chromeless, in
+ * place; leave and the key art comes back. On a phone the whole frame is a
+ * TAP target instead, and a tap is a deliberate request, so it gets the real
+ * player: sound, captions, YouTube's own controls, and a Stop that puts the
+ * key art back. Either way playing is the visitor's decision, not the scroll
+ * position's — no trailer ever starts somewhere they were not looking.
+ *
+ * Hover is gated on the POINTER TYPE, not on a media query: a tap fires
+ * pointerenter and pointerleave around the touch, so an ungated hover handler
+ * starts a trailer and tears it down again 180ms later, which is what a phone
+ * used to do here.
  *
  * AT MOST ONE iframe exists in the document at any moment — the hero
  * included, which is why the two coordinate through the player bus rather
- * than through geometry. Touch devices have no hover, so they get the
- * explicit Play control instead.
+ * than through geometry.
  *
  * The frame carries its own transport: a timecode and an accent rail that
  * fills as the trailer plays and then HOLDS where it stopped, so a glance
@@ -56,7 +64,11 @@ function clock(s: number) {
 
 /** The proof line's separator is one of only two sanctioned accent uses. */
 function Proof({ proof }: { proof: string }) {
-  const sep = proof.includes(" · ") ? " · " : proof.includes(" / ") ? " / " : null;
+  const sep = proof.includes(" · ")
+    ? " · "
+    : proof.includes(" / ")
+      ? " / "
+      : null;
   if (!sep) return <>{proof}</>;
   const [a, b] = proof.split(sep);
   return (
@@ -99,6 +111,9 @@ function Panel({
   onLeave: () => void;
   canAuto: boolean;
 }) {
+  /* A tap fires pointerenter/pointerleave around itself, so hover belongs to
+     mice alone — a pen or a finger is a deliberate press, not a glance. */
+  const hovering = (e: React.PointerEvent) => e.pointerType === "mouse";
   const tiltRef = useRef<HTMLElement | null>(null);
   usePointerSpring(tiltRef, { onlyWhileHovered: false });
   // each tile owns its own reveal: revealing the whole section at once put
@@ -120,8 +135,8 @@ function Panel({
       className={`slate-panel tilt${still ? " slate-panel--still" : ""}`}
       data-reveal="pending"
       aria-labelledby={`slate-${s.slug}`}
-      onPointerEnter={still ? undefined : onEnter}
-      onPointerLeave={still ? undefined : onLeave}
+      onPointerEnter={still ? undefined : (e) => hovering(e) && onEnter()}
+      onPointerLeave={still ? undefined : (e) => hovering(e) && onLeave()}
     >
       <div className="slate-rule" aria-hidden="true">
         <i />
@@ -142,13 +157,24 @@ function Panel({
         className="slate-frame"
         data-slug={s.slug}
         data-state={state}
+        /* a deliberate play brings YouTube's own transport with it, which
+           lands exactly where ours is — so ours gets out of the way */
+        data-manual={isActive && manual ? "true" : undefined}
         ref={frameRef}
       >
         {isActive && s.youtubeId && (
-          <div className="slate-video absolute inset-0" inert aria-hidden="true">
+          /* Ambience is decoration: inert, so it can never take a tap meant
+             for the tile. A deliberate play is the real thing, and its own
+             controls have to work — especially on a phone, where they are
+             how you scrub, pause and go full screen. */
+          <div
+            className="slate-video absolute inset-0"
+            inert={!manual}
+            aria-hidden={manual ? undefined : true}
+          >
             <iframe
               ref={iframeRef}
-              title=""
+              title={manual ? `${s.title} — trailer` : ""}
               src={
                 `${ORIGIN}/embed/${s.youtubeId}` +
                 `?autoplay=1&mute=${manual ? 0 : 1}` +
@@ -184,12 +210,27 @@ function Panel({
         </div>
 
         <p className="slate-state meta-caps" ref={lineRef}>
-          {still ? "Still" : "Trailer · Hover to play"}
+          {still ? (
+            "Still"
+          ) : (
+            <>
+              {"Trailer · "}
+              <span className="on-hover">Hover</span>
+              <span className="on-touch">Tap</span>
+              {" to play"}
+            </>
+          )}
         </p>
 
         <div className="slate-control">
-          {!still && state === "live" && !manual && (
-            <button type="button" className="btn meta-caps" onClick={onStop}>
+          {/* a deliberate play has no other way back to the key art, and on a
+              phone it is the only way at all */}
+          {!still && state === "live" && (
+            <button
+              type="button"
+              className="btn meta-caps bg-screen/80 backdrop-blur-sm"
+              onClick={onStop}
+            >
               Stop
             </button>
           )}
@@ -212,6 +253,20 @@ function Panel({
         <div className="slate-rail" aria-hidden="true">
           {!still && <i ref={fillRef} />}
         </div>
+
+        {/* The phone's hover: the whole frame is the target. It is a pointer
+            convenience only — the Play trailer control beside it carries the
+            accessible name — and it stands down once the trailer is up, so
+            the player's own controls get the taps from then on. */}
+        {!still && !isActive && (
+          <button
+            type="button"
+            className="slate-hit"
+            tabIndex={-1}
+            aria-hidden="true"
+            onClick={onPlay}
+          />
+        )}
       </div>
 
       {/* one line of metadata, not five */}
@@ -237,9 +292,10 @@ function Panel({
 }
 
 export function Slate({ shows, label }: { shows: Show[]; label: string }) {
-  const [active, setActive] = useState<{ slug: string; manual: boolean } | null>(
-    null,
-  );
+  const [active, setActive] = useState<{
+    slug: string;
+    manual: boolean;
+  } | null>(null);
   const [states, setStates] = useState<Record<string, State>>({});
   const [canAuto, setCanAuto] = useState(false);
 
@@ -346,7 +402,11 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
       if (e.source !== iframe.current?.contentWindow) return;
       let d: {
         event?: string;
-        info?: { playerState?: number; currentTime?: number; duration?: number };
+        info?: {
+          playerState?: number;
+          currentTime?: number;
+          duration?: number;
+        };
       };
       try {
         d = JSON.parse(e.data);
@@ -383,8 +443,10 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
         const line = lines.current.get(slug);
         const fill = fills.current.get(slug);
         // written through refs — a playing video never re-renders React
-        if (line) line.textContent = `Playing · ${clock(currentTime)} / ${clock(dur)}`;
-        if (fill) fill.style.transform = `scaleX(${Math.min(1, currentTime / dur)})`;
+        if (line)
+          line.textContent = `Playing · ${clock(currentTime)} / ${clock(dur)}`;
+        if (fill)
+          fill.style.transform = `scaleX(${Math.min(1, currentTime / dur)})`;
         // pre-empt the end screen: rel=0 still allows same-channel cards
         if (dur - currentTime <= 0.4) {
           done = true;
