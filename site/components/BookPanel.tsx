@@ -5,9 +5,10 @@ import { SHOW_TODOS } from "@/lib/site";
 import type { Cover } from "@/components/Shelf";
 
 /**
- * The book panel — slides in from the right when a jacket is hovered,
- * focused or tapped, and stays while the reader moves along the shelf,
- * swapping its contents rather than flying in and out.
+ * The book panel — slides in from the right (up from the bottom on a phone)
+ * when a jacket is pressed: clicked, tapped, or Enter on a keyboard. It stays
+ * until it is put away, and pressing another jacket swaps its contents in
+ * place rather than flying out and back in.
  *
  * It now carries the write-up. The rule it was built under has not changed —
  * we invent nothing — but "invent nothing" was never the same as "say
@@ -19,13 +20,11 @@ import type { Cover } from "@/components/Shelf";
 export function BookPanel({
   book,
   open,
-  pinned,
   founder,
   onClose,
 }: {
   book: Cover | null;
   open: boolean;
-  pinned: boolean;
   /** whose role the panel is describing */
   founder: string;
   onClose: () => void;
@@ -33,7 +32,8 @@ export function BookPanel({
   const r = book?.about ?? null;
   return (
     <aside
-      className={`book-panel${open && book ? " is-open" : ""}${pinned ? " is-pinned" : ""}`}
+      id="book-panel"
+      className={`book-panel${open && book ? " is-open" : ""}`}
       aria-live="polite"
       aria-hidden={!open || !book}
     >
@@ -50,9 +50,7 @@ export function BookPanel({
             />
           </div>
 
-          <p className="meta-caps mt-6 text-faint">
-            {pinned ? "Pinned" : "The shelf"}
-          </p>
+          <p className="meta-caps mt-6 text-faint">The shelf</p>
           <h3 className="display-heavy mt-2 text-h2 leading-tight text-paper">
             {book.title}
           </h3>
@@ -86,7 +84,7 @@ export function BookPanel({
             className="btn meta-caps mt-8 book-panel-close"
             onClick={onClose}
           >
-            {pinned ? "Unpin" : "Close"}
+            Close
           </button>
         </div>
       )}

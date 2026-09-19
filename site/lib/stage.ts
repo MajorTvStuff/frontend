@@ -498,7 +498,7 @@ export function useDepthStage(
           startDrag(p, onCover);
         } else if (pts.size === 2) startPinch();
         // no preventDefault and no pointer capture: a tap must still reach
-        // the cover's button and pin the panel
+        // the cover's button and open the panel
       };
       // touch-action is decided when the first finger lands, so the first
       // pinch from overview still runs under pan-y; this stops the browser
@@ -617,8 +617,8 @@ export function useDepthStage(
           return;
         }
 
-        // a tap. On a cover it belongs to the cover (it pins the panel); on
-        // empty ground it lets a pinned panel go, and twice it toggles the
+        // a tap. On a cover it belongs to the cover (it opens the panel); on
+        // empty ground it puts an open panel away, and twice it toggles the
         // close-up. (Two fingers down and up again without moving is nothing.)
         if (was.kind === "drag" && performance.now() - was.t0 < TAP_MS) {
           endSweep();

@@ -44,10 +44,8 @@ function Jacket({
   className,
   caption,
   index,
-  onOpen,
-  onClose,
-  onLock,
-  locked,
+  onPress,
+  pressed,
 }: {
   p: Cover;
   sizes: string;
@@ -56,37 +54,37 @@ function Jacket({
   className: string;
   caption?: boolean;
   index?: number;
-  onOpen: (p: Cover) => void;
-  onClose: (p: Cover) => void;
-  onLock: (p: Cover) => void;
-  locked: boolean;
+  onPress: (p: Cover) => void;
+  pressed: boolean;
 }) {
   const ref = useRef<HTMLDivElement | null>(null);
   usePointerSpring(ref);
   return (
     <div
       ref={ref}
-      className={`tilt-cover ${className}${locked ? " is-locked" : ""}`}
+      className={`tilt-cover ${className}${pressed ? " is-pressed" : ""}`}
       style={
         index === undefined
           ? undefined
           : ({ "--d": index } as React.CSSProperties)
       }
-      onPointerEnter={() => onOpen(p)}
-      onPointerLeave={() => onClose(p)}
     >
+      {/* The details open on a PRESS — a click, a tap, Enter or Space — and
+          never on hover or focus. On a phone a tap fires hover-in and
+          hover-out around itself, so a hover glance there opened the panel
+          and shut it again in the same gesture; the trailers had the same
+          fault and got the same cure. The cursor still tilts the jacket, so
+          a mouse can tell it is live without it doing anything yet. */}
       <button
         type="button"
         className="jacket-hit"
-        aria-pressed={locked}
-        onFocus={() => onOpen(p)}
-        onBlur={() => onClose(p)}
-        onClick={() => onLock(p)}
+        aria-expanded={pressed}
+        aria-controls="book-panel"
+        onClick={() => onPress(p)}
       >
         <span className="sr-only">
           {p.title}
-          {p.credit ? ` — ${p.credit}` : ""}. {p.proof}.{" "}
-          {locked ? "Pinned. Activate to unpin." : "Activate to pin."}
+          {p.credit ? ` — ${p.credit}` : ""}. {p.proof}. Details
         </span>
       </button>
       {/* three elements, three transforms: the wrapper reveals, this one
@@ -148,88 +146,79 @@ export function Shelf({
   const fieldRef = useRef<HTMLDivElement | null>(null);
   usePointerSpring(fieldRef, { onlyWhileHovered: false });
 
-  /* The panel stays put while the reader moves along the shelf and only
-     leaves once they have actually left — a short close delay stops it
-     flying out and back in over every gap between two jackets. */
+  /* PRESS A JACKET, GET ITS DETAILS. One book at a time holds the panel:
+     pressing another swaps the contents in place, pressing the same one
+     again puts it away, and so do Close, Escape and a press anywhere off the
+     shelf. `shown` outlives `open` so the panel can slide out still showing
+     the book it was showing, instead of emptying first. */
   const [shown, setShown] = useState<Cover | null>(null);
-  const [open, setOpen] = useState(false);
-  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  // which jacket is currently claiming the panel. Leave and enter fire in an
-  // order that is not guaranteed when the pointer crosses straight from one
-  // jacket to the next, so a pending close checks whether it is still the
-  // one being left before it acts — otherwise moving along the shelf closes
-  // the panel instead of swapping its contents.
-  const claim = useRef<string | null>(null);
-  /* Clicking a jacket PINS the panel: it stops following the cursor and stays
-     on that book until it is unpinned. Hovering is a glance; pinning is a
-     decision, and the two should not fight each other. */
-  const [pinned, setPinned] = useState<string | null>(null);
-  const pinnedRef = useRef<string | null>(null);
-  pinnedRef.current = pinned;
+  const [pressed, setPressed] = useState<string | null>(null);
+  const pressedRef = useRef<string | null>(null);
+  pressedRef.current = pressed;
 
-  const openBook = useCallback((p: Cover) => {
-    if (pinnedRef.current) return; // pinned: a passing cursor must not steal it
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    claim.current = p.slug;
-    setShown(p);
-    setOpen(true);
+  const pressBook = useCallback((p: Cover) => {
+    const next = pressedRef.current === p.slug ? null : p.slug;
+    pressedRef.current = next;
+    setPressed(next);
+    if (next) setShown(p);
   }, []);
 
-  const closeBook = useCallback((p?: Cover) => {
-    if (pinnedRef.current) return;
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    const leaving = p?.slug;
-    closeTimer.current = setTimeout(() => {
-      if (leaving && claim.current !== leaving) return; // someone else has it
-      claim.current = null;
-      setOpen(false);
-    }, 220);
-  }, []);
-
-  const lockBook = useCallback((p: Cover) => {
-    if (closeTimer.current) clearTimeout(closeTimer.current);
-    setPinned((cur) => {
-      const next = cur === p.slug ? null : p.slug;
-      pinnedRef.current = next;
-      return next;
-    });
-    claim.current = p.slug;
-    setShown(p);
-    setOpen(true);
-  }, []);
-
-  const unpin = useCallback(() => {
-    pinnedRef.current = null;
-    setPinned(null);
-    setOpen(false);
+  const closeBook = useCallback(() => {
+    pressedRef.current = null;
+    setPressed(null);
   }, []);
 
   // phones have no cursor to follow, so the field becomes a 3D scene with a
   // camera the fingers move instead — same depth, more of it (lib/stage.ts).
-  // A tap on empty ground lets a pinned panel go, which on a phone is the
-  // one way to do it that needs no target.
+  // A tap on empty ground puts an open panel away.
   const stage = useDepthStage(fieldRef, {
     onGroundTap: () => {
-      if (pinnedRef.current) unpin();
+      if (pressedRef.current) closeBook();
     },
   });
   const { reset: resetCamera, zoomed } = stage;
   const resetStage = useCallback(() => {
     resetCamera();
-    unpin();
-  }, [resetCamera, unpin]);
+    closeBook();
+  }, [resetCamera, closeBook]);
 
-  // Escape lets go of a pinned panel, or brings the camera back
+  // Escape puts the panel away, or brings the camera back
   useEffect(() => {
-    if (!pinned && !zoomed) return;
+    if (!pressed && !zoomed) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Escape") return;
-      if (pinnedRef.current) unpin();
+      if (pressedRef.current) closeBook();
       else resetCamera();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [pinned, zoomed, unpin, resetCamera]);
+  }, [pressed, zoomed, closeBook, resetCamera]);
+
+  /* A press anywhere else puts it away too. `click`, not pointerdown: a
+     finger that scrolls the page never produces one, so reading on past the
+     shelf cannot close what someone just opened. The panel itself is
+     transparent to the pointer (so the covers under it stay reachable), so
+     a click that lands inside its box counts as on it, not as off it. */
+  useEffect(() => {
+    if (!pressed) return;
+    const onClick = (e: MouseEvent) => {
+      const t = e.target as Element | null;
+      if (t?.closest(".jacket-hit, .stage-reset")) return; // they handle it
+      const panel = document.getElementById("book-panel");
+      const r = panel?.getBoundingClientRect();
+      if (
+        r &&
+        e.clientX >= r.left &&
+        e.clientX <= r.right &&
+        e.clientY >= r.top &&
+        e.clientY <= r.bottom
+      )
+        return;
+      closeBook();
+    };
+    document.addEventListener("click", onClick);
+    return () => document.removeEventListener("click", onClick);
+  }, [pressed, closeBook]);
 
   // the phone stage spaces the covers evenly in depth by their size rank —
   // the biggest nearest — so the back layer is really at the back
@@ -286,9 +275,20 @@ export function Shelf({
         data-reveal="pending"
         className="mt-20 border-t border-line pt-10"
       >
-        <h3 className="meta-caps reveal text-mid">
-          New York Times Bestsellers
-        </h3>
+        <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
+          <h3 className="meta-caps reveal text-mid">
+            New York Times Bestsellers
+          </h3>
+          {/* with no hover preview, nothing else says the covers open — the
+              same wording the trailer tiles use, chosen by the pointer */}
+          <p
+            className="meta-caps reveal reveal-2 text-faint"
+            aria-hidden="true"
+          >
+            <span className="on-touch">Tap</span>
+            <span className="on-hover">Click</span> a cover for details
+          </p>
+        </div>
         <div className="mt-8 grid grid-cols-3 items-end gap-6 sm:grid-cols-5 sm:gap-8">
           {front.map((p, i) => (
             <Jacket
@@ -298,10 +298,8 @@ export function Shelf({
               caption
               className="cover-cut"
               sizes="(min-width: 1024px) 226px, (min-width: 640px) 18vw, 30vw"
-              onOpen={openBook}
-              onClose={closeBook}
-              onLock={lockBook}
-              locked={pinned === p.slug}
+              onPress={pressBook}
+              pressed={pressed === p.slug}
             />
           ))}
         </div>
@@ -397,10 +395,8 @@ export function Shelf({
                     // size: the isolated layer is the last thing that
                     // should be soft
                     sizes="(min-width: 1024px) 176px, (min-width: 768px) 140px, 45vw"
-                    onOpen={openBook}
-                    onClose={closeBook}
-                    onLock={lockBook}
-                    locked={pinned === p.slug}
+                    onPress={pressBook}
+                    pressed={pressed === p.slug}
                   />
                 </div>
               );
@@ -411,10 +407,9 @@ export function Shelf({
 
       <BookPanel
         book={shown}
-        open={open}
-        pinned={!!pinned}
+        open={!!pressed}
         founder={founder}
-        onClose={unpin}
+        onClose={closeBook}
       />
     </section>
   );

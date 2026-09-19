@@ -1556,7 +1556,7 @@ main > footer {
  */
 /* The panel floats OVER the shelf it describes, and the right-hand covers
    sit underneath it. Left interactive it swallowed their clicks — the two
-   at the end of the first row were unreachable once anything was pinned.
+   at the end of the first row were unreachable once a book was open.
    So the panel itself is transparent to the pointer and only its own
    control takes events. */
 .book-panel {
@@ -1634,6 +1634,15 @@ main > footer {
    shelf it is describing */
 @media (max-width: 639px) {
   .book-panel {
+    /* A sheet, unlike the rail, covers the shelf across its whole width, so
+       it takes its own taps: transparent here, a tap on the write-up fell
+       through and opened whichever book happened to be underneath it. It
+       also scrolls rather than outgrowing the screen when a write-up is
+       long, and keeps that scroll to itself. */
+    pointer-events: auto;
+    max-height: 78svh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
     top: auto;
     bottom: 0;
     left: 0;
@@ -1666,8 +1675,8 @@ main > footer {
   .book-panel .mt-8 {
     margin-top: 0.375rem;
   }
-  /* the close button stays: on a phone it is the one sure way to let a
-     pinned book go (Escape needs a keyboard, and the pinned cover itself may
+  /* the close button stays: on a phone it is the one sure way to put a
+     book away (Escape needs a keyboard, and the pressed cover itself may
      have been panned out of the window or passed by the camera) */
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1709,9 +1718,9 @@ main > footer {
 }
 
 /* THE PRESS — a held state, not a bounce.
-   Pinning pushes the jacket down and it STAYS down for as long as it holds
-   the panel; releasing it, or pinning another book, lets it rise back up
-   along the same curve. One transition serves both directions, which is
+   Pressing a jacket pushes it down and it STAYS down for as long as its
+   details are open; putting them away, or pressing another book, lets it
+   rise back up along the same curve. One transition serves both directions, which is
    what makes the reverse feel like the same movement played backwards.
    It lives on its own element because the wrapper already owns the reveal
    transform and the image owns the cursor tilt. */
@@ -1720,14 +1729,14 @@ main > footer {
     transform 280ms var(--ease-out-strong),
     filter 280ms var(--ease-out-strong);
 }
-.tilt-cover.is-locked .jacket-press {
+.tilt-cover.is-pressed .jacket-press {
   transform: scale(0.94) translateY(5px);
   /* the shadow tightens as it goes down, the way a real object's does */
   filter: drop-shadow(0 4px 10px rgba(0, 5, 12, 0.75));
 }
 /* and it keeps a standing marker, so which book holds the panel is legible
    after the movement has finished */
-.tilt-cover.is-locked::after {
+.tilt-cover.is-pressed::after {
   content: "";
   position: absolute;
   inset: -6px;
@@ -1742,11 +1751,13 @@ main > footer {
     inset: -14px;
   }
 }
-.book-panel.is-pinned {
+/* every open panel belongs to a pressed book now, so it always wears the
+   edge that ties it to one */
+.book-panel.is-open {
   border-left-color: var(--color-signal);
 }
 @media (prefers-reduced-motion: reduce) {
-  .tilt-cover.is-locked::after {
+  .tilt-cover.is-pressed::after {
     animation: none;
   }
 }
