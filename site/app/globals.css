@@ -44,7 +44,7 @@
   /* the reading size: the copy-led page is mostly this */
   --text-read: clamp(1rem, 0.94rem + 0.28vw, 1.125rem);
   /* the one step up from it, for the paragraph that carries a section */
-  --text-lede-copy: clamp(1.1875rem, 1.05rem + 0.7vw, 1.5rem);
+  --text-lede-copy: clamp(1.125rem, 0.955rem + 0.7vw, 1.5rem);
   /* and the claim, which has a screen to itself */
   --text-claim: clamp(1.875rem, 1.1rem + 3.4vw, 3.5rem);
   --text-lede: clamp(1.125rem, 0.85rem + 0.95vw, 1.625rem);
@@ -120,6 +120,17 @@
    * opacity feedback on things the visitor is actively touching.
    */
   @media (prefers-reduced-motion: reduce) {
+    /* The server renders every section pending, which is opacity 0, and only
+       the hydrated hook removes it. A reduced-motion visitor therefore saw
+       an empty page until the JS arrived. The resting state has to be
+       visible in CSS, not on a promise. */
+    [data-reveal="pending"] .reveal,
+    [data-reveal="pending"] .reveal-d,
+    [data-reveal="pending"] .cover-cut {
+      opacity: 1 !important;
+      transform: none !important;
+    }
+
     *,
     *::before,
     *::after {
@@ -864,11 +875,9 @@ main > footer {
   padding-bottom: clamp(5rem, 8vw, 7rem);
 }
 @media (max-width: 480px) {
-  .variant-switch {
-    left: 1rem;
-    right: 1rem;
-    justify-content: center;
-  }
+  /* it stays a compact bottom-right pill: the base rule deliberately keeps
+     it off the centre line, and stretching it full width put it straight
+     back over the scroll cue and the beta watermark */
   .variant-switch-tag {
     display: none;
   }
@@ -925,6 +934,21 @@ main > footer {
   align-items: baseline;
   gap: 0.75rem;
 }
+/* The measure has to live on the element that holds the copy, not only on
+   the grid track. It was declared as minmax(0, 62ch) inside the 900px query
+   alone, so every width from 640 to 899 - tablets, split screens, half a
+   laptop - ran 85 characters to the line with no cap at all. At 900+ this is
+   a no-op; below it, it is the whole thing. */
+.section-body {
+  max-width: 62ch;
+}
+/* the address and the footer are not part of the numbered argument, so they
+   have no rail - but they still sit on its axis */
+@media (min-width: 900px) {
+  .section-grid > .section-body:only-child {
+    grid-column: 2;
+  }
+}
 @media (min-width: 900px) {
   .section-rail {
     flex-direction: column;
@@ -935,13 +959,17 @@ main > footer {
     position: sticky;
     top: 2.5rem;
     align-self: start;
+    gap: 0.85rem;
   }
 }
 /* the number: there are four sections and the order is the point */
 .section-index {
+  /* one step over the label: at the same 11px it read as a stray artifact
+     above the words rather than as the number of a section */
+  font-size: var(--text-strip);
+  letter-spacing: 0.2em;
   color: var(--color-signal);
   font-variant-numeric: tabular-nums;
-  letter-spacing: 0.18em;
 }
 .section-label {
   display: flex;
@@ -960,21 +988,24 @@ main > footer {
    page allows itself */
 .lede {
   font-size: var(--text-lede-copy);
-  line-height: 1.5;
+  /* a 47-character measure wants tighter leading, not looser */
+  line-height: 1.4;
   font-weight: 300;
   color: var(--color-paper);
   text-wrap: pretty;
 }
 /* everything else */
 .body-copy {
-  margin-top: 1.35rem;
+  /* ~2x the line rhythm. At 1.35rem a paragraph break sat only 1.69x the
+     line gap, and 250 words of it read as one continuous field. */
+  margin-top: 1.9rem;
   font-size: var(--text-read);
   line-height: 1.75;
   color: var(--color-mid);
   text-wrap: pretty;
 }
 .lede + .body-copy {
-  margin-top: 1.75rem;
+  margin-top: 2.1rem;
 }
 
 .founder-name {
@@ -983,8 +1014,10 @@ main > footer {
   color: var(--color-paper);
 }
 .founder-role {
-  margin-top: 0.6rem;
-  color: var(--color-faint);
+  margin-top: 0.75rem;
+  font-size: var(--text-strip);
+  letter-spacing: 0.16em;
+  color: var(--color-mid);
 }
 .founder-role + .lede {
   margin-top: 2rem;
@@ -997,6 +1030,51 @@ main > footer {
   border-left: 2px solid var(--color-signal);
   font-size: var(--text-read);
   line-height: 1.7;
+  color: var(--color-paper);
+}
+
+/* The four shows, as type. The band carries their key art, but a title
+   existed nowhere on the page except as alt text. */
+.credit-list {
+  margin-top: 2.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-line);
+  list-style: none;
+}
+.credit {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  padding-block: 0.9rem;
+  border-bottom: 1px solid var(--color-line);
+}
+.credit-title {
+  font-size: var(--text-cap);
+  color: var(--color-paper);
+}
+.credit-sub {
+  font-size: var(--text-cap);
+  color: var(--color-faint);
+}
+.credit-proof {
+  margin-left: auto;
+  color: var(--color-mid);
+}
+@media (max-width: 480px) {
+  .credit-proof {
+    margin-left: 0;
+    flex-basis: 100%;
+  }
+}
+
+/* the eighteen names that prove the sentence above them */
+.icon-roll {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-line);
+  font-size: var(--text-names);
+  line-height: var(--text-names--line-height);
   color: var(--color-paper);
 }
 
@@ -1026,6 +1104,14 @@ main > footer {
 .page-footer {
   padding-block: clamp(2.5rem, 5vw, 4rem);
 }
+/* the only navigation on the page, and they were 45x15px targets with an
+   underline in the hairline colour. WCAG 2.2 asks for 24px. */
+.page-footer .link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  text-decoration-color: var(--color-faint);
+}
 
 /* ------------------------------------------------------------------ *
  *  THE BAND — one row, everything in it, drifting.
@@ -1037,24 +1123,35 @@ main > footer {
  *  half its width, so the loop closes on itself.
  * ------------------------------------------------------------------ */
 .band {
-  --band-h: clamp(122px, 17vw, 208px);
+  /* Sized by the BOOK grid. A paired jacket used to come out 63-78px wide
+     against a 370px show tile - a 5.9x range in one row, and eighteen of the
+     twenty books were below the size at which a cover can be read at all.
+     The jackets carry their own titles; they only needed to be big enough
+     for that to work. */
+  --band-h: clamp(150px, 20vw, 288px);
   --band-gap: clamp(0.6rem, 1.4vw, 1.1rem);
+  --band-fade: calc(var(--band-h) * 0.45);
+  padding-inline: var(--band-gap);
   overflow: hidden;
   /* the row fades out at both edges rather than being cut by them */
+  /* the ramp scales with the cells, not with the viewport */
   mask-image: linear-gradient(
     to right,
     transparent,
-    #000 5%,
-    #000 95%,
+    #000 var(--band-fade),
+    #000 calc(100% - var(--band-fade)),
     transparent
   );
   -webkit-mask-image: linear-gradient(
     to right,
     transparent,
-    #000 5%,
-    #000 95%,
+    #000 var(--band-fade),
+    #000 calc(100% - var(--band-fade)),
     transparent
   );
+}
+.band:focus-visible {
+  outline-offset: -4px;
 }
 .band-track {
   display: flex;
@@ -1081,17 +1178,24 @@ main > footer {
   flex: none;
 }
 .band-cell--show {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--color-panel);
+  display: flex;
 }
 .band-still {
-  object-fit: cover;
+  height: 100%;
+  width: auto;
+}
+/* the shows stop setting the height of the row: at full height they were
+   nearly six times the width of a paired jacket */
+@media (min-width: 900px) {
+  .band-cell--show {
+    height: calc(var(--band-h) * 0.62);
+    align-self: center;
+  }
 }
 .band-cell--pair {
   display: flex;
   flex-direction: column;
+  align-items: start; /* two jackets, one left edge */
   gap: var(--band-gap);
 }
 .band-book {
@@ -1102,12 +1206,29 @@ main > footer {
 .band-cell--pair .band-book {
   height: calc((var(--band-h) - var(--band-gap)) / 2);
 }
+/* Below the desktop breakpoint there is not enough band height for a stack:
+   half of 150px leaves a 46px jacket, which is smaller than the title
+   printed on it. So the pair lies down and both books stand full height —
+   the row is horizontally scrollable at these widths anyway, so the only
+   cost is length, and the covers become legible. */
+@media (max-width: 899px) {
+  .band-cell--pair {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .band-cell--pair .band-book {
+    height: 100%;
+  }
+}
 /* stopped, it is still a row of things — so give it a scrollbar back */
-@media (prefers-reduced-motion: reduce) {
+/* Stopped, it is still a row of things - so hand back a scrollbar, and keep
+   the fade, because without it the row is hard-cut flush against both edges
+   and reads as a rendering fault rather than as something scrollable.
+   (hover: none) is here for the same reason: a phone cannot hover, so
+   without it the row drifts forever and cannot be stopped or scrubbed. */
+@media (prefers-reduced-motion: reduce), (hover: none) {
   .band {
     overflow-x: auto;
-    mask-image: none;
-    -webkit-mask-image: none;
   }
   .band-track {
     animation: none;
@@ -1618,9 +1739,16 @@ main > footer {
    whole document 41px past the viewport. It gets its own scale, tied to the
    space it actually has, and is allowed to break rather than overflow. */
 .contact-email {
-  /* it has to fit the reading measure, not the viewport: at 2.25rem the
-     address is wider than 68ch and breaks mid-word */
-  font-size: clamp(1.0625rem, 0.72rem + 1.05vw, 1.75rem);
+  /* Uppercased 800-weight display type made the address ~15% wider than its
+     own column, so overflow-wrap dropped a lone M onto a second line
+     carrying its own underline. Nobody writes an address in capitals, and
+     lowercase removes the cause rather than patching the symptom. */
+  font-size: clamp(1.125rem, 0.85rem + 0.95vw, 1.625rem);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.005em;
+  display: inline-block;
+  max-width: 100%;
   line-height: 1.15;
   display: inline-block;
   max-width: 100%;

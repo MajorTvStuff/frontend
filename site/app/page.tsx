@@ -1,4 +1,4 @@
-import { site, projects, projectDims } from "@/lib/content";
+import { site, projects, projectDims, knit } from "@/lib/content";
 import type { Cover, Primer } from "@/components/Hero";
 import { Hero } from "@/components/Hero";
 import type { BandItem } from "@/components/Band";
@@ -104,10 +104,10 @@ export default function Home() {
         <Section index={1} label="Company">
           {/* the first paragraph is the definition of the company; the other
               two qualify it, so it leads and they follow */}
-          <p className="reveal lede">{site.company[0]}</p>
+          <p className="reveal lede">{knit(site.company[0])}</p>
           {site.company.slice(1).map((para, i) => (
             <p key={i} className={`reveal reveal-${i + 2} body-copy`}>
-              {para}
+              {knit(para)}
             </p>
           ))}
         </Section>
@@ -119,11 +119,43 @@ export default function Home() {
 
         {/* ————— the two halves of the business, as copy ————— */}
         <Section index={2} label={site.tvFilm.label}>
-          <p className="reveal lede">{site.tvFilm.body}</p>
+          <p className="reveal lede">{knit(site.tvFilm.body)}</p>
+          {/* The page named no production anywhere: the band carries the key
+              art but a title only ever existed as alt text. Type only, and
+              every string verbatim from the copy doc. */}
+          <ul className="credit-list reveal reveal-2">
+            {shows.map((p) => (
+              <li key={p.slug} className="credit">
+                <span className="credit-title display-heavy">{p.title}</span>
+                {p.credit && <span className="credit-sub">{p.credit}</span>}
+                <span className="credit-proof meta-caps">{p.proof}</span>
+              </li>
+            ))}
+          </ul>
         </Section>
 
         <Section index={3} label={site.books.label}>
-          <p className="reveal lede">{site.books.body}</p>
+          <p className="reveal lede">{knit(site.books.body)}</p>
+          {/* "industry-leading, platform-driven, and celebrity authors" is a
+              claim; these eighteen names are the proof of it, and they are
+              his own approved copy. They were rendering on the build he
+              rejected and not on this one. */}
+          {site.icons && (
+            <p className="icon-roll reveal reveal-2 display-heavy">
+              {site.icons.map((name, i) => (
+                <span key={name}>
+                  <span className="whitespace-nowrap">
+                    {name}
+                    {i < site.icons!.length - 1 && (
+                      <span aria-hidden="true" className="ml-2 text-signal">
+                        ·
+                      </span>
+                    )}
+                  </span>{" "}
+                </span>
+              ))}
+            </p>
+          )}
         </Section>
 
         {/* The one differentiating claim in the whole argument, and the only
@@ -131,35 +163,32 @@ export default function Home() {
             from the call notes — display-only until he signs them off. */}
         {site.positioning?.leverage && (
           <Reveal className="page-section claim-section">
-            <blockquote className="claim reveal">
-              {site.positioning.leverage}
-            </blockquote>
+            <p className="claim reveal">{site.positioning.leverage}</p>
           </Reveal>
         )}
 
         {/* ————— the person, at last at full length ————— */}
         <Section index={4} label="Founder">
-          <p className="reveal display-heavy founder-name">{f.name}</p>
+          <h3 className="reveal display-heavy founder-name">{f.name}</h3>
           <p className="reveal meta-caps founder-role">{f.role}</p>
           {/* the first paragraph is the credits — it is the reason to read
               the other four, so it carries the lede weight */}
-          <p className="reveal reveal-2 lede">{f.bio[0]}</p>
+          <p className="reveal reveal-2 lede">{knit(f.bio[0])}</p>
           {f.bio.slice(1).map((para, i) => (
             <p key={i} className="reveal reveal-3 body-copy">
-              {para}
+              {knit(para)}
             </p>
           ))}
-          <p className="reveal reveal-4 recognition">{f.recognition}</p>
+          <p className="reveal reveal-4 recognition">{knit(f.recognition)}</p>
         </Section>
 
         {/* ————— the address ————— */}
         <Reveal className="page-section">
           <div className="section-grid">
-            <div className="section-rail" aria-hidden="true" />
             <div className="section-body">
               <a
                 href={`mailto:${site.contact.email}`}
-                className="link contact-email display-heavy reveal decoration-signal decoration-2 underline-offset-8"
+                className="link contact-email reveal decoration-signal decoration-2 underline-offset-8"
               >
                 {site.contact.email}
               </a>
@@ -169,7 +198,6 @@ export default function Home() {
 
         <footer className="page-section page-footer">
           <div className="section-grid">
-            <div className="section-rail" aria-hidden="true" />
             <div className="section-body">
               <Lockup tone="light" className="w-28 opacity-80" />
               <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">

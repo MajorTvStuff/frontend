@@ -162,5 +162,22 @@ export function youtubeId(url: string | null): string | null {
   }
 }
 
+/**
+ * Keeps the names that must not come apart on a line break.
+ *
+ * It swaps the SPACE CHARACTER for a no-break space and nothing else — no
+ * word is added, removed or reordered, so the copy is still verbatim. Two
+ * things need it: the company's own name, which was breaking as "Major /
+ * Content" in the middle of the BOOKS pitch and again in the first line of
+ * the bio; and the pipe-joined imprints ("Celebra | Penguin Random House",
+ * "REG | Strategic Innovations"), which were leaving the bar hanging at the
+ * end of a line, where it reads as a typo in a brand whose own vocabulary
+ * is built on that pipe.
+ */
+export const knit = (s: string): string =>
+  s
+    .replace(/(MAJOR|Major) (CONTENT|Content)/g, "$1 $2")
+    .replace(/(\S) \| (\S)/g, "$1 | $2");
+
 export const project = (slug: string): Project =>
   projects.find((p) => p.slug === slug)!;

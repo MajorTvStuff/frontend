@@ -13,14 +13,17 @@ export type BandItem = Project & { width: number; height: number };
  * page, and it is deliberately small — his brief was for the site to breathe
  * with copy and for the pictures to support it.
  *
- * Shows take a full-height 16:9 tile. Books are half height and stack in
- * pairs, which is the grid he described; a book left over at the end of a run
- * stands full height on its own, and that irregularity is what stops the row
- * reading as a filmstrip.
+ * Shows take a tile at their own aspect ratio — three of the four key art
+ * files are not 16:9, and a fixed box was cropping a quarter off the height
+ * of TIME OF ESSENCE. Books are half height and stack in pairs, which is the
+ * grid he described; a book standing full height on its own is what stops
+ * the row reading as a filmstrip.
  *
- * The order is the copy doc's order, which already alternates shows and
- * books, so the rhythm comes from the client's own sequencing rather than
- * from us shuffling it. A pair never straddles a show.
+ * The order is the copy doc's, which alternates shows and books for its first
+ * half — but only its first half. Left to parity the tail came out as twelve
+ * consecutive stamps with no show and nothing full height among them, so the
+ * rule caps a run at two pairs and stands the next book up instead. A pair
+ * never straddles a show.
  *
  * It is a server component: the drift is one CSS animation, so none of this
  * costs the browser a script. Hovering or tabbing into it pauses the row;
@@ -32,26 +35,32 @@ type Cell =
   | { kind: "solo"; item: BandItem }
   | { kind: "pair"; items: [BandItem, BandItem] };
 
+const MAX_RUN = 2; // consecutive pairs before a book stands up on its own
+
 function lay(items: BandItem[]): Cell[] {
   const cells: Cell[] = [];
-  let held: BandItem[] = [];
-  const flush = () => {
-    while (held.length >= 2)
+  const held: BandItem[] = [];
+  let run = 0; // pairs emitted since the last show or solo
+  const take = () => {
+    if (held.length >= 2 && run < MAX_RUN) {
       cells.push({ kind: "pair", items: [held.shift()!, held.shift()!] });
-    if (held.length) cells.push({ kind: "solo", item: held.shift()! });
-    held = [];
+      run += 1;
+    } else {
+      cells.push({ kind: "solo", item: held.shift()! });
+      run = 0;
+    }
   };
   for (const it of items) {
     if (it.medium === "show") {
-      flush(); // a pair never straddles a show
+      while (held.length) take(); // a pair never straddles a show
       cells.push({ kind: "show", item: it });
+      run = 0;
     } else {
       held.push(it);
-      if (held.length === 2)
-        cells.push({ kind: "pair", items: [held.shift()!, held.shift()!] });
+      if (held.length === 2 && run < MAX_RUN) take();
     }
   }
-  flush();
+  while (held.length) take();
   return cells;
 }
 
@@ -81,11 +90,14 @@ export function Band({ items }: { items: BandItem[] }) {
         if (c.kind === "show")
           return (
             <div className="band-cell band-cell--show" key={key}>
+              {/* its own aspect ratio, not a 16:9 box — only two of the four
+                  key art files are 16:9, and the box was cropping the rest */}
               <Image
                 src={`/projects/${c.item.slug}.jpg`}
                 alt={alt(c.item)}
-                fill
-                sizes="360px"
+                width={c.item.width}
+                height={c.item.height}
+                sizes="340px"
                 className="band-still"
               />
             </div>
@@ -107,7 +119,10 @@ export function Band({ items }: { items: BandItem[] }) {
   );
 
   return (
-    <div className="band" role="group" aria-label="Selected work">
+    /* A focus stop, so the pause that :focus-within already describes can
+       actually happen — nothing inside is focusable, so without this the rule
+       was decorative and the row could not be stopped without a mouse. */
+    <div className="band" role="group" aria-label="Selected work" tabIndex={0}>
       <div className="band-track">
         {run(0)}
         {run(1)}
