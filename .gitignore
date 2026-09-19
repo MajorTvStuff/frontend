@@ -17,9 +17,13 @@ next-env.d.ts
 .vercel
 
 # previous project (own git repo)
-/archive/
-# ...but the note explaining what is in there is prose, not a build, and it
-# is the only thing that says why each variant was replaced
+# The contents, not the directory: git will not re-include a file whose
+# parent directory is itself excluded, so `/archive/` + an exception does
+# nothing. `/archive/*` excludes what is in it and leaves the door open.
+/archive/*
+# ...and the note explaining what each variant was, and why it was replaced,
+# is prose rather than a build. It belongs in git even though nothing around
+# it does.
 !/archive/README.md
 
 # client source drop (26MB incl. video); site uses processed copies in public/
