@@ -149,7 +149,9 @@ material clause, which matters more than usual for a company that receives
 pitches.
 
 RG supplied the company details 2026-09-07: the entity is **Major TV, Inc.**,
-a **New Jersey** company, and the contact is **rgarcia@majortvproductions.com**.
+a **New Jersey** company. The contact was `rgarcia@majortvproductions.com`
+and is now **info@majorcontent.com** — he is moving it to the new brand's
+domain (2026-09-19), which is the address his own build showed.
 Both live in `site/content/site.json` (`legal.entity`, `legal.jurisdiction`,
 `contact.email`), so the terms, the privacy page and the copyright notice all
 read them from one place. Governing law and forum are now New Jersey, and the

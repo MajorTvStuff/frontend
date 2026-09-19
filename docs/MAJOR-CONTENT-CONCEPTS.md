@@ -206,10 +206,11 @@ slate expands. Worth putting in front of RG as an option.
    trailers is clean either way.)
 4. **The Vegas Residency trailer** only exists as a Facebook video — poor to
    embed. Is there a file we can host?
-5. **Contact** — ANSWERED 2026-09-07: **rgarcia@majortvproductions.com**.
-   Live on the site (header CTA, founder band, both legal pages). Note it is
-   on the OLD domain — worth asking whether a majorcontent.com address should
-   forward to it once the domain moves, so the brand and the address match.
+5. **Contact** — ANSWERED 2026-09-07, CHANGED 2026-09-19: he is swapping to
+   **info@majorcontent.com**, the address his own build showed, so the brand
+   and the address match. Live on the site (header CTA, contact block, both
+   legal pages). The mailbox has to exist on the new domain before launch —
+   the site links it, so a dead address is a dead contact route.
 6. **DRIVE's Emmy** — RESEARCHED 2026-09-18: it won the **2024 Daytime Emmy for
    Outstanding Single Camera Editing**, and was nominated for Outstanding Sound
    Mixing and Sound Editing. The tile still says only "Emmy Award-Winning",
