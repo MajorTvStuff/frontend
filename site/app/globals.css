@@ -43,6 +43,10 @@
   --text-about--line-height: 1.75;
   /* the reading size: the copy-led page is mostly this */
   --text-read: clamp(1rem, 0.94rem + 0.28vw, 1.125rem);
+  /* the one step up from it, for the paragraph that carries a section */
+  --text-lede-copy: clamp(1.1875rem, 1.05rem + 0.7vw, 1.5rem);
+  /* and the claim, which has a screen to itself */
+  --text-claim: clamp(1.875rem, 1.1rem + 3.4vw, 3.5rem);
   --text-lede: clamp(1.125rem, 0.85rem + 0.95vw, 1.625rem);
   --text-lede--line-height: 1.35;
   --text-h2: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
@@ -145,6 +149,17 @@
     letter-spacing: -0.01em;
     text-transform: uppercase;
   }
+}
+
+/* the hero's ground — see the note beside the drift keyframes */
+.hero-ground {
+  overflow: hidden;
+}
+.hero-still {
+  filter: blur(22px);
+  /* the resting value; the drift animates the same property from 1.14 */
+  transform: scale(1.14);
+  will-change: transform;
 }
 
 /* ------------------------------------------------------------------ *
@@ -376,7 +391,35 @@
       transform: scale(1.055);
     }
   }
+  /* the defocused ground needs more of itself outside the frame, because
+     the blur bleeds transparent edges inwards */
+  .hero-still.hero-drift {
+    animation-name: hero-drift-soft;
+  }
+  @keyframes hero-drift-soft {
+    from {
+      transform: scale(1.14);
+    }
+    to {
+      transform: scale(1.175);
+    }
+  }
 
+  /* ------------------------------------------------------------------ *
+   *  THE HERO'S GROUND
+   *
+   *  The key art is defocused so the first screen reads as type on light
+   *  rather than as a poster with words over it — the client asked for the
+   *  images to be supportive, and the first screen is where that is
+   *  loudest. It also removes a real defect: the DRIVE art carries its own
+   *  lockup, which ghosted straight through ours.
+   *
+   *  The blur bleeds transparent edges inwards, so the frame clips and the
+   *  still is oversized past it. The scale lives on the still itself and
+   *  the drift animates the same property, which is why the resting value
+   *  is declared here as well — reduced motion and print never run the
+   *  animation, and an unscaled blurred image shows its own soft border.
+   * ------------------------------------------------------------------ */
   /* the footage fades up behind the held lockup */
   .trailer-in {
     animation: logo-fade 1.6s var(--ease-weighted) 0.2s both;
@@ -768,9 +811,10 @@
 .variant-switch {
   position: fixed;
   z-index: 90;
-  left: 50%;
+  /* off the centre line: the hero's scroll cue and the claim both sit
+     there, and a review control should never cover the work */
+  right: 1rem;
   bottom: 1rem;
-  transform: translateX(-50%);
   display: flex;
   align-items: stretch;
   gap: 1px;
@@ -819,7 +863,12 @@
 main > footer {
   padding-bottom: clamp(5rem, 8vw, 7rem);
 }
-@media (max-width: 420px) {
+@media (max-width: 480px) {
+  .variant-switch {
+    left: 1rem;
+    right: 1rem;
+    justify-content: center;
+  }
   .variant-switch-tag {
     display: none;
   }
@@ -828,17 +877,22 @@ main > footer {
 /* ------------------------------------------------------------------ *
  *  THE COPY-LED PAGE
  *
- *  The client's own layout, from the recording he sent: a label, then the
- *  writing, at one reading measure, with air around it — and one band of
- *  imagery in the whole body. "I want the site to breathe more with copy
- *  and messaging, and have the images be more supportive."
+ *  The client's structure, on an editorial grid.
  *
- *  So this is mostly a typographic file. The measure is capped in ch, not
- *  px, because the thing being protected is line length; the rhythm comes
- *  from one spacing step used everywhere rather than a value per section.
+ *  His own version stacks a label over its copy, centred, four times over.
+ *  The structure is right and it is what he approved; the hierarchy is the
+ *  part that was missing — every section arrived at the same weight, so
+ *  nothing led. Here the labels take a rail of their own and stay put
+ *  while their copy scrolls past, each section is numbered because the
+ *  four are meant to be read in order, and the paragraph that carries a
+ *  section leads it at a larger size.
+ *
+ *  Three things carry the page: the measure, the leading, and the one
+ *  step of scale between a lede and a body paragraph. There is no
+ *  decoration in this file.
  * ------------------------------------------------------------------ */
 .page-section {
-  padding-block: clamp(3.5rem, 9vw, 7.5rem);
+  padding-block: clamp(4rem, 10vw, 9rem);
   padding-inline: 1.25rem;
   border-top: 1px solid var(--color-line);
 }
@@ -847,16 +901,48 @@ main > footer {
     padding-inline: 2rem;
   }
 }
-/* the band is the one full-bleed thing on the page */
 .page-section--band {
   padding-inline: 0;
 }
-.measure {
-  margin-inline: auto;
-  max-width: 68ch;
-}
 
-/* the label: the mark, then the name, quiet */
+/* the rail and the column. One grid for every section, so the copy sits on
+   the same axis the whole way down the page. */
+.section-grid {
+  margin-inline: auto;
+  max-width: 78rem;
+  display: grid;
+  gap: 1.75rem;
+}
+@media (min-width: 900px) {
+  .section-grid {
+    grid-template-columns: 10rem minmax(0, 62ch);
+    gap: clamp(2rem, 5vw, 5rem);
+    justify-content: center;
+  }
+}
+.section-rail {
+  display: flex;
+  align-items: baseline;
+  gap: 0.75rem;
+}
+@media (min-width: 900px) {
+  .section-rail {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.6rem;
+    /* it stays with its copy: the reader always knows which part of the
+       argument they are inside */
+    position: sticky;
+    top: 2.5rem;
+    align-self: start;
+  }
+}
+/* the number: there are four sections and the order is the point */
+.section-index {
+  color: var(--color-signal);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.18em;
+}
 .section-label {
   display: flex;
   align-items: center;
@@ -870,38 +956,71 @@ main > footer {
   color: var(--color-paper);
 }
 
-/* the writing. 66ch of measure, generous leading, and a real paragraph
-   gap — the three things that decide whether a page of prose is read */
+/* the one paragraph that carries a section, at the one step of scale the
+   page allows itself */
+.lede {
+  font-size: var(--text-lede-copy);
+  line-height: 1.5;
+  font-weight: 300;
+  color: var(--color-paper);
+  text-wrap: pretty;
+}
+/* everything else */
 .body-copy {
-  margin-top: 1.5rem;
+  margin-top: 1.35rem;
   font-size: var(--text-read);
   line-height: 1.75;
   color: var(--color-mid);
   text-wrap: pretty;
 }
-.body-copy + .body-copy {
-  margin-top: 1.15rem;
-}
-.section-label + .body-copy {
+.lede + .body-copy {
   margin-top: 1.75rem;
 }
 
-/* the one differentiating claim, and the one accent sentence */
-.leverage {
-  margin-top: 2rem;
-  font-size: var(--text-lede);
-  line-height: 1.35;
-  font-weight: 300;
+.founder-name {
+  font-size: var(--text-h2);
+  line-height: 1.05;
   color: var(--color-paper);
-  text-wrap: balance;
 }
-.recognition {
+.founder-role {
+  margin-top: 0.6rem;
+  color: var(--color-faint);
+}
+.founder-role + .lede {
   margin-top: 2rem;
-  padding-left: 1rem;
+}
+
+/* the citation, marked as the aside it is */
+.recognition {
+  margin-top: 2.25rem;
+  padding-left: 1.1rem;
   border-left: 2px solid var(--color-signal);
   font-size: var(--text-read);
   line-height: 1.7;
   color: var(--color-paper);
+}
+
+/* ------------------------------------------------------------------ *
+ *  THE CLAIM — the one sentence with a screen to itself.
+ *
+ *  "Publishing is the leverage for production." It is the only thing on
+ *  the page that no competitor could also say, and in the build it
+ *  replaced it was a 15px line four fifths of the way down. It gets the
+ *  full width, display scale, and nothing else in view.
+ * ------------------------------------------------------------------ */
+.claim-section {
+  padding-block: clamp(5rem, 13vw, 11rem);
+}
+.claim {
+  margin: 0 auto;
+  max-width: 24ch;
+  text-align: center;
+  font-size: var(--text-claim);
+  line-height: 1.12;
+  font-weight: 300;
+  letter-spacing: -0.015em;
+  color: var(--color-paper);
+  text-wrap: balance;
 }
 
 .page-footer {

@@ -5,7 +5,7 @@ import type { BandItem } from "@/components/Band";
 import { Band } from "@/components/Band";
 import { Reveal } from "@/components/Reveal";
 import { Lockup } from "@/components/Lockup";
-import { SectionLabel } from "@/components/Mark";
+import { Section } from "@/components/Section";
 import { VariantSwitch } from "@/components/VariantSwitch";
 
 /**
@@ -97,19 +97,20 @@ export default function Home() {
           introLines={site.introLines}
           flash={FLASH.map(cover)}
           primer={primer}
+          ground="soft"
         />
 
         {/* ————— what the company is ————— */}
-        <Reveal className="page-section">
-          <div className="measure">
-            <SectionLabel className="reveal">Company</SectionLabel>
-            {site.company.map((para, i) => (
-              <p key={i} className={`reveal reveal-${i + 2} body-copy`}>
-                {para}
-              </p>
-            ))}
-          </div>
-        </Reveal>
+        <Section index={1} label="Company">
+          {/* the first paragraph is the definition of the company; the other
+              two qualify it, so it leads and they follow */}
+          <p className="reveal lede">{site.company[0]}</p>
+          {site.company.slice(1).map((para, i) => (
+            <p key={i} className={`reveal reveal-${i + 2} body-copy`}>
+              {para}
+            </p>
+          ))}
+        </Section>
 
         {/* ————— every title, in one drifting row ————— */}
         <Reveal className="page-section page-section--band">
@@ -117,72 +118,72 @@ export default function Home() {
         </Reveal>
 
         {/* ————— the two halves of the business, as copy ————— */}
-        <Reveal className="page-section">
-          <div className="measure">
-            <SectionLabel className="reveal">{site.tvFilm.label}</SectionLabel>
-            <p className="reveal reveal-2 body-copy">{site.tvFilm.body}</p>
-          </div>
-        </Reveal>
+        <Section index={2} label={site.tvFilm.label}>
+          <p className="reveal lede">{site.tvFilm.body}</p>
+        </Section>
 
-        <Reveal className="page-section">
-          <div className="measure">
-            <SectionLabel className="reveal">{site.books.label}</SectionLabel>
-            <p className="reveal reveal-2 body-copy">{site.books.body}</p>
-            {site.positioning?.leverage && (
-              /* his own line, from the call notes — display-only until he
-                 signs it off in writing */
-              <p className="reveal reveal-3 leverage">
-                {site.positioning.leverage}
-              </p>
-            )}
-          </div>
-        </Reveal>
+        <Section index={3} label={site.books.label}>
+          <p className="reveal lede">{site.books.body}</p>
+        </Section>
+
+        {/* The one differentiating claim in the whole argument, and the only
+            sentence on the page given a screen of its own. His own words,
+            from the call notes — display-only until he signs them off. */}
+        {site.positioning?.leverage && (
+          <Reveal className="page-section claim-section">
+            <blockquote className="claim reveal">
+              {site.positioning.leverage}
+            </blockquote>
+          </Reveal>
+        )}
 
         {/* ————— the person, at last at full length ————— */}
-        <Reveal className="page-section">
-          <div className="measure">
-            <SectionLabel className="reveal">Founder</SectionLabel>
-            <p className="reveal reveal-2 display-heavy mt-6 text-h2 text-paper">
-              {f.name}
+        <Section index={4} label="Founder">
+          <p className="reveal display-heavy founder-name">{f.name}</p>
+          <p className="reveal meta-caps founder-role">{f.role}</p>
+          {/* the first paragraph is the credits — it is the reason to read
+              the other four, so it carries the lede weight */}
+          <p className="reveal reveal-2 lede">{f.bio[0]}</p>
+          {f.bio.slice(1).map((para, i) => (
+            <p key={i} className="reveal reveal-3 body-copy">
+              {para}
             </p>
-            <p className="reveal reveal-2 meta-caps mt-2 text-faint">
-              {f.role}
-            </p>
-            {f.bio.map((para, i) => (
-              <p key={i} className="reveal reveal-3 body-copy">
-                {para}
-              </p>
-            ))}
-            <p className="reveal reveal-4 recognition">{f.recognition}</p>
-          </div>
-        </Reveal>
+          ))}
+          <p className="reveal reveal-4 recognition">{f.recognition}</p>
+        </Section>
 
         {/* ————— the address ————— */}
         <Reveal className="page-section">
-          <div className="measure">
-            <a
-              href={`mailto:${site.contact.email}`}
-              className="link contact-email display-heavy reveal decoration-signal decoration-2 underline-offset-8"
-            >
-              {site.contact.email}
-            </a>
+          <div className="section-grid">
+            <div className="section-rail" aria-hidden="true" />
+            <div className="section-body">
+              <a
+                href={`mailto:${site.contact.email}`}
+                className="link contact-email display-heavy reveal decoration-signal decoration-2 underline-offset-8"
+              >
+                {site.contact.email}
+              </a>
+            </div>
           </div>
         </Reveal>
 
         <footer className="page-section page-footer">
-          <div className="measure">
-            <Lockup tone="light" className="w-28 opacity-80" />
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
-              <a href="/terms" className="link meta-caps">
-                Terms
-              </a>
-              <a href="/privacy" className="link meta-caps">
-                Privacy
-              </a>
-              <p className="meta-caps text-faint">
-                {site.verticals} · © {new Date().getFullYear()}{" "}
-                {site.legal.entity}
-              </p>
+          <div className="section-grid">
+            <div className="section-rail" aria-hidden="true" />
+            <div className="section-body">
+              <Lockup tone="light" className="w-28 opacity-80" />
+              <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2">
+                <a href="/terms" className="link meta-caps">
+                  Terms
+                </a>
+                <a href="/privacy" className="link meta-caps">
+                  Privacy
+                </a>
+                <p className="meta-caps text-faint">
+                  {site.verticals} · © {new Date().getFullYear()}{" "}
+                  {site.legal.entity}
+                </p>
+              </div>
             </div>
           </div>
         </footer>

@@ -53,11 +53,25 @@ export function Hero({
   introLines,
   flash,
   primer,
+  ground = "sharp",
 }: {
   still: Cover;
   introLines: string[];
   flash: Cover[];
   primer: Primer;
+  /**
+   * How the key art behaves behind the type.
+   *
+   * "sharp" is the original: a full-bleed photograph with just enough scrim
+   * for the lockup to read. "soft" defocuses it into colour and light, which
+   * is what the client's "the images should be more supportive" asks of the
+   * first screen — and it removes a real defect, because the DRIVE art
+   * carries its own lockup and it ghosted straight through ours.
+   *
+   * It is a prop rather than a decision because both variants are live at
+   * once and the image-led one has to stay as it was.
+   */
+  ground?: "sharp" | "soft";
 }) {
   // bumping `run` remounts every intro layer, restarting their CSS timelines
   const [run, setRun] = useState(0);
@@ -108,7 +122,10 @@ export function Hero({
         {/* the still. One image, not a ten-slide carousel: nine of those
             never rendered, and it put a decade-old book jacket full-bleed
             under the brand reveal. */}
-        <div aria-hidden="true" className="absolute inset-0">
+        <div
+          aria-hidden="true"
+          className={`absolute inset-0 ${ground === "soft" ? "hero-ground" : ""}`}
+        >
           <Image
             key={`still-${run}`}
             src={`/projects/${still.slug}.jpg`}
@@ -117,7 +134,12 @@ export function Hero({
             priority
             quality={90}
             sizes="100vw"
-            className="hero-drift h-full w-full object-cover"
+            style={
+              ground === "soft" ? { objectPosition: "68% 50%" } : undefined
+            }
+            className={`hero-drift h-full w-full object-cover ${
+              ground === "soft" ? "hero-still" : ""
+            }`}
           />
         </div>
 
@@ -133,14 +155,21 @@ export function Hero({
           className="pointer-events-none absolute inset-0 z-[19]"
           style={{
             background:
-              "linear-gradient(to top, rgba(0,21,40,.96) 0%, rgba(0,21,40,.88) 26%, rgba(0,21,40,.62) 46%, rgba(0,21,40,0) 68%)",
+              ground === "soft"
+                ? "linear-gradient(to top, rgba(0,21,40,.98) 0%, rgba(0,21,40,.94) 30%, rgba(0,21,40,.78) 52%, rgba(0,21,40,.34) 78%, rgba(0,21,40,.18) 100%)"
+                : "linear-gradient(to top, rgba(0,21,40,.96) 0%, rgba(0,21,40,.88) 26%, rgba(0,21,40,.62) 46%, rgba(0,21,40,0) 68%)",
           }}
         />
 
-        {/* resting scrim — just enough for the lockup to read */}
+        {/* Resting scrim — just enough for the lockup to read, and on the
+            copy-led page enough more that the type owns the frame. */}
         <div
           aria-hidden="true"
-          className="absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(0,21,40,0.5)_0%,rgba(0,21,40,0.12)_55%,rgba(0,21,40,0.4)_100%)]"
+          className={
+            ground === "soft"
+              ? "absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(0,21,40,0.66)_0%,rgba(0,21,40,0.46)_48%,rgba(0,21,40,0.7)_100%)]"
+              : "absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(0,21,40,0.5)_0%,rgba(0,21,40,0.12)_55%,rgba(0,21,40,0.4)_100%)]"
+          }
         />
         {/* intro scrim — heavy through the sequence, released once the logo
             build has actually finished */}
