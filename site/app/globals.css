@@ -41,6 +41,8 @@
   --text-base--line-height: 1.6;
   --text-about: 0.9375rem;
   --text-about--line-height: 1.75;
+  /* the reading size: the copy-led page is mostly this */
+  --text-read: clamp(1rem, 0.94rem + 0.28vw, 1.125rem);
   --text-lede: clamp(1.125rem, 0.85rem + 0.95vw, 1.625rem);
   --text-lede--line-height: 1.35;
   --text-h2: clamp(1.5rem, 1.1rem + 1.6vw, 2.25rem);
@@ -754,6 +756,180 @@
   }
 }
 
+/* ------------------------------------------------------------------ *
+ *  THE COPY-LED PAGE
+ *
+ *  The client's own layout, from the recording he sent: a label, then the
+ *  writing, at one reading measure, with air around it — and one band of
+ *  imagery in the whole body. "I want the site to breathe more with copy
+ *  and messaging, and have the images be more supportive."
+ *
+ *  So this is mostly a typographic file. The measure is capped in ch, not
+ *  px, because the thing being protected is line length; the rhythm comes
+ *  from one spacing step used everywhere rather than a value per section.
+ * ------------------------------------------------------------------ */
+.page-section {
+  padding-block: clamp(3.5rem, 9vw, 7.5rem);
+  padding-inline: 1.25rem;
+  border-top: 1px solid var(--color-line);
+}
+@media (min-width: 640px) {
+  .page-section {
+    padding-inline: 2rem;
+  }
+}
+/* the band is the one full-bleed thing on the page */
+.page-section--band {
+  padding-inline: 0;
+}
+.measure {
+  margin-inline: auto;
+  max-width: 68ch;
+}
+
+/* the label: the mark, then the name, quiet */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: var(--color-mid);
+}
+.section-mark {
+  width: 0.95rem;
+  height: auto;
+  flex: none;
+  color: var(--color-paper);
+}
+
+/* the writing. 66ch of measure, generous leading, and a real paragraph
+   gap — the three things that decide whether a page of prose is read */
+.body-copy {
+  margin-top: 1.5rem;
+  font-size: var(--text-read);
+  line-height: 1.75;
+  color: var(--color-mid);
+  text-wrap: pretty;
+}
+.body-copy + .body-copy {
+  margin-top: 1.15rem;
+}
+.section-label + .body-copy {
+  margin-top: 1.75rem;
+}
+
+/* the one differentiating claim, and the one accent sentence */
+.leverage {
+  margin-top: 2rem;
+  font-size: var(--text-lede);
+  line-height: 1.35;
+  font-weight: 300;
+  color: var(--color-paper);
+  text-wrap: balance;
+}
+.recognition {
+  margin-top: 2rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-signal);
+  font-size: var(--text-read);
+  line-height: 1.7;
+  color: var(--color-paper);
+}
+
+.page-footer {
+  padding-block: clamp(2.5rem, 5vw, 4rem);
+}
+
+/* ------------------------------------------------------------------ *
+ *  THE BAND — one row, everything in it, drifting.
+ *
+ *  Full-height 16:9 tiles for the shows, books half height in pairs. The
+ *  page holds still and the row moves, so the work is continuously present
+ *  without ever being the thing you are reading. One CSS animation, no
+ *  script: the sequence is rendered twice and the track travels exactly
+ *  half its width, so the loop closes on itself.
+ * ------------------------------------------------------------------ */
+.band {
+  --band-h: clamp(122px, 17vw, 208px);
+  --band-gap: clamp(0.6rem, 1.4vw, 1.1rem);
+  overflow: hidden;
+  /* the row fades out at both edges rather than being cut by them */
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 5%,
+    #000 95%,
+    transparent
+  );
+}
+.band-track {
+  display: flex;
+  width: max-content;
+  animation: band-drift 96s linear infinite;
+}
+.band-run {
+  display: flex;
+  gap: var(--band-gap);
+  padding-right: var(--band-gap);
+}
+/* look at it and it waits for you */
+.band:hover .band-track,
+.band:focus-within .band-track {
+  animation-play-state: paused;
+}
+@keyframes band-drift {
+  to {
+    transform: translateX(-50%);
+  }
+}
+.band-cell {
+  height: var(--band-h);
+  flex: none;
+}
+.band-cell--show {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  background: var(--color-panel);
+}
+.band-still {
+  object-fit: cover;
+}
+.band-cell--pair {
+  display: flex;
+  flex-direction: column;
+  gap: var(--band-gap);
+}
+.band-book {
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+}
+.band-cell--pair .band-book {
+  height: calc((var(--band-h) - var(--band-gap)) / 2);
+}
+/* stopped, it is still a row of things — so give it a scrollbar back */
+@media (prefers-reduced-motion: reduce) {
+  .band {
+    overflow-x: auto;
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+  .band-track {
+    animation: none;
+  }
+  /* the duplicate run is decorative; with no drift it is just repetition */
+  .band-run[aria-hidden="true"] {
+    display: none;
+  }
+}
+
 /* ---------- the backlist as a field ---------- */
 /*
  * The back catalogue is twenty years deep and the client asked for it to be
@@ -1254,7 +1430,9 @@
    whole document 41px past the viewport. It gets its own scale, tied to the
    space it actually has, and is allowed to break rather than overflow. */
 .contact-email {
-  font-size: clamp(1.125rem, 0.6rem + 1.6vw, 2.25rem);
+  /* it has to fit the reading measure, not the viewport: at 2.25rem the
+     address is wider than 68ch and breaks mid-word */
+  font-size: clamp(1.0625rem, 0.72rem + 1.05vw, 1.75rem);
   line-height: 1.15;
   display: inline-block;
   max-width: 100%;

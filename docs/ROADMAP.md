@@ -6,6 +6,51 @@ something only RG can provide.
 
 ---
 
+## THE CLIENT'S OWN LAYOUT — 2026-09-18
+
+RG built a version himself and sent the screen recording (`Assets/1288.mp4`,
+67s, 320x240). It is the clearest brief of the project, and the page now
+follows it. Frames are in the session scratchpad; the structure is:
+
+    hero      the intro lines resolving into the lockup — no key art
+    COMPANY   all three company paragraphs
+    [band]    one drifting row: full 16:9 tiles for shows, books two high
+    TV | FILM the copy
+    BOOKS     the copy
+    FOUNDER   the whole five-paragraph bio, recognition in a rule
+    contact   the address, then the footer
+
+Every section is a small-caps label with the M mark, then writing at one
+reading measure. The band is the ONLY imagery in the body of the page. In his
+recording the page holds still while the row drifts — the surrounding copy is
+identical across frames 42s, 46s and 49s while the images change completely —
+so it is a marquee, not a scroller.
+
+**What this answered.** "I want the site to breathe more with copy and
+messaging, and have the images be more supportive." The old page carried 164
+words of his copy and 441 more sat unused in the content file; the page now
+carries all of it, the founder bio included, and the body has no imagery
+except the band. 5,640px and image-led became 4,968px and copy-led.
+
+**Parked, not deleted:** the trailer slate (`components/Slate.tsx`), the book
+clump (`components/Shelf.tsx`, `lib/clump.ts`, `lib/stage.ts`) and the book
+panel are intact, tested and out of the page. His layout has none of them and
+he asked for simplicity. Their probes in the scratchpad (`tap-verify.js`,
+`stage-verify.js`, `clump-verify.js`) target components that are no longer
+mounted and will not pass until they return. Where the trailers belong is a
+question for the call.
+
+**Open against his version:**
+
+- **Palette.** His ground is a neutral near-black (sampled 5-11% grey, R=G=B);
+  ours is the navy #001528 measured off majortvproductions.com on the client's
+  instruction. Not changed unilaterally — it is one token, `--color-ground`.
+- **The hero.** He deferred it ("we can explore the header video/animation
+  after") and says his own logo timing is wrong. `Assets/MAJOR-TV-logo-
+  animation.mov` is the source file and has been in the drop all along.
+- **Global icons** had its own band and no longer does; the eighteen names are
+  in bio paragraph three, which now renders in full.
+
 ## 0. Book synopses — DRAFTED FROM SOURCES, awaiting RG's sign-off
 
 Hovering a jacket on the shelf slides in a panel with the title, the author
