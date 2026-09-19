@@ -6,6 +6,7 @@ import { Band } from "@/components/Band";
 import { Reveal } from "@/components/Reveal";
 import { Lockup } from "@/components/Lockup";
 import { SectionLabel } from "@/components/Mark";
+import { VariantSwitch } from "@/components/VariantSwitch";
 
 /**
  * THE PAGE, IN THE CLIENT'S OWN ORDER.
@@ -87,6 +88,8 @@ export default function Home() {
           Contact
         </a>
       </header>
+
+      <VariantSwitch current="copy-led" />
 
       <main id="main">
         <Hero

@@ -757,6 +757,75 @@
 }
 
 /* ------------------------------------------------------------------ *
+ *  THE VARIANT SWITCH — a reviewing tool, and it should look like one.
+ *
+ *  Two versions of the page exist while the direction is settled. This
+ *  pins to the bottom of the viewport on both so they can be flipped
+ *  between in front of the client. It is deliberately not styled as
+ *  navigation: when the decision is made it goes, along with the
+ *  /image-led route and the components only that route still uses.
+ * ------------------------------------------------------------------ */
+.variant-switch {
+  position: fixed;
+  z-index: 90;
+  left: 50%;
+  bottom: 1rem;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: stretch;
+  gap: 1px;
+  padding: 1px;
+  background: var(--color-line);
+  border: 1px solid var(--color-line);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  max-width: calc(100vw - 2rem);
+}
+.variant-switch-tag {
+  display: flex;
+  align-items: center;
+  padding: 0.5rem 0.7rem;
+  background: rgba(0, 21, 40, 0.92);
+  color: var(--color-faint);
+}
+.variant-switch-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.45rem 0.85rem;
+  background: rgba(0, 21, 40, 0.92);
+  color: var(--color-mid);
+  text-decoration: none;
+  transition:
+    color 160ms linear,
+    background-color 160ms linear;
+}
+.variant-switch-link:hover {
+  color: var(--color-paper);
+}
+.variant-switch-link[data-here] {
+  background: var(--color-paper);
+  color: var(--color-ink);
+}
+.variant-switch-note {
+  font-size: 0.5625rem;
+  letter-spacing: 0.1em;
+  opacity: 0.7;
+  font-weight: 500;
+}
+/* the copy-led page ends in a footer the switch would sit on; give both
+   variants room to finish underneath it */
+.page-footer,
+main > footer {
+  padding-bottom: clamp(5rem, 8vw, 7rem);
+}
+@media (max-width: 420px) {
+  .variant-switch-tag {
+    display: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
  *  THE COPY-LED PAGE
  *
  *  The client's own layout, from the recording he sent: a label, then the

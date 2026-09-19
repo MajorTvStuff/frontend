@@ -19,6 +19,32 @@ npm start       # http://localhost:3011
 
 **Never use port 3000** — another application on this machine owns it.
 
+Anything that is not the dev server gets its own output directory, or it
+corrupts the one the dev server is using:
+
+```
+NEXT_DIST_DIR=.next-verify npm run build
+NEXT_DIST_DIR=.next-verify npx next dev -p 3012
+```
+
+## The two variants, for showing
+
+Two versions of the page are live side by side while the direction is settled.
+A switch pinned to the bottom of both flips between them, so they can be shown
+without touching the URL bar.
+
+| Route        | What it is                                                                                                                                                                                                                         |
+| ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `/`          | **Copy-led** — the client's own layout, from the build he sent on 18 Sep (`Assets/1288.mp4`). Copy leads every section; the only imagery in the body is one drifting band holding every title.                                     |
+| `/image-led` | **Image-led** — the build as it stood the day before. Full-viewport hero, four playable trailer tiles, the backlist as a round clump. A real page, not a screenshot: the trailers play and the phone still pinches into the clump. |
+
+`/image-led` is `noindex` and disallowed in `robots.txt` — it is a review
+variant, not a page of the site. When the direction is settled, delete the
+route, `components/VariantSwitch.tsx`, and whichever components only the
+losing side still uses.
+
+Every **earlier** variant is in `archive/` and does not run.
+
 ## Where things are
 
 - **`site/`** — the production frontend. Its own README states the rules the
