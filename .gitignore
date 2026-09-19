@@ -18,6 +18,9 @@ next-env.d.ts
 
 # previous project (own git repo)
 /archive/
+# ...but the note explaining what is in there is prose, not a build, and it
+# is the only thing that says why each variant was replaced
+!/archive/README.md
 
 # client source drop (26MB incl. video); site uses processed copies in public/
 /Assets/
