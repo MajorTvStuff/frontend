@@ -6,6 +6,7 @@ import { useReveal } from "@/lib/reveal";
 import { usePointerSpring } from "@/lib/pointer";
 import { STAGE, depthOf, foreshorten, useDepthStage } from "@/lib/stage";
 import { BookPanel } from "@/components/BookPanel";
+import { useDismiss } from "@/lib/panel";
 import type { Project, Credit } from "@/lib/content";
 import type { ClumpItem } from "@/lib/clump";
 
@@ -182,43 +183,19 @@ export function Shelf({
     closeBook();
   }, [resetCamera, closeBook]);
 
-  // Escape puts the panel away, or brings the camera back
+  // Escape and a press off the shelf put the panel away — the same contract
+  // the row uses, so both open the same way and close the same way
+  useDismiss(!!pressed, closeBook);
+
+  // with no panel up, Escape brings the camera back instead
   useEffect(() => {
-    if (!pressed && !zoomed) return;
+    if (pressed || !zoomed) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== "Escape") return;
-      if (pressedRef.current) closeBook();
-      else resetCamera();
+      if (e.key === "Escape") resetCamera();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [pressed, zoomed, closeBook, resetCamera]);
-
-  /* A press anywhere else puts it away too. `click`, not pointerdown: a
-     finger that scrolls the page never produces one, so reading on past the
-     shelf cannot close what someone just opened. The panel itself is
-     transparent to the pointer (so the covers under it stay reachable), so
-     a click that lands inside its box counts as on it, not as off it. */
-  useEffect(() => {
-    if (!pressed) return;
-    const onClick = (e: MouseEvent) => {
-      const t = e.target as Element | null;
-      if (t?.closest(".jacket-hit, .stage-reset")) return; // they handle it
-      const panel = document.getElementById("book-panel");
-      const r = panel?.getBoundingClientRect();
-      if (
-        r &&
-        e.clientX >= r.left &&
-        e.clientX <= r.right &&
-        e.clientY >= r.top &&
-        e.clientY <= r.bottom
-      )
-        return;
-      closeBook();
-    };
-    document.addEventListener("click", onClick);
-    return () => document.removeEventListener("click", onClick);
-  }, [pressed, closeBook]);
+  }, [pressed, zoomed, resetCamera]);
 
   // the phone stage spaces the covers evenly in depth by their size rank —
   // the biggest nearest — so the back layer is really at the back

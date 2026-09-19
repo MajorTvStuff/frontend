@@ -65,7 +65,11 @@ export function BookPanel({
               <p className="book-panel-summary mt-6">{r.summary}</p>
 
               <dl className="book-panel-facts mt-6">
-                <dt className="meta-caps text-faint">Published</dt>
+                {/* the line is the imprint or the network now that the dates
+                    are out of it, so it is labelled as one */}
+                <dt className="meta-caps text-faint">
+                  {book.medium === "show" ? "Network" : "Publisher"}
+                </dt>
                 <dd className="mt-1 text-cap text-mid">{r.carrier}</dd>
                 <dt className="meta-caps mt-4 text-faint">{founder}</dt>
                 <dd className="mt-1 text-cap text-mid">{r.role}</dd>

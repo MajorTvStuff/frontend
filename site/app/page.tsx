@@ -71,6 +71,9 @@ export default function Home() {
   const band: BandItem[] = projects.map((p) => ({
     ...p,
     ...projectDims(p.slug),
+    /* pressing a tile opens this in the panel — the same write-up the
+       shelf shows on the other variant, dates excluded */
+    about: credit(p.slug),
   }));
   const showRows = projects.filter((p) => p.medium === "show");
   /* the four trailers, exactly as they play on the other variant */
@@ -138,7 +141,7 @@ export default function Home() {
 
         {/* ————— every title, in one drifting row ————— */}
         <Reveal className="page-section page-section--band">
-          <Band items={band} />
+          <Band items={band} founder={f.name} />
         </Reveal>
 
         {/* ————— the two halves of the business, as copy ————— */}
@@ -167,7 +170,7 @@ export default function Home() {
               his own approved copy. They were rendering on the build he
               rejected and not on this one. */}
           {site.icons && (
-            <p className="icon-roll reveal reveal-2 display-heavy">
+            <p className="icon-roll reveal reveal-2">
               {site.icons.map((name, i) => (
                 <span key={name}>
                   <span className="whitespace-nowrap">

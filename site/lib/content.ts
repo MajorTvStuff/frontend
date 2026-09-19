@@ -119,12 +119,51 @@ export type Credit = {
 
 /** The display half of a write-up, and ONLY the display half. Our citations
     and our questions for RG stay on the server where they belong. */
+/* Dates come out of the display view at the client's instruction — he
+   wants the write-ups without publication dates — so `carrier` reaches the
+   page as the publisher or the network and whatever else it said, minus the
+   date and minus the words left hanging by its removal ("premiered", a
+   stranded "in"). research.json keeps the full line: it is the citation, and
+   what we can show is a separate question from what we know. */
+const DATE =
+  /\b(?:\d{1,2}\s+)?(?:January|February|March|April|May|June|July|August|September|October|November|December)\s+\d{4}\b|\b(?:19|20)\d{2}\b/g;
+/* "premiered", "published" and their kind are only left hanging once their
+   date is gone, and a preposition stranded the same way ("followed in 2013
+   with more" -> "followed in with more"). Each is removed only where nothing
+   follows it. */
+const HANGING_VERB =
+  /(?:,|;)?\s*\b(?:premiered|aired|published|released|first\s+aired)\b\s*(?=$|[;,.)\u2014|])/gi;
+const HANGING_PREP = /\b(?:in|on|from)\s+(?=$|[,.;)\u2014]|with\b|and\b)/gi;
+
+/** A carrier line with its publication date taken out — "Celebra | Penguin
+    — 28 January 2014" becomes "Celebra | Penguin". Two passes, because
+    removing a date can strand a word whose own removal stands another one
+    up behind it. */
+export function dateless(line: string): string {
+  let s = line.replace(DATE, "");
+  for (let i = 0; i < 2; i++) {
+    s = s
+      .replace(HANGING_VERB, "")
+      .replace(HANGING_PREP, "")
+      .replace(/\s{2,}/g, " ")
+      .replace(/,\s*\./g, ".")
+      .replace(/\u2014\s*[;,]\s*/g, "\u2014 ")
+      .replace(/[;,]\s*(?=[;,.]|$)/g, "")
+      .replace(/\s+([.,;])/g, "$1");
+  }
+  return s
+    .trim()
+    .replace(/\s*[\u2014,;|-]\s*$/, "")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
+
 export function credit(slug: string): Credit | null {
   const r = researched[slug];
   if (!r || !r.onSite) return null;
   return {
     summary: r.summary,
-    carrier: r.carrier,
+    carrier: dateless(r.carrier),
     ...(r.awardShort ? { award: r.awardShort } : {}),
     role: r.role,
   };
@@ -176,8 +215,8 @@ export function youtubeId(url: string | null): string | null {
  */
 export const knit = (s: string): string =>
   s
-    .replace(/(MAJOR|Major) (CONTENT|Content)/g, "$1 $2")
-    .replace(/(\S) \| (\S)/g, "$1 | $2");
+    .replace(/\b(MAJOR|Major) (CONTENT|Content)\b/g, "$1\u00a0$2")
+    .replace(/(\S) \| (\S)/g, "$1\u00a0|\u00a0$2");
 
 export const project = (slug: string): Project =>
   projects.find((p) => p.slug === slug)!;

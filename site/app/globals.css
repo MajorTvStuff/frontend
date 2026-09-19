@@ -1090,9 +1090,13 @@ main > footer {
   margin-top: 2.5rem;
   padding-top: 2rem;
   border-top: 1px solid var(--color-line);
-  font-size: var(--text-names);
-  line-height: var(--text-names--line-height);
-  color: var(--color-paper);
+  /* All eighteen, in his order, every name kept. At display size they were
+     a 630px wall that outranked the section they were proof for — and the
+     bio two screens down lists the same eighteen. So they run at the lede
+     tier instead, as the proof line of the BOOKS copy. */
+  font-size: var(--text-lede-copy);
+  line-height: var(--text-lede-copy--line-height, 1.45);
+  color: var(--color-mid);
 }
 
 /* ------------------------------------------------------------------ *
@@ -1145,11 +1149,19 @@ main > footer {
      twenty books were below the size at which a cover can be read at all.
      The jackets carry their own titles; they only needed to be big enough
      for that to work. */
-  --band-h: clamp(150px, 20vw, 288px);
+  --band-h: clamp(240px, 20vw, 288px);
   --band-gap: clamp(0.6rem, 1.4vw, 1.1rem);
   --band-fade: calc(var(--band-h) * 0.45);
   padding-inline: var(--band-gap);
-  overflow: hidden;
+  /* A ROW YOU CAN WORK. It drifts on its own, but it is also a scroll
+     container at every width, so a finger, a trackpad, a dragged mouse or
+     the arrow keys can go through all 24 at any pace. Everything about the
+     drift is written so that the visitor outranks it. */
+  overflow-x: auto;
+  overflow-y: hidden;
+  cursor: grab;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-line) transparent;
   /* the row fades out at both edges rather than being cut by them */
   /* the ramp scales with the cells, not with the viewport */
   mask-image: linear-gradient(
@@ -1170,6 +1182,16 @@ main > footer {
 .band:focus-visible {
   outline-offset: -4px;
 }
+.band:active {
+  cursor: grabbing;
+}
+/* pulling the row must not select its alt text or drag a cover out of it */
+.band {
+  user-select: none;
+}
+.band img {
+  -webkit-user-drag: none;
+}
 .band-track {
   display: flex;
   width: max-content;
@@ -1180,9 +1202,13 @@ main > footer {
   gap: var(--band-gap);
   padding-right: var(--band-gap);
 }
-/* look at it and it waits for you */
+/* look at it and it waits for you — and so does working it: [data-held] is
+   set for six seconds after a scroll, a drag or a tap, so a scrubbed row
+   does not snatch itself back the instant a finger lifts, and an open
+   write-up holds it still for as long as it is open */
 .band:hover .band-track,
-.band:focus-within .band-track {
+.band:focus-within .band-track,
+.band[data-held] .band-track {
   animation-play-state: paused;
 }
 @keyframes band-drift {
@@ -1200,6 +1226,28 @@ main > footer {
 .band-still {
   height: 100%;
   width: auto;
+}
+/* every tile is a press: it opens that title's write-up in the panel */
+.band-hit {
+  display: block;
+  position: relative;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+.band-hit:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+}
+/* the pressed tile keeps a standing marker, like a pressed jacket does */
+.band-hit[data-pressed]::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: 1px solid var(--color-signal);
+  pointer-events: none;
 }
 /* the shows stop setting the height of the row: at full height they were
    nearly six times the width of a paired jacket */
@@ -1220,33 +1268,19 @@ main > footer {
   width: auto;
   object-fit: contain;
 }
-.band-cell--pair .band-book {
+.band-cell--pair .band-hit {
   height: calc((var(--band-h) - var(--band-gap)) / 2);
 }
-/* Below the desktop breakpoint there is not enough band height for a stack:
-   half of 150px leaves a 46px jacket, which is smaller than the title
-   printed on it. So the pair lies down and both books stand full height —
-   the row is horizontally scrollable at these widths anyway, so the only
-   cost is length, and the covers become legible. */
-@media (max-width: 899px) {
-  .band-cell--pair {
-    flex-direction: row;
-    align-items: stretch;
-  }
-  .band-cell--pair .band-book {
-    height: 100%;
-  }
-}
-/* stopped, it is still a row of things — so give it a scrollbar back */
-/* Stopped, it is still a row of things - so hand back a scrollbar, and keep
-   the fade, because without it the row is hard-cut flush against both edges
-   and reads as a rendering fault rather than as something scrollable.
-   (hover: none) is here for the same reason: a phone cannot hover, so
-   without it the row drifts forever and cannot be stopped or scrubbed. */
-@media (prefers-reduced-motion: reduce), (hover: none) {
-  .band {
-    overflow-x: auto;
-  }
+/* The pair used to lie down below 900px, because half of a 150px row left a
+   46px jacket — smaller than the title printed on it. The row's floor is
+   240px now, so a stacked jacket is about 115px and legible, and "grids on
+   the books" survives at the width the client reviews on. */
+/* A phone used to be excluded from the drift, on the reasoning that it
+   could not hover and so could never stop the row. It can now: a touch sets
+   [data-held]. And the drift is the one moving part in the client's own
+   recording, which he made on a phone — so it runs there too, and only a
+   stated preference for less motion stops it. */
+@media (prefers-reduced-motion: reduce) {
   .band-track {
     animation: none;
   }
