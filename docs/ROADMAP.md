@@ -45,9 +45,14 @@ question for the call.
 - **Palette.** His ground is a neutral near-black (sampled 5-11% grey, R=G=B);
   ours is the navy #001528 measured off majortvproductions.com on the client's
   instruction. Not changed unilaterally — it is one token, `--color-ground`.
-- **The hero.** He deferred it ("we can explore the header video/animation
-  after") and says his own logo timing is wrong. `Assets/MAJOR-TV-logo-
-  animation.mov` is the source file and has been in the drop all along.
+- **The hero. BEING REPLACED (2026-09-19)** — the client's word, so nothing
+  in it is worth fixing first. Two review findings die with it: the hero
+  repeats the first sentence of 01 COMPANY almost verbatim, and its eyebrow
+  is the unsigned "From MAJOR TV to MAJOR CONTENT" where his own build has
+  TV | FILM | BOOKS under the lockup. He deferred it in his note ("we can
+  explore the header video/animation after") and says his own logo timing is
+  wrong. `Assets/MAJOR-TV-logo-animation.mov` is the source file and has been
+  in the drop all along.
 - **Global icons** had its own band and no longer does; the eighteen names are
   in bio paragraph three, which now renders in full.
 
