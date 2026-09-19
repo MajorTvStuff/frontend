@@ -5,6 +5,7 @@ import Image from "next/image";
 import { claimPlayer, releasePlayer, onPlayerChange } from "@/lib/player-bus";
 import { useReveal } from "@/lib/reveal";
 import { usePointerSpring } from "@/lib/pointer";
+import type { Credit } from "@/lib/content";
 
 export type Show = {
   slug: string;
@@ -15,6 +16,8 @@ export type Show = {
   width: number;
   height: number;
   youtubeId: string | null;
+  /** the display half of our write-up, looked up on the server */
+  about?: Credit | null;
 };
 
 /**
@@ -269,12 +272,29 @@ function Panel({
         )}
       </div>
 
-      {/* one line of metadata, not five */}
       <div className="slate-stub">
         <p className="text-cap text-mid reveal reveal-3">
           {s.credit && <>{s.credit} · </>}
           <Proof proof={s.proof} />
         </p>
+        {/* what the show actually is, and what carried it — the client asked
+            for the site to breathe with copy and let the images support it */}
+        {s.about && (
+          <>
+            <p className="reveal reveal-3 mt-3 max-w-[58ch] text-about text-mid">
+              {s.about.summary}
+            </p>
+            <p className="reveal reveal-4 meta-caps mt-3 text-faint">
+              {s.about.carrier}
+              {s.about.award && (
+                <>
+                  {" · "}
+                  <span className="text-signal">{s.about.award}</span>
+                </>
+              )}
+            </p>
+          </>
+        )}
         {/* only the tile with nothing to play sends you elsewhere */}
         {still && s.trailer && (
           <a

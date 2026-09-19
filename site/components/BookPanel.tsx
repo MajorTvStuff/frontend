@@ -9,24 +9,28 @@ import type { Cover } from "@/components/Shelf";
  * focused or tapped, and stays while the reader moves along the shelf,
  * swapping its contents rather than flying in and out.
  *
- * IT CARRIES NO SYNOPSIS, deliberately. The content files hold a title, an
- * author and a proof line per book and nothing else, and writing plot
- * summaries for twenty real published books would be inventing facts about
- * other people's work. The slot for a synopsis is visible in the beta
- * (NEXT_PUBLIC_SHOW_TODOS) so the client can see exactly what is missing;
- * it renders nothing at all in production until he sends them.
+ * It now carries the write-up. The rule it was built under has not changed —
+ * we invent nothing — but "invent nothing" was never the same as "say
+ * nothing": the summaries are ours, written from published sources and cited
+ * per title in content/research.json, and RG's role comes either from his own
+ * approved bio or from the imprint, which is a matter of record. A title with
+ * no entry yet still shows only what the copy doc gives us.
  */
 export function BookPanel({
   book,
   open,
   pinned,
+  founder,
   onClose,
 }: {
   book: Cover | null;
   open: boolean;
   pinned: boolean;
+  /** whose role the panel is describing */
+  founder: string;
   onClose: () => void;
 }) {
+  const r = book?.about ?? null;
   return (
     <aside
       className={`book-panel${open && book ? " is-open" : ""}${pinned ? " is-pinned" : ""}`}
@@ -58,10 +62,22 @@ export function BookPanel({
 
           <p className="meta-caps mt-6 text-signal">{book.proof}</p>
 
-          {SHOW_TODOS && (
+          {r && (
+            <>
+              <p className="book-panel-summary mt-6">{r.summary}</p>
+
+              <dl className="book-panel-facts mt-6">
+                <dt className="meta-caps text-faint">Published</dt>
+                <dd className="mt-1 text-cap text-mid">{r.carrier}</dd>
+                <dt className="meta-caps mt-4 text-faint">{founder}</dt>
+                <dd className="mt-1 text-cap text-mid">{r.role}</dd>
+              </dl>
+            </>
+          )}
+
+          {!r && SHOW_TODOS && (
             <p className="book-panel-todo mt-6">
-              Synopsis pending — RG to supply one paragraph per title, plus his
-              role on it. We will not write these.
+              No write-up for this title yet — see content/research.json.
             </p>
           )}
 

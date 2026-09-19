@@ -6,10 +6,16 @@ import { useReveal } from "@/lib/reveal";
 import { usePointerSpring } from "@/lib/pointer";
 import { STAGE, depthOf, foreshorten, useDepthStage } from "@/lib/stage";
 import { BookPanel } from "@/components/BookPanel";
-import type { Project } from "@/lib/content";
+import type { Project, Credit } from "@/lib/content";
 import type { ClumpItem } from "@/lib/clump";
 
-export type Cover = Project & { width: number; height: number };
+export type Cover = Project & {
+  width: number;
+  height: number;
+  /** The display half of our write-up, looked up on the server. Named
+      `about`, not `credit`: a Project's own `credit` is the author line. */
+  about?: Credit | null;
+};
 /** a backlist cover with its place in the clump (see lib/clump.ts) */
 export type Placed = Cover & ClumpItem;
 
@@ -115,6 +121,7 @@ export function Shelf({
   front,
   back,
   fieldPx,
+  founder,
 }: {
   label: string;
   thesis?: string;
@@ -124,6 +131,8 @@ export function Shelf({
   back: Placed[];
   /** the field width at which the largest backlist cover is full size */
   fieldPx: number;
+  /** whose role the panel is describing */
+  founder: string;
 }) {
   const claimRef = useRef<HTMLDivElement | null>(null);
   const frontRef = useRef<HTMLDivElement | null>(null);
@@ -400,7 +409,13 @@ export function Shelf({
         </div>
       </div>
 
-      <BookPanel book={shown} open={open} pinned={!!pinned} onClose={unpin} />
+      <BookPanel
+        book={shown}
+        open={open}
+        pinned={!!pinned}
+        founder={founder}
+        onClose={unpin}
+      />
     </section>
   );
 }

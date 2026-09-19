@@ -1103,6 +1103,24 @@
   box-shadow: inset 0 0 0 1px var(--color-line);
   filter: drop-shadow(0 16px 34px rgba(0, 5, 12, 0.6));
 }
+/* the write-up: the one long-form passage in the panel, so it gets the
+   reading measure and the line height the rest of the chrome does not */
+.book-panel-summary {
+  font-size: var(--text-about);
+  line-height: var(--text-about--line-height);
+  color: var(--color-paper);
+  max-width: 44ch;
+}
+/* publisher, year and RG's role — a definition list, because that is what it
+   is: a short column of facts, each with its own label */
+.book-panel-facts {
+  border-top: 1px solid var(--color-line);
+  padding-top: 1rem;
+}
+.book-panel-facts dd {
+  margin: 0;
+}
+
 .book-panel-todo {
   font-size: var(--text-strip);
   line-height: 1.5;

@@ -1,5 +1,5 @@
 {
-  "note": "RESEARCHED, NOT CLIENT-SUPPLIED. Every summary below is written by us from published sources (publisher listings, trade press, network announcements) and paraphrased — no jacket copy is reproduced. Facts (publisher, imprint, year, network, collaborators) are cited in `sources`. This file is deliberately separate from site.json, which holds RG's verbatim copy: nothing here goes on the site until RG signs it off. `roleBasis` says how we know RG's role — 'client-copy' means his own approved bio states it, 'imprint' means the publisher is verified and his bio states his job there, 'unconfirmed' means ask him. Compiled 2026-09-18.",
+  "note": "RESEARCHED, NOT CLIENT-SUPPLIED. Every summary below is written by us from published sources (publisher listings, trade press, network announcements) and paraphrased — no jacket copy is reproduced. Facts (publisher, imprint, year, network, collaborators) are cited in `sources`. This file is deliberately separate from site.json, which holds RG's verbatim copy: nothing here goes on the site until RG signs it off. `roleBasis` says how we know RG's role — 'client-copy' means his own approved bio states it, 'imprint' means the publisher is verified and his bio states his job there, 'unconfirmed' means ask him. Compiled 2026-09-18; six further titles added the same day at the client's instruction, marked onSite:false — they are named in RG's bio but have no tile, and cannot get one until a cover image and a proof line exist for each.",
   "roleSources": {
     "shows": "founder.bio[0]: 'under which he has Executive Produced shows such as HULU's Emmy Award-winning DRIVE with SWIZZ BEATZ, OWN's and HBO MAX's TIME OF ESSENCE, DISCOVERY+'s and HBO MAX's REMIX MY SPACE with Marsai Martin, and VH1's RICKY MARTIN: BEHIND VEGAS RESIDENCY'",
     "literary": "founder.bio[0]: 'also served as literary representation for New York Times Bestsellers authors, such as Marco Borges, THE GREENPRINT and Emme Muñiz, LORD HELP ME'",
@@ -19,7 +19,10 @@
         "https://abc7.com/drive-with-swizz-beatz-nasir-dean-onyx-collective-hulu-docuseries/14118517/",
         "https://www.thewrap.com/drive-with-swizz-beatz-hulu-premiere-date/"
       ],
-      "confirm": "Do you want the Emmy named by category — 'Outstanding Single Camera Editing, 2024 Daytime Emmy Awards' — or left as 'Emmy Award-Winning'?"
+      "confirm": "Do you want the Emmy named by category — 'Outstanding Single Camera Editing, 2024 Daytime Emmy Awards' — or left as 'Emmy Award-Winning'?",
+      "onSite": true,
+      "needs": [],
+      "awardShort": "2024 Daytime Emmy — Outstanding Single Camera Editing"
     },
     "time-of-essence": {
       "summary": "Five hours on fifty years of Essence, a decade to an episode — how the magazine reported and shaped Black American culture, told by the people who were in it. With Oprah Winfrey, Halle Berry, Whoopi Goldberg, Taraji P. Henson, Regina Hall, Taye Diggs, Gabrielle Union and Beverly Johnson.",
@@ -32,7 +35,9 @@
         "https://www.hbomax.com/shows/time-of-essence/da9383c4-a0a0-418a-a133-e8425b89080d",
         "https://www.essence.com/entertainment/time-of-essence-episode-1-recap-1970s/"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "remix-my-space": {
       "summary": "Marsai Martin and a design team surprise teenagers who have done something for their community, and rebuild their bedrooms around what each of them actually cares about — photography, robotics, sneakers.",
@@ -45,7 +50,9 @@
         "https://www.hbomax.com/shows/remix-my-space-with-marsai-martin/d31aaa5d-f993-48d8-833b-f25ab0daf57d",
         "https://www.imdb.com/title/tt17055316/"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "behind-the-vegas-residency": {
       "summary": "A backstage hour on Ricky Martin's 'All In' residency at the Park Theater in Las Vegas — rehearsals, career flashbacks and the days before opening night.",
@@ -58,9 +65,10 @@
         "https://www.vh1.com/news/sn1ukf/vh1-announces-ricky-martin-behind-the-vegas-residency",
         "https://www.imdb.com/title/tt7361518/"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
-
     "true-love": {
       "summary": "Lopez's first book: a diary of the two years in which her marriage ended, her twins were born and she rebuilt both her life and her work. A portion of the proceeds goes to the Lopez Family Foundation.",
       "released": "2014",
@@ -71,7 +79,9 @@
         "https://www.penguinrandomhouse.com/books/315716/true-love-by-jennifer-lopez/",
         "https://en.wikipedia.org/wiki/True_Love_(book)"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "me": {
       "summary": "Martin's memoir — a childhood in Puerto Rico, the Menudo years, the scale of 'Livin' la Vida Loca', coming to terms with his sexuality, and becoming a father.",
@@ -83,7 +93,9 @@
         "https://www.amazon.com/Me-Ricky-Martin/dp/0451234154",
         "https://www.oprah.com/oprahsbookclub/book-excerpt-me-ricky-martin-introduction"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "the-love-playbook": {
       "summary": "Anthony's rules for dating, relationships and holding on to yourself inside one, drawn from her own life. Written with Karen Hunter; it reached No. 1 on the New York Times advice list.",
@@ -95,7 +107,9 @@
         "https://www.penguinrandomhouse.com/books/314967/the-love-playbook-by-la-la-anthony/",
         "https://en.wikipedia.org/wiki/The_Love_Playbook:_Rules_for_Love,_Sex,_and_Happiness"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "my-voice": {
       "summary": "Two decades of hip-hop radio from the inside: an internship at Hot 97, 'Battle of the Beats', and the last interview Tupac Shakur gave, which Martinez was summoned to conduct at twenty-five. Foreword by J. Cole.",
@@ -107,7 +121,9 @@
         "https://www.penguinrandomhouse.com/books/531927/my-voice-by-angie-martinez-with-a-foreword-by-j-cole/",
         "https://www.biblio.com/book/my-voice-memoir-martinez-angie/d/1604925485"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "estefan-kitchen": {
       "summary": "Cuban home cooking from the Estefans and the kitchen of their Bongos Cuban Café — tapas, family-style plates, desserts and the cocktails that go with them.",
@@ -119,7 +135,9 @@
         "https://www.amazon.com/Estefan-Kitchen-Emilio/dp/045122518X",
         "https://archive.org/details/estefankitchen0000este"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "a-memoir": {
       "summary": "Moreno's account of the journey from a Puerto Rican childhood and the Bronx to Broadway at thirteen and Hollywood in its golden age — and of becoming one of the very few performers to hold an Oscar, a Grammy, a Tony and two Emmys.",
@@ -131,7 +149,9 @@
         "https://www.penguinrandomhouse.com/books/312568/rita-moreno-by-rita-moreno/",
         "https://www.bookreporter.com/reviews/rita-moreno-a-memoir"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "to-selena-with-love": {
       "summary": "Selena's husband and guitarist on their life together — how they met in her band, the marriage, and her death in 1995 — written seventeen years afterwards.",
@@ -143,7 +163,9 @@
         "https://en.wikipedia.org/wiki/To_Selena,_With_Love",
         "https://www.kirkusreviews.com/book-reviews/chris-perez/to-selena-with-love/"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "why-soccer-matters": {
       "summary": "Pelé on six decades of the game, built around five World Cups — 1950, 1958, 1970, 1994 and 2014 — and on what the sport did for lives far away from the pitch. Written with Brian Winter.",
@@ -155,7 +177,9 @@
         "https://www.penguinrandomhouse.com/books/315583/why-soccer-matters-by-pele/",
         "https://www.kirkusreviews.com/book-reviews/pele/why-soccer-matters/"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "out-of-the-blue": {
       "summary": "The route from Paterson, New Jersey to a Super Bowl-winning Giants side, and the family who made it possible — a grandmother who gave him the salsa celebration, a firefighter father who taught him the game, a mother who would not let him stop. Written with Peter Schrager.",
@@ -167,7 +191,9 @@
         "https://www.penguinrandomhouse.com/books/312512/out-of-the-blue-by-victor-cruz/",
         "https://www.bigblueview.com/2012/8/14/3240527/book-review-victor-cruz-out-of-the-blue"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "the-22-day-revolution": {
       "summary": "A twenty-two day plant-based programme from the exercise physiologist behind 22 Days Nutrition, built on the idea that a habit takes three weeks to form. Foreword by Beyoncé, introduction by Dr Dean Ornish.",
@@ -179,7 +205,9 @@
         "https://www.penguinrandomhouse.com/books/318009/the-22-day-revolution-by-marco-borges/",
         "https://www.booksamillion.com/p/Day-Revolution/Marco-Borges/9780451474841"
       ],
-      "confirm": "Your bio names a different Borges title — THE GREENPRINT — as a Major Content literary-representation credit. Both are real. Do you want THE GREENPRINT on the site as well, or instead of this one?"
+      "confirm": "Your bio names a different Borges title — THE GREENPRINT — as a Major Content literary-representation credit. Both are real. Do you want THE GREENPRINT on the site as well, or instead of this one?",
+      "onSite": true,
+      "needs": []
     },
     "chasing-the-sun": {
       "summary": "An illustrated autobiography: growing up in Medellín through the most violent years of Colombia's recent history, founding the rock band Ekhymosis at sixteen, and the faith and music that carried him out.",
@@ -191,7 +219,9 @@
         "https://www.penguinrandomhouse.com/books/312143/chasing-the-sun-by-juanes/",
         "https://colombiareports.com/juanes-to-release-his-memoir-chasing-the-sun/"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "im-not-gonna-lie": {
       "summary": "Lopez on turning fifty, played for comedy — dating much younger, losing the fight to stay in shape, a session with a pet psychic — and, underneath it, his kidney disease and transplant. Written with Alan Eisenstock.",
@@ -203,7 +233,9 @@
         "https://www.penguinrandomhouse.com/books/312925/im-not-gonna-lie-and-other-lies-you-tell-when-you-turn-50-by-george-lopez-and-alan-eisenstock/",
         "https://www.amazon.com/Im-Not-Gonna-Lie-Other/dp/0451417100"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "chords-of-strength": {
       "summary": "The American Idol finalist on the vocal cord paralysis he had to overcome to sing at all, and the faith he leaned on doing it. Written with Monica Haim — and the first New York Times bestseller Celebra ever had.",
@@ -215,7 +247,9 @@
         "https://en.wikipedia.org/wiki/Chords_of_Strength",
         "https://www.penguinrandomhouse.com/books/306632/chords-of-strength-by-david-archuleta/"
       ],
-      "confirm": "Are you happy for us to say this was Celebra's first New York Times bestseller? It is a matter of record, and it is a good line for the shelf."
+      "confirm": "Are you happy for us to say this was Celebra's first New York Times bestseller? It is a matter of record, and it is a good line for the shelf.",
+      "onSite": true,
+      "needs": []
     },
     "growing-stronger": {
       "summary": "The singer and telenovela star on the things she does not usually discuss: her father's death when she was five, her sister's kidnapping, and the illness that changed her life — set against her marriage to Tommy Mottola and their daughter.",
@@ -227,7 +261,9 @@
         "https://www.amazon.com/Growing-Stronger-Thalia/dp/0451234413",
         "https://www.today.com/news/growing-stronger-thalia-shares-her-story-wbna45148867"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "clemente": {
       "summary": "Roberto Clemente told by his own family: Puerto Rico to the major leagues, eighteen seasons and three thousand hits, and the relief flight to earthquake victims in Nicaragua that he died on at the end of 1972.",
@@ -239,7 +275,9 @@
         "https://www.amazon.com/Clemente-True-Legacy-Undying-Hero/dp/0451419030",
         "https://www.worldcat.org/title/clemente-the-true-legacy-of-an-undying-hero/oclc/837143638"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "celia-my-life": {
       "summary": "The autobiography the Queen of Salsa wrote in her final months — Havana and La Sonora Matancera, the exile that followed, and Pedro Knight. Written with Ana Cristina Reymundo.",
@@ -251,7 +289,9 @@
         "https://www.amazon.com/Celia-My-Life-Cruz/dp/0060725532",
         "https://www.publishersweekly.com/9780060725532"
       ],
-      "confirm": "Your bio names Isabel Allende, Paulo Coelho and Gloria Estefan as the Rayo authors, not Celia Cruz — and separately says that at REG you 'grew the Celia Cruz license into a perennial International property'. So: were you at Rayo for this book, is it here for the licensing work, or both? This is the only title where the connection is not spelled out."
+      "confirm": "Your bio names Isabel Allende, Paulo Coelho and Gloria Estefan as the Rayo authors, not Celia Cruz — and separately says that at REG you 'grew the Celia Cruz license into a perennial International property'. So: were you at Rayo for this book, is it here for the licensing work, or both? This is the only title where the connection is not spelled out.",
+      "onSite": true,
+      "needs": []
     },
     "lord-help-me": {
       "summary": "A picture book of everyday prayers by Muñiz, written at eleven — waking up for school, getting along with a sibling, and looking after endangered animals. Illustrated by Brenda Figueroa, published in English and Spanish.",
@@ -264,7 +304,9 @@
         "https://global.penguinrandomhouse.com/announcements/rhcb-to-publish-debut-picture-book-by-emme-muniz-daughter-of-jennifer-lopez-and-marc-anthony/",
         "https://www.publishersweekly.com/pw/by-topic/industry-news/religion/article/83366-jennifer-lopez-s-daughter-debuts-with-book-on-prayer.html"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "noelle-the-bulldog": {
       "summary": "Estefan's first children's book. An adopted bulldog is sure she is too odd-looking and too short-legged for her new home, and finds out that everyone has something worth having. Illustrated by Michael Garland.",
@@ -277,7 +319,9 @@
         "https://www.publishersweekly.com/9780060826239",
         "https://www.biblio.com/9780060826239"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "mud-tacos": {
       "summary": "A brother and sister make wormy, squirmy mud tacos in their nana's backyard, which gives them the idea of making real ones. By Mario Lopez and his sister Marissa Lopez Wong, illustrated by Maryn Roos; published in English and Spanish.",
@@ -289,7 +333,9 @@
         "https://www.biblio.com/book/mud-tacos-mario-lopez-marissa-lopez/d/1693417765",
         "https://www.kirkusreviews.com/book-reviews/mario-lopez/mud-tacos/"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
     },
     "santiago-the-dreamer": {
       "summary": "A boy who wants nothing more than to be on a stage doesn't get the lead in the school play. His father's answer is what gets his confidence back. Illustrated by Patricia Castelao.",
@@ -301,7 +347,137 @@
         "https://www.penguinrandomhouse.com/books/312244/santiago-the-dreamer-in-land-among-the-stars-by-ricky-martin-illustrated-by-patricia-castelao/",
         "https://biblio.co.uk/book/santiago-dreamer-land-among-stars-martin/d/1606296067?aid=frg"
       ],
-      "confirm": null
+      "confirm": null,
+      "onSite": true,
+      "needs": []
+    },
+    "the-greenprint": {
+      "title": "THE GREENPRINT",
+      "credit": "Marco Borges",
+      "medium": "book",
+      "summary": "Twenty-two rules for eating plants, with around sixty recipes and the exercise and lifestyle habits meant to go with them. Introduction by Jay-Z and Beyoncé.",
+      "released": "2018",
+      "carrier": "Harmony | Penguin Random House — 31 December 2018",
+      "role": "Literary representation (Major Content)",
+      "roleBasis": "client-copy",
+      "sources": [
+        "https://www.penguinrandomhouse.com/books/599543/the-greenprint-by-marco-borges-introduction-by-jay-z-and-beyonce/9781984823106/",
+        "https://www.prnewswire.com/news-releases/plant-based-leader-marco-borges-to-launch-the-greenprint-300736909.html"
+      ],
+      "confirm": null,
+      "onSite": false,
+      "needs": [
+        "cover image",
+        "proof line"
+      ],
+      "note": "Named in RG's bio as a Major Content representation credit. Harmony, not Celebra — which is consistent: this is the post-Celebra, representation-era Borges title, where THE 22-DAY REVOLUTION was the Celebra one."
+    },
+    "no-lost-causes": {
+      "title": "NO LOST CAUSES",
+      "credit": "Álvaro Uribe Vélez",
+      "medium": "book",
+      "summary": "The Colombian president's account of his eight years in office: the campaign that broke the FARC, and the 2008 jungle rescue of Íngrid Betancourt.",
+      "released": "2012",
+      "carrier": "Celebra | Penguin — 2012; in Spanish as NO HAY CAUSA PERDIDA",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.amazon.com/Lost-Causes-Alvaro-Uribe-Velez/dp/0451413814",
+        "https://books.apple.com/gb/book/no-lost-causes/id506564036"
+      ],
+      "confirm": null,
+      "onSite": false,
+      "needs": [
+        "cover image",
+        "proof line"
+      ],
+      "note": "Uribe is named in RG's bio as a Celebra author."
+    },
+    "the-next-big-story": {
+      "title": "THE NEXT BIG STORY",
+      "credit": "Soledad O'Brien",
+      "medium": "book",
+      "summary": "The broadcaster's account of her own route into news and of the stories she chose to go after. Written with Rose Marie Arce.",
+      "released": "2010",
+      "carrier": "Celebra | Penguin — 2 November 2010",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.amazon.com/Next-Big-Story-Journey-Possibilities/dp/0451231376",
+        "http://www.cnn.com/2010/LIVING/11/11/inam.soledad.excerpt2/index.html"
+      ],
+      "confirm": null,
+      "onSite": false,
+      "needs": [
+        "cover image",
+        "proof line"
+      ],
+      "note": "Full title: THE NEXT BIG STORY: MY JOURNEY THROUGH THE LAND OF POSSIBILITIES. O'Brien is named in RG's bio as a Celebra author."
+    },
+    "el-creador-de-exitos": {
+      "title": "EL CREADOR DE ÉXITOS",
+      "credit": "Tommy Mottola",
+      "medium": "book",
+      "summary": "The Bronx college dropout who became one of the music industry's most powerful and most argued-over executives, and who signed and steered Mariah Carey, Celine Dion, Shakira, Jennifer Lopez and Gloria Estefan.",
+      "released": "2014",
+      "carrier": "Celebra | Penguin — Spanish edition, 2014. The English edition, HITMAKER: THE MAN AND HIS MUSIC, was published by Grand Central in 2013, written with Cal Fussman.",
+      "role": "Founder and Publisher, Celebra — Spanish edition",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.penguinrandomhouse.com/books/310275/el-creador-de-exitos-by-tommy-mottola/",
+        "https://www.amazon.com/Hitmaker-Man-Music-Tommy-Mottola/dp/0446585181"
+      ],
+      "confirm": "Celebra published the SPANISH edition only — Grand Central had the English. Do you want this tile at all, and if so under which title?",
+      "onSite": false,
+      "needs": [
+        "cover image",
+        "proof line",
+        "which edition to show"
+      ],
+      "note": "This resolves an apparent contradiction: Mottola is named in RG's bio as a Celebra author, and the English HITMAKER is Grand Central. The Spanish edition is the Celebra one."
+    },
+    "viviendo": {
+      "title": "VIVIENDO",
+      "credit": "Adamari López",
+      "medium": "book",
+      "summary": "The actor and presenter on her childhood in Puerto Rico, her breast cancer, her mother's sudden illness, and the end of her marriage.",
+      "released": "2012",
+      "carrier": "Celebra | Penguin — December 2012; the English edition, THRIVING, followed in 2013 with additional material",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.penguinrandomhouse.com/books/312922/viviendo-by-adamari-lopez/9780451417091/",
+        "https://www.huffingtonpost.com/2013/11/06/adamari-lopez-thriving_n_4225362.html"
+      ],
+      "confirm": null,
+      "onSite": false,
+      "needs": [
+        "cover image",
+        "proof line"
+      ],
+      "note": "Adamari Lopez is named in RG's bio as a Celebra author."
+    },
+    "una-vida": {
+      "title": "UNA VIDA",
+      "credit": "Ednita Nazario",
+      "medium": "book",
+      "summary": "The Puerto Rican singer's memoir — a child performer in Ponce who became one of Latin music's lasting voices, and what it cost along the way.",
+      "released": "2016",
+      "carrier": "Celebra | Penguin",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.amazon.com/Vida-Celebra-Spanish-Ednita-Nazario/dp/0399583009",
+        "https://www.penguinrandomhouse.com/authors/2136010/ednita-nazario/"
+      ],
+      "confirm": "We could not pin the publication year to a source — 2016 is our best reading of the ISBN. Can you confirm it, or shall we leave the year off this one?",
+      "onSite": false,
+      "needs": [
+        "cover image",
+        "proof line",
+        "publication year"
+      ],
+      "note": "Ednita Nazario is named in RG's bio as a Celebra author. Spanish-language title."
     }
   }
 }

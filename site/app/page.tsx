@@ -1,4 +1,11 @@
-import { site, projects, project, projectDims, youtubeId } from "@/lib/content";
+import {
+  site,
+  projects,
+  project,
+  projectDims,
+  youtubeId,
+  credit,
+} from "@/lib/content";
 import { clump } from "@/lib/clump";
 import type { Cover, Primer } from "@/components/Hero";
 import { Hero } from "@/components/Hero";
@@ -50,9 +57,13 @@ const FRONT = [
 ];
 
 const cover = (slug: string): Cover => ({ slug, ...projectDims(slug) });
+/* the write-up is looked up HERE, on the server, and only its DISPLAY half
+   travels as a prop — the research file, zod, our citations and our open
+   questions for RG all stay behind */
 const jacket = (slug: string): Jacket => ({
   ...project(slug),
   ...projectDims(slug),
+  about: credit(slug),
 });
 
 export default function Home() {
@@ -67,6 +78,7 @@ export default function Home() {
       trailer: p.trailer,
       ...projectDims(p.slug),
       youtubeId: youtubeId(p.trailer),
+      about: credit(p.slug),
     }));
 
   const lead = jacket(LEAD);
@@ -123,6 +135,7 @@ export default function Home() {
           front={FRONT.map(jacket)}
           back={back}
           fieldPx={field.fieldPx}
+          founder={f.name}
         />
 
         {/* the network, as names — the densest "cool info" on the page */}

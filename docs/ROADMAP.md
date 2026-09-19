@@ -26,8 +26,22 @@ representation; for the books the imprint is a matter of public record
 published Celebra and was Associate Publisher of Rayo. One title — CELIA, MY
 LIFE — is the only case where the connection is not spelled out either way.
 
-**Still blocked on:** RG reading the file and saying yes. Nothing ships until
-he does; it is our words about other people's work, and he is the one who
+**LIVE ON THE BETA** as of 2026-09-18, at the client's instruction: the book
+panel carries the summary, the publisher and the year, and RG's role on the
+title; each slate tile carries the same beneath its credit line, with DRIVE's
+Emmy named by category. Only the display half of each entry reaches the page —
+our citations and our open questions stay on the server, where `research()`
+keeps them and `credit()` does not.
+
+**Six further titles were added the same day** — THE GREENPRINT, NO LOST
+CAUSES, THE NEXT BIG STORY, EL CREADOR DE ÉXITOS, VIVIENDO and UNA VIDA. All
+six are named in RG's bio and all six are researched, but **none can get a
+tile**: we have no cover image and no proof line for any of them, and we will
+not invent a bestseller claim. They sit in research.json with `onSite: false`
+and are listed in the review doc.
+
+**Still open:** six cover images, six proof lines, and RG's read-through of
+the wording — it is our words about other people's work, and he is the one who
 carries the relationships.
 
 ## 0b. Decide whether the shelf popup survives
