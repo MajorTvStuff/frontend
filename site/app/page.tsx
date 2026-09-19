@@ -1,8 +1,17 @@
-import { site, projects, projectDims, knit } from "@/lib/content";
+import {
+  site,
+  projects,
+  projectDims,
+  knit,
+  youtubeId,
+  credit,
+} from "@/lib/content";
 import type { Cover, Primer } from "@/components/Hero";
 import { Hero } from "@/components/Hero";
 import type { BandItem } from "@/components/Band";
 import { Band } from "@/components/Band";
+import type { Show } from "@/components/Slate";
+import { Slate } from "@/components/Slate";
 import { Reveal } from "@/components/Reveal";
 import { Lockup } from "@/components/Lockup";
 import { Section } from "@/components/Section";
@@ -18,7 +27,7 @@ import { VariantSwitch } from "@/components/VariantSwitch";
  *   company  — what the company is, all three paragraphs
  *   band     — every title in one drifting row: full tiles for the shows,
  *              books gridded two high. "All in one place", in his words.
- *   tv|film  — the copy
+ *   tv|film  — the copy, then the four trailers
  *   books    — the copy
  *   founder  — the whole bio, and the recognition
  *   contact  — the address, and the footer
@@ -32,10 +41,14 @@ import { VariantSwitch } from "@/components/VariantSwitch";
  * Every string here is verbatim from his copy doc. Nothing is paraphrased and
  * nothing is cut for length; where a section is long it is simply long.
  *
- * The slate of playable trailers and the book clump are PARKED, not deleted —
- * components/Slate.tsx, components/Shelf.tsx and lib/clump.ts are intact and
- * still tested. His layout has neither, and he asked for simplicity; where
- * the trailers belong in this order is a question for the call.
+ * The four TRAILERS sit under 02 TV | FILM. His own mock had none, but he
+ * asked for them early and pressed the point — "also afterwards lets the
+ * trailer play" — and they are the only proof on the page that moves. They
+ * behave exactly as they do on the other variant.
+ *
+ * The book clump is PARKED, not deleted: components/Shelf.tsx, lib/clump.ts
+ * and lib/stage.ts are intact and still tested. The band covers the books
+ * here, and he asked for simplicity.
  */
 
 /* The covers that hard-cut behind the word flow of the intro. Large sources
@@ -59,19 +72,30 @@ export default function Home() {
     ...p,
     ...projectDims(p.slug),
   }));
-  const shows = projects.filter((p) => p.medium === "show");
+  const showRows = projects.filter((p) => p.medium === "show");
+  /* the four trailers, exactly as they play on the other variant */
+  const shows: Show[] = showRows.map((p) => ({
+    slug: p.slug,
+    title: p.title,
+    credit: p.credit,
+    proof: p.proof,
+    trailer: p.trailer,
+    ...projectDims(p.slug),
+    youtubeId: youtubeId(p.trailer),
+    about: credit(p.slug),
+  }));
 
   /* the hero's proof tokens, still every one of them verbatim */
   const primer: Primer = {
     eyebrow: site.positioning?.continuity ?? site.verticals,
     statement: site.company[0].split(", focusing")[0] + ".",
     proofs: [
-      ...shows.map((s) => s.proof),
+      ...showRows.map((s) => s.proof),
       projects.find((p) => p.slug === "the-love-playbook")!.proof,
     ],
     proofsShort: [
-      shows[0].proof,
-      shows[1].proof,
+      showRows[0].proof,
+      showRows[1].proof,
       projects.find((p) => p.slug === "the-love-playbook")!.proof,
     ],
   };
@@ -120,19 +144,21 @@ export default function Home() {
         {/* ————— the two halves of the business, as copy ————— */}
         <Section index={2} label={site.tvFilm.label}>
           <p className="reveal lede">{knit(site.tvFilm.body)}</p>
-          {/* The page named no production anywhere: the band carries the key
-              art but a title only ever existed as alt text. Type only, and
-              every string verbatim from the copy doc. */}
-          <ul className="credit-list reveal reveal-2">
-            {shows.map((p) => (
-              <li key={p.slug} className="credit">
-                <span className="credit-title display-heavy">{p.title}</span>
-                {p.credit && <span className="credit-sub">{p.credit}</span>}
-                <span className="credit-proof meta-caps">{p.proof}</span>
-              </li>
-            ))}
-          </ul>
         </Section>
+
+        {/* THE FOUR TRAILERS. The client asked for these early and pressed
+            the point — "also afterwards lets the trailer play" — and they
+            are the only proof on the page that moves. They continue section
+            02 rather than starting a new one, so they read as what TV | FILM
+            is rather than as another stop on the page, and they break the
+            reading measure because a trailer is not reading copy.
+
+            Identical to the other variant: hover plays muted and chromeless
+            on a mouse, a tap gets the real player with sound on a phone, and
+            only one ever exists in the document. */}
+        <Reveal className="page-section page-section--continues">
+          <Slate shows={shows} label={site.tvFilm.label} heading={false} />
+        </Reveal>
 
         <Section index={3} label={site.books.label}>
           <p className="reveal lede">{knit(site.books.body)}</p>

@@ -1033,6 +1033,23 @@ main > footer {
   color: var(--color-paper);
 }
 
+/* A block that continues the section above it instead of starting a new
+   one: no rule across the top, no top padding, and free of the reading
+   measure — the trailers under 02 TV | FILM are not reading copy.
+   No side padding either: the slate brings its own gutter, and two of them
+   stacked made each phone tile 40px narrower than on the other variant —
+   narrow enough for its two labels to collide. */
+.page-section--continues {
+  border-top: 0;
+  padding-top: 0;
+  padding-inline: 0;
+}
+/* and the section it continues closes up to it, so the copy and its
+   trailers read as one section rather than two with a hole between */
+.page-section:has(+ .page-section--continues) {
+  padding-bottom: clamp(1.5rem, 4vw, 3rem);
+}
+
 /* The four shows, as type. The band carries their key art, but a title
    existed nowhere on the page except as alt text. */
 .credit-list {

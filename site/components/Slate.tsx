@@ -311,7 +311,21 @@ function Panel({
   );
 }
 
-export function Slate({ shows, label }: { shows: Show[]; label: string }) {
+export function Slate({
+  shows,
+  label,
+  heading = true,
+}: {
+  shows: Show[];
+  label: string;
+  /**
+   * Whether the slate prints its own heading. The copy-led page already has
+   * a numbered rail saying 02 TV | FILM directly above it, and two headings
+   * for one section reads as a mistake. Everything else about the tiles —
+   * hover to play, tap to play, one player ever — is untouched.
+   */
+  heading?: boolean;
+}) {
   const [active, setActive] = useState<{
     slug: string;
     manual: boolean;
@@ -534,11 +548,13 @@ export function Slate({ shows, label }: { shows: Show[]; label: string }) {
     <section
       ref={headRef}
       data-reveal="pending"
-      className="mx-auto max-w-[1320px] px-5 pt-20 sm:px-8"
+      className={`mx-auto max-w-[1320px] px-5 sm:px-8${heading ? " pt-20" : ""}`}
     >
-      <h2 className="meta-caps reveal text-mid">
-        The slate <span className="text-faint">— {label}</span>
-      </h2>
+      {heading && (
+        <h2 className="meta-caps reveal text-mid">
+          The slate <span className="text-faint">— {label}</span>
+        </h2>
+      )}
 
       <div className="slate-grid">
         {shows.map((s) => (
