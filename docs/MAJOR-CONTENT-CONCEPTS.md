@@ -210,9 +210,10 @@ slate expands. Worth putting in front of RG as an option.
    Live on the site (header CTA, founder band, both legal pages). Note it is
    on the OLD domain — worth asking whether a majorcontent.com address should
    forward to it once the domain moves, so the brand and the address match.
-6. **DRIVE's Emmy** — we'll cite it exactly as the copy doc does ("Emmy
-   Award-Winning"); if there's a category/year he wants named (e.g. Outstanding
-   Cinematography), it strengthens the tile.
+6. **DRIVE's Emmy** — RESEARCHED 2026-09-18: it won the **2024 Daytime Emmy for
+   Outstanding Single Camera Editing**, and was nominated for Outstanding Sound
+   Mixing and Sound Editing. The tile still says only "Emmy Award-Winning",
+   which is what the copy doc says. Does he want the category named?
 7. **Founder photo** — the only headshot we hold is the small 250px one from the
    2018 site. A current, larger photo would help every variation.
 8. **GoDaddy** — once a direction is picked: yes to access, we'll point
@@ -247,13 +248,15 @@ slate expands. Worth putting in front of RG as an option.
     the footage, which is now visible in the hero. An official file or
     official link fixes that.
 
-14. **Per-title detail pages, and the book synopses** — a panel now slides in
-    when you hover a jacket on the shelf, and it carries the title, the
-    author and the proof line, because that is everything the copy doc gives
-    us per book. **It has no synopsis, and we will not write one** — plot
-    summaries for twenty real published books are facts about other people's
-    work. Send one paragraph per title and the panel has a home for it
-    immediately; the same paragraph feeds the detail pages below.
+14. **Per-title detail pages, and the book synopses** — DRAFTED 2026-09-18.
+    All 24 write-ups now exist in `site/content/research.json`, with a
+    readable sign-off copy at `docs/SYNOPSES-FOR-REVIEW.md`. Nothing is
+    invented: each is our own wording from cited published sources, and RG's
+    role per title comes either from his own approved bio (all four shows,
+    plus LORD HELP ME) or from the verified imprint (Celebra, Rayo) that his
+    bio already describes him running. **Still needs his yes before any of it
+    reaches the site**, plus answers on four flagged questions — the Emmy
+    category, THE GREENPRINT, whether to publish years, and CELIA, MY LIFE.
     Clicking any show or book then opens a full breakdown of that title. We can already build the parts we hold
     verbatim (title, author/credit, network or publisher, the proof line,
     the trailer, the jacket). What we DON'T have, and won't invent, is

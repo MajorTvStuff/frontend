@@ -6,16 +6,29 @@ something only RG can provide.
 
 ---
 
-## 0. Book synopses — BLOCKED, and the site is already built for them
+## 0. Book synopses — DRAFTED FROM SOURCES, awaiting RG's sign-off
 
 Hovering a jacket on the shelf slides in a panel with the title, the author
-and the proof line. That is everything the content files hold per book.
+and the proof line. The synopsis slot exists in the markup and is still empty
+on the site.
 
-**It carries no synopsis on purpose.** Writing plot summaries for twenty real
-published books would be inventing facts about other people's work, which is
-the same rule that keeps RG's role off the detail pages. The slot exists in
-the markup and shows a pending note in the beta (`NEXT_PUBLIC_SHOW_TODOS`);
-send one paragraph per title and it fills in with no further work.
+**All 24 are now written** (2026-09-18) — see `site/content/research.json` and
+the sign-off copy at `docs/SYNOPSES-FOR-REVIEW.md`. The rule has not changed:
+nothing was invented. Each summary is written by us, in our own words, from
+published sources — publisher listings, trade press, network announcements —
+and every fact underneath it (imprint, year, network, co-writers) is cited.
+No jacket copy is reproduced, because that is someone else's copyright.
+
+**RG's role per title is not guessed either.** His own approved bio names all
+four shows as Executive Producer and names LORD HELP ME as literary
+representation; for the books the imprint is a matter of public record
+(Celebra for 17 of them, Rayo for two), and his bio states that he founded and
+published Celebra and was Associate Publisher of Rayo. One title — CELIA, MY
+LIFE — is the only case where the connection is not spelled out either way.
+
+**Still blocked on:** RG reading the file and saying yes. Nothing ships until
+he does; it is our words about other people's work, and he is the one who
+carries the relationships.
 
 ## 0b. Decide whether the shelf popup survives
 
