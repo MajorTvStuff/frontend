@@ -9,6 +9,9 @@ import type { Credit, Project } from "@/lib/content";
 export type BandItem = Project & {
   width: number;
   height: number;
+  /** the trailer's YouTube id, for the shows — the panel embeds it and it
+      plays there, rather than showing the key art again */
+  youtubeId?: string | null;
   /** the display half of our write-up, looked up on the server. The panel
       shows it when the tile is pressed; the row itself stays wordless. */
   about?: Credit | null;

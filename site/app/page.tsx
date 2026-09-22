@@ -74,6 +74,8 @@ export default function Home() {
     /* pressing a tile opens this in the panel — the same write-up the
        shelf shows on the other variant, dates excluded */
     about: credit(p.slug),
+    /* and, for a show, the trailer itself: the panel embeds it */
+    youtubeId: youtubeId(p.trailer),
   }));
   const showRows = projects.filter((p) => p.medium === "show");
   /* the four trailers, exactly as they play on the other variant */

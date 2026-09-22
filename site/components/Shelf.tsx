@@ -13,6 +13,9 @@ import type { ClumpItem } from "@/lib/clump";
 export type Cover = Project & {
   width: number;
   height: number;
+  /** a show's trailer id, when it has one — the panel embeds it and plays
+      it rather than showing the key art a second time */
+  youtubeId?: string | null;
   /** The display half of our write-up, looked up on the server. Named
       `about`, not `credit`: a Project's own `credit` is the author line. */
   about?: Credit | null;

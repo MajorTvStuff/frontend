@@ -1179,6 +1179,14 @@ main > footer {
     transparent
   );
 }
+/* On a phone the height is decided by WIDTH: a 16:9 show tile at 240px is
+   427px across, wider than the screen it is on, so no whole tile is ever
+   visible. The row is sized so one fits, and the books stack to match. */
+@media (max-width: 639px) {
+  .band {
+    --band-h: calc((100vw - 2.25rem) * 0.5625);
+  }
+}
 .band:focus-visible {
   outline-offset: -4px;
 }
@@ -1249,14 +1257,12 @@ main > footer {
   border: 1px solid var(--color-signal);
   pointer-events: none;
 }
-/* the shows stop setting the height of the row: at full height they were
-   nearly six times the width of a paired jacket */
-@media (min-width: 900px) {
-  .band-cell--show {
-    height: calc(var(--band-h) * 0.62);
-    align-self: center;
-  }
-}
+/* Everything in the row is the same height: a show tile stands as tall as
+   two books stacked, which makes it the widest thing in the row as well.
+   It was 0.62 of the row from 900px up, to stop a show being six times the
+   width of a paired jacket — but the pair is a stack now, not a stamp, so
+   the two heights agree and the row reads as one band rather than as tiles
+   of assorted sizes. */
 .band-cell--pair {
   display: flex;
   flex-direction: column;
@@ -1664,6 +1670,71 @@ main > footer {
   border-left: 2px solid currentColor;
   padding-left: 0.75rem;
 }
+/* ——— A SHOW OPENS AS A PLAYER ———
+   The key art is what was pressed, so showing it again says nothing. A show
+   with a trailer gets the trailer, and the panel stops being a side rail:
+   it is a centred window, wide enough that the picture is the point, with
+   the page behind it stepped back. The panel takes its own pointer events
+   here, because the player's controls are inside it. */
+.book-panel-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 44;
+  /* the page steps back behind the player; it does not disappear */
+  background: rgba(0, 8, 18, 0.74);
+  animation: scrim-in 260ms linear both;
+}
+@keyframes scrim-in {
+  from {
+    opacity: 0;
+  }
+}
+.book-panel.is-video {
+  pointer-events: auto;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  /* wide enough that the picture is the point, narrow enough that the
+     write-up under it is still on the screen with it */
+  width: min(50rem, 92vw);
+  max-height: 88svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 0 1.75rem;
+  border-left: 0;
+  border: 1px solid var(--color-line);
+  transform: translate(-50%, -48%) scale(0.98);
+}
+.book-panel.is-video.is-open {
+  transform: translate(-50%, -50%) scale(1);
+}
+/* the picture, at the ratio every one of these trailers is cut in */
+.book-panel-video {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  background: #000;
+}
+.book-panel-video iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+}
+.book-panel.is-video .book-panel-say {
+  padding: 0 1.75rem;
+}
+@media (prefers-reduced-motion: reduce) {
+  .book-panel.is-video,
+  .book-panel.is-video.is-open {
+    transform: translate(-50%, -50%);
+  }
+  .book-panel-scrim {
+    animation: none;
+  }
+}
+
 /* on a phone the panel is a bottom sheet — a 22rem rail would cover the
    shelf it is describing */
 @media (max-width: 639px) {
@@ -1700,6 +1771,27 @@ main > footer {
     gap: 1rem;
     align-items: center;
     width: 100%;
+  }
+  /* a player is not a thumbnail: on a phone the video sheet is one column,
+     the picture full width across the top of it */
+  .book-panel.is-video {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    max-width: none;
+    max-height: 92svh;
+    transform: translate(0, 100%);
+  }
+  .book-panel.is-video.is-open {
+    transform: translate(0, 0);
+  }
+  .book-panel.is-video .book-panel-inner {
+    display: block;
+  }
+  .book-panel.is-video .book-panel-say {
+    padding: 0 1.25rem 0.5rem;
   }
   .book-panel-art {
     width: 4.5rem;
