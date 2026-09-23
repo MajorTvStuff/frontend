@@ -14,7 +14,7 @@ const grotesk = localFont({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#001528",
+  themeColor: "#0c0c0c",
 };
 
 export const metadata: Metadata = {

@@ -136,8 +136,17 @@ export function BookPanel({
                         <dd className="mt-1 text-cap text-mid">{r.award}</dd>
                       </>
                     )}
-                    <dt className="meta-caps mt-4 text-faint">{founder}</dt>
-                    <dd className="mt-1 text-cap text-mid">{r.role}</dd>
+                    {/* A title he has no established role on says nothing
+                        about him. CELIA: MY LIFE published two months before
+                        he joined Rayo, so the imprint inference that carries
+                        every other title does not hold there, and an empty
+                        role prints nothing at all rather than a hedge. */}
+                    {r.role && (
+                      <>
+                        <dt className="meta-caps mt-4 text-faint">{founder}</dt>
+                        <dd className="mt-1 text-cap text-mid">{r.role}</dd>
+                      </>
+                    )}
                   </dl>
                 </>
               )}

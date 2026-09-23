@@ -283,18 +283,21 @@
       "summary": "The autobiography the Queen of Salsa wrote in her final months — Havana and La Sonora Matancera, the exile that followed, and Pedro Knight. Written with Ana Cristina Reymundo.",
       "released": "2004",
       "carrier": "Rayo | HarperCollins — 6 July 2004",
-      "role": "Associate Publisher and Marketing Director, Rayo — to be confirmed for this title",
-      "roleBasis": "imprint",
+      "role": "",
+      "roleBasis": "unconfirmed",
       "sources": [
         "https://www.amazon.com/Celia-My-Life-Cruz/dp/0060725532",
-        "https://www.publishersweekly.com/9780060725532"
+        "https://www.publishersweekly.com/9780060725532",
+        "https://www.publishersweekly.com/pw/print/20040920/18858-harpercollins-to-expand-rayo-imprint.html"
       ],
-      "confirm": "Your bio names Isabel Allende, Paulo Coelho and Gloria Estefan as the Rayo authors, not Celia Cruz — and separately says that at REG you 'grew the Celia Cruz license into a perennial International property'. So: were you at Rayo for this book, is it here for the licensing work, or both? This is the only title where the connection is not spelled out.",
+      "confirm": "HIS ROLE HERE IS NOT THE RAYO JOB. Publishers Weekly (20 September 2004) reports he started at Rayo ON 20 September 2004, in the new position of associate publisher, coming from REG. CELIA: MY LIFE was reviewed by PW on 21 June 2004 and published that July — roughly two months before he arrived. So the imprint inference does not hold for this title and the role is off the site until he says what it should be. His bio does say that at REG he 'grew the Celia Cruz license into a perennial International property', which may be the actual connection. Ask him.",
       "onSite": true,
-      "needs": []
+      "needs": [
+        "RG to confirm his role on this title"
+      ]
     },
     "lord-help-me": {
-      "summary": "A picture book of everyday prayers by Muñiz, written at eleven — waking up for school, getting along with a sibling, and looking after endangered animals. Illustrated by Brenda Figueroa, published in English and Spanish.",
+      "summary": "A picture book of everyday prayers by Muñiz, written at twelve — waking up for school, getting along with a sibling, and looking after endangered animals. Illustrated by Brenda Figueroa, published in English and Spanish.",
       "released": "2020",
       "carrier": "Crown Books for Young Readers | Random House Children's Books — 29 September 2020",
       "role": "Literary representation (Major Content)",

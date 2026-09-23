@@ -556,7 +556,7 @@ export function Slate({
         </h2>
       )}
 
-      <div className="slate-grid">
+      {/* <div className="slate-grid">
         {shows.map((s) => (
           <Panel
             key={s.slug}
@@ -585,7 +585,7 @@ export function Slate({
             }}
           />
         ))}
-      </div>
+      </div> */}
     </section>
   );
 }

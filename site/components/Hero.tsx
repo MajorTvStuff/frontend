@@ -115,7 +115,7 @@ export function Hero({
       className="relative overflow-hidden"
       style={{
         background:
-          "linear-gradient(178deg, #001528 0%, #001d33 60%, #003b59 130%)",
+          "linear-gradient(178deg, #0c0c0c 0%, #001d33 60%, #003b59 130%)",
       }}
     >
       <div className="relative h-[100svh] min-h-[560px] w-full">
@@ -156,8 +156,8 @@ export function Hero({
           style={{
             background:
               ground === "soft"
-                ? "linear-gradient(to top, rgba(0,21,40,.98) 0%, rgba(0,21,40,.94) 30%, rgba(0,21,40,.78) 52%, rgba(0,21,40,.34) 78%, rgba(0,21,40,.18) 100%)"
-                : "linear-gradient(to top, rgba(0,21,40,.96) 0%, rgba(0,21,40,.88) 26%, rgba(0,21,40,.62) 46%, rgba(0,21,40,0) 68%)",
+                ? "linear-gradient(to top, rgba(0,0,0,.98) 0%, rgba(0,0,0,.94) 30%, rgba(0,0,0,.78) 52%, rgba(0,0,0,.34) 78%, rgba(0,0,0,.18) 100%)"
+                : "linear-gradient(to top, rgba(0,0,0,.96) 0%, rgba(0,0,0,.88) 26%, rgba(0,0,0,.62) 46%, rgba(0,0,0,0) 68%)",
           }}
         />
 
@@ -167,8 +167,8 @@ export function Hero({
           aria-hidden="true"
           className={
             ground === "soft"
-              ? "absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(0,21,40,0.66)_0%,rgba(0,21,40,0.46)_48%,rgba(0,21,40,0.7)_100%)]"
-              : "absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(0,21,40,0.5)_0%,rgba(0,21,40,0.12)_55%,rgba(0,21,40,0.4)_100%)]"
+              ? "absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.66)_0%,rgba(0,0,0,0.46)_48%,rgba(0,0,0,0.7)_100%)]"
+              : "absolute inset-0 z-20 bg-[radial-gradient(ellipse_at_center,rgba(0,0,0,0.5)_0%,rgba(0,0,0,0.12)_55%,rgba(0,0,0,0.4)_100%)]"
           }
         />
         {/* intro scrim — heavy through the sequence, released once the logo
@@ -199,7 +199,7 @@ export function Hero({
                 quality={90}
                 sizes="45vh"
                 loading="eager"
-                className="h-[42%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,5,12,0.85))]"
+                className="h-[42%] w-auto object-contain [filter:drop-shadow(0_14px_44px_rgba(0,0,0,0.85))]"
               />
             </div>
           ))}
@@ -215,7 +215,7 @@ export function Hero({
             <p
               key={line}
               style={{ "--i": i } as React.CSSProperties}
-              className="intro-line absolute inset-0 flex items-end justify-center px-6 pb-[26svh] text-center font-light text-intro text-paper opacity-0 [text-shadow:0_2px_22px_rgba(0,18,35,0.95)] [text-wrap:balance]"
+              className="intro-line absolute inset-0 flex items-end justify-center px-6 pb-[26svh] text-center font-light text-intro text-paper opacity-0 [text-shadow:0_2px_22px_rgba(0,0,0,0.95)] [text-wrap:balance]"
             >
               {line}
             </p>
@@ -231,7 +231,7 @@ export function Hero({
           <Lockup
             animate
             bright
-            className="logo-settle w-[min(28rem,66vw)] [filter:drop-shadow(0_2px_22px_rgba(0,18,35,0.95))_drop-shadow(0_0_6px_rgba(0,18,35,0.7))]"
+            className="logo-settle w-[min(28rem,66vw)] [filter:drop-shadow(0_2px_22px_rgba(0,0,0,0.95))_drop-shadow(0_0_6px_rgba(0,0,0,0.7))]"
           />
         </div>
 
@@ -243,13 +243,13 @@ export function Hero({
           key={`primer-${run}`}
           className="hero-primer absolute bottom-[13svh] left-5 z-40 max-w-[680px] pr-5 sm:left-8"
         >
-          <p className="meta-caps text-mid [text-shadow:0_1px_10px_rgba(0,18,35,0.95)]">
+          <p className="meta-caps text-mid [text-shadow:0_1px_10px_rgba(0,0,0,0.95)]">
             {primer.eyebrow}
           </p>
-          <h1 className="mt-3 text-lede font-light text-paper [text-shadow:0_2px_18px_rgba(0,18,35,0.75)]">
+          <h1 className="mt-3 text-lede font-light text-paper [text-shadow:0_2px_18px_rgba(0,0,0,0.75)]">
             {primer.statement}
           </h1>
-          <p className="mt-5 text-strip text-mid [text-shadow:0_1px_10px_rgba(0,18,35,0.95)]">
+          <p className="mt-5 text-strip text-mid [text-shadow:0_1px_10px_rgba(0,0,0,0.95)]">
             <span className="sm:hidden">
               {primer.proofsShort.map((t, i) => (
                 <span key={t}>
@@ -272,7 +272,7 @@ export function Hero({
         {/* the hero owns the viewport, so it owes the visitor a cue */}
         <div
           aria-hidden="true"
-          className="hero-primer absolute bottom-6 left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2 [text-shadow:0_1px_10px_rgba(0,18,35,0.95)]"
+          className="hero-primer absolute bottom-6 left-1/2 z-40 flex -translate-x-1/2 flex-col items-center gap-2 [text-shadow:0_1px_10px_rgba(0,0,0,0.95)]"
         >
           <span className="meta-caps text-faint">Scroll</span>
           <span className="block h-7 w-px bg-line" />

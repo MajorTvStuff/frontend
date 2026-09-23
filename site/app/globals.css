@@ -3,29 +3,43 @@
 /* ------------------------------------------------------------------ *
  *  MAJOR CONTENT
  *
- *  The palette is the client's own, measured off majortvproductions.com
- *  rather than invented: the blue-M gradient ground, the #003853 section
- *  band, the published #26b3ef accent. One grotesque. The key art and the
- *  book jackets supply every other colour on the page; brand red appears
- *  only where the logo itself carries it.
+ *  THE PALETTE IS HIS, MEASURED OFF HIS OWN BUILD. It was the navy of
+ *  majortvproductions.com (#0c0c0c ground, #26b3ef accent) until he asked
+ *  for his exact scheme instead. His 67s recording was sampled frame by
+ *  frame, inside the screen area rather than the letterbox around it:
+ *
+ *    ground            #0c0c0c, and neutral — 74% of his dark pixels have
+ *                      r=g=b, and the blue-shifted rest are compression
+ *                      around bright type, not a blue ground
+ *    headline type     #e9e8e5 average, brightest #fcfcfc
+ *    body type         #bbb3a8 average
+ *    secondary type    #6a5e59 average
+ *    rules             #322e2d average, i.e. white at about 0.16
+ *    accent            NONE. Nothing in his build is saturated except the
+ *                      red inside the M itself, which is the logo artwork
+ *                      and stays.
+ *
+ *  So there is no colour on this page at all: one grotesque, black, white
+ *  and the greys between them. The key art and the book jackets supply
+ *  every colour a visitor sees.
  * ------------------------------------------------------------------ */
 
 @theme {
   --color-*: initial;
 
-  --color-ground: #001528; /* body — blue-m-bg-2.jpg, top of gradient */
-  --color-panel: #062036; /* lifted frames */
-  --color-paper: #ffffff; /* primary text on dark */
-  --color-ink: #001223; /* text on light insets */
-  --color-harbor: #47596a; /* muted text on light insets */
-  --color-mid: #9fb1be; /* steel — muted text on dark, ≈8.7:1 on ground */
-  --color-faint: #7d8f9d; /* de-emphasised text on dark, ≥4.5:1 */
-  --color-line: rgba(178, 190, 198, 0.22); /* hairline on dark */
-  --color-screen: #001528; /* scrims */
-  --color-band: #003853; /* the founder band — the one tonal break */
-  --color-signal: #26b3ef; /* the site's own published accent */
+  --color-ground: #0c0c0c; /* his ground, sampled inside the screen */
+  --color-panel: #151515; /* lifted frames — the only step above ground */
+  --color-paper: #ededed; /* primary text — his headline band */
+  --color-ink: #0c0c0c; /* text on light insets */
+  --color-harbor: #5b5b5b; /* muted text on light insets */
+  --color-mid: #b7b7b7; /* his body type — 8.9:1 on the ground */
+  --color-faint: #8a8a8a; /* his secondary type — 5.0:1, still ≥4.5 */
+  --color-line: rgba(255, 255, 255, 0.16); /* his rules */
+  --color-screen: #0c0c0c; /* scrims */
+  --color-band: #151515; /* the one tonal break, now a tonal one */
+  --color-signal: #ffffff; /* there is no accent in his build: white */
   --color-red: #a22d32; /* the M's wings */
-  --color-silver: #b2bec6;
+  --color-silver: #b7b7b7;
 
   --font-ui: var(--font-grotesk), Arial, sans-serif;
 
@@ -81,7 +95,7 @@
 
   html {
     scrollbar-gutter: stable;
-    background: #001528;
+    background: #0c0c0c;
   }
 
   body {
@@ -616,7 +630,7 @@
   bottom: 12px;
   left: 12px;
   z-index: 6;
-  background: rgba(0, 21, 40, 0.72);
+  background: rgba(0, 0, 0, 0.72);
   padding: 4px 8px;
   color: var(--color-mid);
   font-variant-numeric: tabular-nums;
@@ -744,7 +758,7 @@
   box-shadow: inset 0 0 0 1px var(--color-line);
 }
 .cover-lift {
-  filter: drop-shadow(0 18px 40px rgba(0, 5, 12, 0.55));
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.55));
 }
 
 /* ---------- pointer physics ---------- */
@@ -784,7 +798,7 @@
 }
 @media (hover: hover) and (pointer: fine) {
   .tilt-cover:hover img {
-    filter: drop-shadow(0 26px 52px rgba(0, 5, 12, 0.7));
+    filter: drop-shadow(0 26px 52px rgba(0, 0, 0, 0.7));
   }
 }
 
@@ -840,7 +854,7 @@
   display: flex;
   align-items: center;
   padding: 0.5rem 0.7rem;
-  background: rgba(0, 21, 40, 0.92);
+  background: rgba(0, 0, 0, 0.92);
   color: var(--color-faint);
 }
 .variant-switch-link {
@@ -848,7 +862,7 @@
   flex-direction: column;
   gap: 0.15rem;
   padding: 0.45rem 0.85rem;
-  background: rgba(0, 21, 40, 0.92);
+  background: rgba(0, 0, 0, 0.92);
   color: var(--color-mid);
   text-decoration: none;
   transition:
@@ -1031,23 +1045,6 @@ main > footer {
   font-size: var(--text-read);
   line-height: 1.7;
   color: var(--color-paper);
-}
-
-/* A block that continues the section above it instead of starting a new
-   one: no rule across the top, no top padding, and free of the reading
-   measure — the trailers under 02 TV | FILM are not reading copy.
-   No side padding either: the slate brings its own gutter, and two of them
-   stacked made each phone tile 40px narrower than on the other variant —
-   narrow enough for its two labels to collide. */
-.page-section--continues {
-  border-top: 0;
-  padding-top: 0;
-  padding-inline: 0;
-}
-/* and the section it continues closes up to it, so the copy and its
-   trailers read as one section rather than two with a hole between */
-.page-section:has(+ .page-section--continues) {
-  padding-bottom: clamp(1.5rem, 4vw, 3rem);
 }
 
 /* The four shows, as type. The band carries their key art, but a title
@@ -1367,7 +1364,7 @@ main > footer {
 .shelf-item .cover {
   filter: drop-shadow(
     0 calc(6px + var(--z, 0.5) * 16px) calc(14px + var(--z, 0.5) * 26px)
-      rgba(0, 5, 12, calc(0.4 + var(--z, 0.5) * 0.3))
+      rgba(0, 0, 0, calc(0.4 + var(--z, 0.5) * 0.3))
   );
   opacity: calc(0.76 + var(--z, 0.5) * 0.24);
   transition: opacity 260ms var(--ease-out-strong);
@@ -1527,7 +1524,7 @@ main > footer {
      rasterised once */
   .shelf-item .cover {
     filter: none;
-    box-shadow: 0 8px 24px rgba(0, 5, 12, 0.55);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.55);
   }
   /* a cover the camera is passing stops taking taps as soon as it is no
      longer solid; once it has gone it leaves the tab order and the paint */
@@ -1609,7 +1606,7 @@ main > footer {
   padding: 2rem 1.75rem 1.75rem;
   background: color-mix(in oklab, var(--color-panel) 92%, black);
   border-left: 1px solid var(--color-line);
-  box-shadow: -30px 0 60px rgba(0, 5, 12, 0.55);
+  box-shadow: -30px 0 60px rgba(0, 0, 0, 0.55);
   transform: translate(100%, -50%);
   opacity: 0;
   visibility: hidden;
@@ -1643,7 +1640,7 @@ main > footer {
 .book-panel-art {
   width: 8.5rem;
   box-shadow: inset 0 0 0 1px var(--color-line);
-  filter: drop-shadow(0 16px 34px rgba(0, 5, 12, 0.6));
+  filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.6));
 }
 /* the write-up: the one long-form passage in the panel, so it gets the
    reading measure and the line height the rest of the chrome does not */
@@ -1760,7 +1757,7 @@ main > footer {
     border-left: 0;
     border-top: 1px solid var(--color-line);
     transform: translate(0, 100%);
-    box-shadow: 0 -20px 40px rgba(0, 5, 12, 0.55);
+    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.55);
   }
   .book-panel.is-open {
     transform: translate(0, 0);
@@ -1858,7 +1855,7 @@ main > footer {
 .tilt-cover.is-pressed .jacket-press {
   transform: scale(0.94) translateY(5px);
   /* the shadow tightens as it goes down, the way a real object's does */
-  filter: drop-shadow(0 4px 10px rgba(0, 5, 12, 0.75));
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.75));
 }
 /* and it keeps a standing marker, so which book holds the panel is legible
    after the movement has finished */

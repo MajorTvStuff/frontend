@@ -32,19 +32,28 @@ words of his copy and 441 more sat unused in the content file; the page now
 carries all of it, the founder bio included, and the body has no imagery
 except the band. 5,640px and image-led became 4,968px and copy-led.
 
+**Where the trailers ended up (2026-09-22).** They came back as a block of
+four tiles under 02 TV | FILM, and he cut it: the same four pieces of key art
+were already in the band a screen earlier, so the page showed its work twice.
+They are in the row now — pressing a show tile opens its trailer, playing,
+in the panel. Nothing was lost; there is one fewer gallery.
+
 **Parked, not deleted:** the trailer slate (`components/Slate.tsx`), the book
-clump (`components/Shelf.tsx`, `lib/clump.ts`, `lib/stage.ts`) and the book
-panel are intact, tested and out of the page. His layout has none of them and
-he asked for simplicity. Their probes in the scratchpad (`tap-verify.js`,
-`stage-verify.js`, `clump-verify.js`) target components that are no longer
-mounted and will not pass until they return. Where the trailers belong is a
-question for the call.
+clump (`components/Shelf.tsx`, `lib/clump.ts`, `lib/stage.ts`) are still on
+`/image-led` and still tested (`tap-verify.js`, `stage-verify.js`,
+`clump-verify.js` all run against that page).
 
 **Open against his version:**
 
-- **Palette.** His ground is a neutral near-black (sampled 5-11% grey, R=G=B);
-  ours is the navy #001528 measured off majortvproductions.com on the client's
-  instruction. Not changed unilaterally — it is one token, `--color-ground`.
+- **Palette. SETTLED 2026-09-22 — his, exactly.** He asked for his own colour
+  scheme, so the recording was sampled frame by frame inside the screen area:
+  ground `#0c0c0c` and neutral (74% of his dark pixels are r=g=b; the
+  blue-shifted rest is compression around bright type), headline type
+  `#e9e8e5`, body `#bbb3a8`, secondary `#6a5e59`, rules `#322e2d` — and no
+  accent at all. The navy `#001528` ground and the `#26b3ef` accent are gone,
+  along with every hardcoded blue-black scrim. The only saturated thing left
+  on the page is the red inside the M, which his own build has too. All text
+  still passes AA: 16.7:1, 9.8:1 and 5.7:1 on the ground.
 - **The hero. BEING REPLACED (2026-09-19)** — the client's word, so nothing
   in it is worth fixing first. Two review findings die with it: the hero
   repeats the first sentence of 01 COMPANY almost verbatim, and its eyebrow

@@ -10,8 +10,6 @@ import type { Cover, Primer } from "@/components/Hero";
 import { Hero } from "@/components/Hero";
 import type { BandItem } from "@/components/Band";
 import { Band } from "@/components/Band";
-import type { Show } from "@/components/Slate";
-import { Slate } from "@/components/Slate";
 import { Reveal } from "@/components/Reveal";
 import { Lockup } from "@/components/Lockup";
 import { Section } from "@/components/Section";
@@ -41,10 +39,12 @@ import { VariantSwitch } from "@/components/VariantSwitch";
  * Every string here is verbatim from his copy doc. Nothing is paraphrased and
  * nothing is cut for length; where a section is long it is simply long.
  *
- * The four TRAILERS sit under 02 TV | FILM. His own mock had none, but he
- * asked for them early and pressed the point — "also afterwards lets the
- * trailer play" — and they are the only proof on the page that moves. They
- * behave exactly as they do on the other variant.
+ * THE TRAILERS ARE IN THE ROW, not under it. They had their own block of
+ * four tiles beneath the band, and he cut it: the same four pieces of key
+ * art were already in the band a screen earlier, so the page showed its
+ * work twice. Pressing a show in the band opens its trailer, playing, in
+ * the panel — the trailers are all still here, they are just no longer a
+ * gallery of their own.
  *
  * The book clump is PARKED, not deleted: components/Shelf.tsx, lib/clump.ts
  * and lib/stage.ts are intact and still tested. The band covers the books
@@ -78,18 +78,6 @@ export default function Home() {
     youtubeId: youtubeId(p.trailer),
   }));
   const showRows = projects.filter((p) => p.medium === "show");
-  /* the four trailers, exactly as they play on the other variant */
-  const shows: Show[] = showRows.map((p) => ({
-    slug: p.slug,
-    title: p.title,
-    credit: p.credit,
-    proof: p.proof,
-    trailer: p.trailer,
-    ...projectDims(p.slug),
-    youtubeId: youtubeId(p.trailer),
-    about: credit(p.slug),
-  }));
-
   /* the hero's proof tokens, still every one of them verbatim */
   const primer: Primer = {
     eyebrow: site.positioning?.continuity ?? site.verticals,
@@ -150,20 +138,6 @@ export default function Home() {
         <Section index={2} label={site.tvFilm.label}>
           <p className="reveal lede">{knit(site.tvFilm.body)}</p>
         </Section>
-
-        {/* THE FOUR TRAILERS. The client asked for these early and pressed
-            the point — "also afterwards lets the trailer play" — and they
-            are the only proof on the page that moves. They continue section
-            02 rather than starting a new one, so they read as what TV | FILM
-            is rather than as another stop on the page, and they break the
-            reading measure because a trailer is not reading copy.
-
-            Identical to the other variant: hover plays muted and chromeless
-            on a mouse, a tap gets the real player with sound on a phone, and
-            only one ever exists in the document. */}
-        <Reveal className="page-section page-section--continues">
-          <Slate shows={shows} label={site.tvFilm.label} heading={false} />
-        </Reveal>
 
         <Section index={3} label={site.books.label}>
           <p className="reveal lede">{knit(site.books.body)}</p>
