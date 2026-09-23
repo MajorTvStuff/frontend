@@ -2,30 +2,36 @@ import { Mark } from "@/components/Mark";
 import { Reveal } from "@/components/Reveal";
 
 /**
- * A SECTION OF THE ARGUMENT.
+ * A SECTION, LAID OUT THE WAY HIS IS.
  *
- * The client's own layout stacks a label on top of its copy, centred, four
- * times over. That is the right structure and the wrong hierarchy: every
- * section arrives at exactly the same weight, so nothing leads and the eye
- * has no way in.
+ * It used to have a numbered rail: 01, 02, 03, 04 down the left, the label
+ * sticky beside a centred 62-character column. He sent screens of his own
+ * build and it has none of that — the mark and the label sit together on one
+ * line, the copy runs directly under them at a single size, and the left
+ * edge of the label is the left edge of the copy, the whole way down.
  *
- * So the label moves into a rail of its own and stays there while its copy
- * scrolls past it — the reader always knows which part of the argument they
- * are inside — and each section takes a number, because there are four and
- * they are meant to be read in order. The copy column keeps a single reading
- * measure whatever the viewport does.
+ * The numbers went with it. Four sections in a fixed order do not need to be
+ * counted out loud, and his build never numbered them.
  *
- * Below the rail breakpoint it collapses back to his stack, which is what a
- * phone wants anyway.
+ * TV | FILM and BOOKS are a PAIR in his layout — two labelled columns side
+ * by side, not two stops one after the other. SectionPair puts them there,
+ * and below 900px they stack, which is the only thing a phone can do.
  */
+
+function Head({ label }: { label: string }) {
+  return (
+    <h2 className="section-label meta-caps reveal">
+      <Mark className="section-mark" />
+      <span>{label}</span>
+    </h2>
+  );
+}
+
 export function Section({
-  index,
   label,
   children,
   className = "",
 }: {
-  /** its place in the argument — there are four, and the order is the point */
-  index: number;
   label: string;
   children: React.ReactNode;
   className?: string;
@@ -33,17 +39,34 @@ export function Section({
   return (
     <Reveal className={`page-section ${className}`}>
       <div className="section-grid">
-        <div className="section-rail">
-          <span className="section-index meta-caps reveal" aria-hidden="true">
-            {String(index).padStart(2, "0")}
-          </span>
-          <h2 className="section-label meta-caps reveal">
-            <Mark className="section-mark" />
-            <span>{label}</span>
-          </h2>
-        </div>
+        <Head label={label} />
         <div className="section-body">{children}</div>
       </div>
     </Reveal>
+  );
+}
+
+/** the two halves of the business, side by side, as he has them */
+export function SectionPair({ children }: { children: React.ReactNode }) {
+  return (
+    <Reveal className="page-section">
+      <div className="section-grid section-grid--pair">{children}</div>
+    </Reveal>
+  );
+}
+
+/** one column of that pair */
+export function SectionColumn({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
+  return (
+    <div className="section-col">
+      <Head label={label} />
+      <div className="section-body">{children}</div>
+    </div>
   );
 }

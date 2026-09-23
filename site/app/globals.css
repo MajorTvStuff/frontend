@@ -55,8 +55,11 @@
   --text-base--line-height: 1.6;
   --text-about: 0.9375rem;
   --text-about--line-height: 1.75;
-  /* the reading size: the copy-led page is mostly this */
-  --text-read: clamp(1rem, 0.94rem + 0.28vw, 1.125rem);
+  /* THE READING SIZE, taken off his screens. His copy sets at about 22px
+     on a desktop: the same sentence breaks at the same words as ours did,
+     so the measure already matched — the type itself was four points too
+     small, which is what made the column look half-empty beside his. */
+  --text-read: clamp(1.0625rem, 0.9rem + 0.72vw, 1.375rem);
   /* the one step up from it, for the paragraph that carries a section */
   --text-lede-copy: clamp(1.125rem, 0.955rem + 0.7vw, 1.5rem);
   /* and the claim, which has a screen to itself */
@@ -924,29 +927,39 @@ main > footer {
     padding-inline: 2rem;
   }
 }
+/* his gutter: the copy starts about 9% in, which at the width he screenshot
+   (1177) puts its left edge at 105px */
+@media (min-width: 900px) {
+  .page-section {
+    padding-inline: min(9vw, 8rem);
+  }
+}
 .page-section--band {
   padding-inline: 0;
 }
 
 /* the rail and the column. One grid for every section, so the copy sits on
    the same axis the whole way down the page. */
+/* HIS GRID. One column, left-aligned inside a container, the label on top
+   of the copy and sharing its left edge — measured off the screens he sent:
+   the copy runs about 72% of the window with roughly a 9% gutter, and where
+   TV | FILM and BOOKS sit side by side each column takes about 42%. */
 .section-grid {
   margin-inline: auto;
-  max-width: 78rem;
+  /* wide enough not to re-centre inside his gutter: on the 1699px screen he
+     sent, his two columns run 124..1611, which a 78rem cap would have pulled
+     in by another 90px a side */
+  max-width: 94rem;
+}
+.section-grid--pair {
   display: grid;
-  gap: 1.75rem;
+  gap: 3.5rem;
 }
 @media (min-width: 900px) {
-  .section-grid {
-    grid-template-columns: 10rem minmax(0, 62ch);
-    gap: clamp(2rem, 5vw, 5rem);
-    justify-content: center;
+  .section-grid--pair {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(2.5rem, 5vw, 4.5rem);
   }
-}
-.section-rail {
-  display: flex;
-  align-items: baseline;
-  gap: 0.75rem;
 }
 /* The measure has to live on the element that holds the copy, not only on
    the grid track. It was declared as minmax(0, 62ch) inside the 900px query
@@ -954,42 +967,25 @@ main > footer {
    laptop - ran 85 characters to the line with no cap at all. At 900+ this is
    a no-op; below it, it is the whole thing. */
 .section-body {
-  max-width: 62ch;
+  /* His measure: 853px at the width he sent, which is the 71 characters of
+     his opening line and not one fewer — at 72ch ours broke that sentence
+     across five lines where his takes four. */
+  max-width: 93ch;
+  margin-top: 2rem;
 }
-/* the address and the footer are not part of the numbered argument, so they
-   have no rail - but they still sit on its axis */
-@media (min-width: 900px) {
-  .section-grid > .section-body:only-child {
-    grid-column: 2;
-  }
-}
-@media (min-width: 900px) {
-  .section-rail {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 0.6rem;
-    /* it stays with its copy: the reader always knows which part of the
-       argument they are inside */
-    position: sticky;
-    top: 2.5rem;
-    align-self: start;
-    gap: 0.85rem;
-  }
-}
-/* the number: there are four sections and the order is the point */
-.section-index {
-  /* one step over the label: at the same 11px it read as a stray artifact
-     above the words rather than as the number of a section */
-  font-size: var(--text-strip);
-  letter-spacing: 0.2em;
-  color: var(--color-signal);
-  font-variant-numeric: tabular-nums;
+/* inside a pair the column IS the measure */
+.section-col .section-body {
+  max-width: none;
 }
 .section-label {
   display: flex;
   align-items: center;
-  gap: 0.55rem;
-  color: var(--color-mid);
+  gap: 0.6rem;
+  /* white in his build, not grey: it is the only thing above the copy, and
+     a size up from our 11px meta with it */
+  font-size: var(--text-strip);
+  letter-spacing: 0.18em;
+  color: var(--color-paper);
 }
 .section-mark {
   width: 0.95rem;
@@ -1000,50 +996,47 @@ main > footer {
 
 /* the one paragraph that carries a section, at the one step of scale the
    page allows itself */
+/* ONE SIZE FOR EVERY PARAGRAPH. His build steps nothing up: the opening
+   paragraph of a section is the same size as the ones under it and leads on
+   colour alone. The leading is his too — a shade under 2, which is what the
+   space between his lines measures. */
 .lede {
-  font-size: var(--text-lede-copy);
-  /* a 47-character measure wants tighter leading, not looser */
-  line-height: 1.4;
-  font-weight: 300;
+  font-size: var(--text-read);
+  line-height: 1.8;
+  font-weight: 400;
   color: var(--color-paper);
   text-wrap: pretty;
 }
-/* everything else */
 .body-copy {
-  /* ~2x the line rhythm. At 1.35rem a paragraph break sat only 1.69x the
-     line gap, and 250 words of it read as one continuous field. */
-  margin-top: 1.9rem;
+  /* his rhythm: a 40px line gap and 73px between paragraphs */
+  margin-top: 2rem;
   font-size: var(--text-read);
-  line-height: 1.75;
+  line-height: 1.8;
   color: var(--color-mid);
   text-wrap: pretty;
-}
-.lede + .body-copy {
-  margin-top: 2.1rem;
 }
 
+/* His name as he sets it: a heading in sentence case at a little over the
+   reading size, not a wall of 800-weight caps. */
 .founder-name {
-  font-size: var(--text-h2);
-  line-height: 1.05;
+  font-size: clamp(1.5rem, 1.2rem + 0.9vw, 1.9rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
   color: var(--color-paper);
 }
-.founder-role {
-  margin-top: 0.75rem;
-  font-size: var(--text-strip);
-  letter-spacing: 0.16em;
-  color: var(--color-mid);
-}
-.founder-role + .lede {
-  margin-top: 2rem;
+.founder-name + .lede {
+  margin-top: 1.75rem;
 }
 
 /* the citation, marked as the aside it is */
 .recognition {
-  margin-top: 2.25rem;
-  padding-left: 1.1rem;
-  border-left: 2px solid var(--color-signal);
+  margin-top: 2.8rem;
+  padding-left: 1.25rem;
+  border-left: 2px solid rgba(255, 255, 255, 0.3);
   font-size: var(--text-read);
   line-height: 1.7;
+  font-weight: 600;
   color: var(--color-paper);
 }
 
@@ -1083,6 +1076,25 @@ main > footer {
 }
 
 /* the eighteen names that prove the sentence above them */
+/* the address sits close under the bio in his build, not a screen away */
+.page-section--address {
+  padding-block: clamp(2.5rem, 5vw, 3.75rem);
+}
+
+/* The address is a line of type under a rule in his build — not the 60px
+   headline it had become here. (.contact-email, below, is the other
+   variant's; this page uses .contact-line.) */
+.contact-line {
+  font-size: var(--text-read);
+  font-weight: 600;
+  color: var(--color-paper);
+  text-decoration: none;
+}
+.contact-line:hover {
+  text-decoration: underline;
+  text-underline-offset: 6px;
+}
+
 .icon-roll {
   margin-top: 2.5rem;
   padding-top: 2rem;

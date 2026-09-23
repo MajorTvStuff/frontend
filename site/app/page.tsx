@@ -12,7 +12,11 @@ import type { BandItem } from "@/components/Band";
 import { Band } from "@/components/Band";
 import { Reveal } from "@/components/Reveal";
 import { Lockup } from "@/components/Lockup";
-import { Section } from "@/components/Section";
+import {
+  Section,
+  SectionColumn,
+  SectionPair,
+} from "@/components/Section";
 import { VariantSwitch } from "@/components/VariantSwitch";
 
 /**
@@ -118,9 +122,11 @@ export default function Home() {
         />
 
         {/* ————— what the company is ————— */}
-        <Section index={1} label="Company">
-          {/* the first paragraph is the definition of the company; the other
-              two qualify it, so it leads and they follow */}
+        <Section label="Company">
+          {/* One size for all three. The first paragraph is the definition
+              and the other two qualify it, so it leads on colour — his own
+              build sets the whole section at one size, and a paragraph that
+              steps up in scale is the thing he called "not breathing". */}
           <p className="reveal lede">{knit(site.company[0])}</p>
           {site.company.slice(1).map((para, i) => (
             <p key={i} className={`reveal reveal-${i + 2} body-copy`}>
@@ -134,50 +140,23 @@ export default function Home() {
           <Band items={band} founder={f.name} />
         </Reveal>
 
-        {/* ————— the two halves of the business, as copy ————— */}
-        <Section index={2} label={site.tvFilm.label}>
-          <p className="reveal lede">{knit(site.tvFilm.body)}</p>
-        </Section>
-
-        <Section index={3} label={site.books.label}>
-          <p className="reveal lede">{knit(site.books.body)}</p>
-          {/* "industry-leading, platform-driven, and celebrity authors" is a
-              claim; these eighteen names are the proof of it, and they are
-              his own approved copy. They were rendering on the build he
-              rejected and not on this one. */}
-          {site.icons && (
-            <p className="icon-roll reveal reveal-2">
-              {site.icons.map((name, i) => (
-                <span key={name}>
-                  <span className="whitespace-nowrap">
-                    {name}
-                    {i < site.icons!.length - 1 && (
-                      <span aria-hidden="true" className="ml-2 text-signal">
-                        ·
-                      </span>
-                    )}
-                  </span>{" "}
-                </span>
-              ))}
-            </p>
-          )}
-        </Section>
-
-        {/* The one differentiating claim in the whole argument, and the only
-            sentence on the page given a screen of its own. His own words,
-            from the call notes — display-only until he signs them off. */}
-        {site.positioning?.leverage && (
-          <Reveal className="page-section claim-section">
-            <p className="claim reveal">{site.positioning.leverage}</p>
-          </Reveal>
-        )}
+        {/* ————— the two halves of the business, side by side ————— */}
+        <SectionPair>
+          <SectionColumn label={site.tvFilm.label}>
+            <p className="reveal lede">{knit(site.tvFilm.body)}</p>
+          </SectionColumn>
+          <SectionColumn label={site.books.label}>
+            <p className="reveal lede">{knit(site.books.body)}</p>
+          </SectionColumn>
+        </SectionPair>
 
         {/* ————— the person, at last at full length ————— */}
-        <Section index={4} label="Founder">
-          <h3 className="reveal display-heavy founder-name">{f.name}</h3>
-          <p className="reveal meta-caps founder-role">{f.role}</p>
-          {/* the first paragraph is the credits — it is the reason to read
-              the other four, so it carries the lede weight */}
+        <Section label="Founder">
+          {/* His name, set the way he sets it: a heading in sentence case,
+              not a wall of heavy caps. The role line under it is gone — his
+              own first sentence is "Raymond Garcia is the founder and CEO of
+              Major Content", so the page was saying it twice. */}
+          <h3 className="reveal founder-name">{f.name}</h3>
           <p className="reveal reveal-2 lede">{knit(f.bio[0])}</p>
           {f.bio.slice(1).map((para, i) => (
             <p key={i} className="reveal reveal-3 body-copy">
@@ -188,12 +167,12 @@ export default function Home() {
         </Section>
 
         {/* ————— the address ————— */}
-        <Reveal className="page-section">
+        <Reveal className="page-section page-section--address">
           <div className="section-grid">
             <div className="section-body">
               <a
                 href={`mailto:${site.contact.email}`}
-                className="link contact-email reveal decoration-signal decoration-2 underline-offset-8"
+                className="link contact-line reveal"
               >
                 {site.contact.email}
               </a>
