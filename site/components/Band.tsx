@@ -33,6 +33,11 @@ export type BandItem = Project & {
  * grid he described; a book standing full height on its own is what stops
  * the row reading as a filmstrip.
  *
+ * TRUE LOVE and ME stand alone by name (STAND_ALONE). They are the two the
+ * shelf is known for and a stack made them half height — "so we're not
+ * dwarfing important books", in the client's words. Side by side at full
+ * height they read at the same weight as the shows do.
+ *
  * The order is the copy doc's, which alternates shows and books for its first
  * half — but only its first half. Left to parity the tail came out as twelve
  * consecutive stamps with no show and nothing full height among them, so the
@@ -58,6 +63,11 @@ type Cell =
   | { kind: "pair"; items: [BandItem, BandItem] };
 
 const MAX_RUN = 2; // consecutive pairs before a book stands up on its own
+/* The two the client wants standing on their own, side by side, at the same
+   height as everything else in the row: stacked into a pair they came out
+   half height, and these are the two names the shelf is known for. Any book
+   named here never goes into a stack. */
+const STAND_ALONE = new Set(["true-love", "me"]);
 /** how long the row waits after a scroll, drag or tap before drifting again */
 const HOLD_MS = 6000;
 
@@ -78,6 +88,10 @@ function lay(items: BandItem[]): Cell[] {
     if (it.medium === "show") {
       while (held.length) take(); // a pair never straddles a show
       cells.push({ kind: "show", item: it });
+      run = 0;
+    } else if (STAND_ALONE.has(it.slug)) {
+      while (held.length) take(); // nor does it straddle one of these
+      cells.push({ kind: "solo", item: it });
       run = 0;
     } else {
       held.push(it);
