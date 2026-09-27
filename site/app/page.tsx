@@ -11,6 +11,7 @@ import type { BandItem } from "@/components/Band";
 import { Band } from "@/components/Band";
 import { Reveal } from "@/components/Reveal";
 import { Lockup } from "@/components/Lockup";
+import { TopBar } from "@/components/TopBar";
 import {
   Section,
   SectionColumn,
@@ -69,16 +70,11 @@ export default function Home() {
   }));
   return (
     <>
-      {/* the chrome sits over the hero, which owns the viewport */}
-      <header className="absolute inset-x-0 top-0 z-50 flex items-center justify-between px-5 py-4 sm:px-8">
-        <Lockup tone="light" className="w-28 sm:w-32" />
-        <a
-          href={`mailto:${site.contact.email}`}
-          className="btn meta-caps bg-screen/80 text-paper backdrop-blur-sm"
-        >
-          Contact
-        </a>
-      </header>
+      {/* Nothing sits over the banner: it spends nine seconds spelling out
+          MAJOR CONTENT, and a lockup in the corner saying it again was, in
+          his words, too redundant. The navbar arrives once the banner has
+          scrolled away. */}
+      <TopBar email={site.contact.email} />
 
       <VariantSwitch current="copy-led" />
 

@@ -528,6 +528,75 @@
 }
 
 /* ------------------------------------------------------------------ *
+ *  THE NAVBAR — absent over the banner, present everywhere else.
+ *  See components/TopBar.tsx for why it is not there at the top.
+ * ------------------------------------------------------------------ */
+.topbar {
+  position: fixed;
+  inset-inline: 0;
+  top: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1.25rem;
+  padding-top: calc(0.75rem + env(safe-area-inset-top, 0px));
+  background: color-mix(in oklab, var(--color-ground) 86%, transparent);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--color-line);
+  /* away: off the top, and out of reach of a cursor OR a tab key */
+  transform: translateY(-100%);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    transform 420ms var(--ease-out-strong),
+    opacity 240ms linear,
+    visibility 0s linear 420ms;
+}
+.topbar.is-shown {
+  transform: translateY(0);
+  opacity: 1;
+  visibility: visible;
+  transition:
+    transform 420ms var(--ease-out-strong),
+    opacity 200ms linear,
+    visibility 0s;
+}
+@media (min-width: 640px) {
+  .topbar {
+    padding-inline: 2rem;
+  }
+}
+.topbar-brand {
+  display: block;
+  line-height: 0;
+}
+/* the skip link lands under a fixed bar otherwise */
+#main {
+  scroll-margin-top: 4.5rem;
+}
+.topbar-brand:focus-visible,
+.topbar-contact:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .topbar {
+    transition:
+      opacity 160ms linear,
+      visibility 0s linear 160ms;
+    transform: none;
+  }
+  .topbar.is-shown {
+    transition:
+      opacity 160ms linear,
+      visibility 0s;
+    transform: none;
+  }
+}
+
+/* ------------------------------------------------------------------ *
  *  THE OPENING BANNER — copied from the client's own build.
  *
  *  Every number below is his: the gradient and its angle, the scrim, the
