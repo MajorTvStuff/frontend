@@ -54,16 +54,17 @@ clump (`components/Shelf.tsx`, `lib/clump.ts`, `lib/stage.ts`) are still on
   along with every hardcoded blue-black scrim. The only saturated thing left
   on the page is the red inside the M, which his own build has too. All text
   still passes AA: 16.7:1, 9.8:1 and 5.7:1 on the ground.
-- **The hero. BEING REPLACED (2026-09-19)** — the client's word, so nothing
-  in it is worth fixing first. Two review findings die with it: the hero
-  repeats the first sentence of 01 COMPANY almost verbatim, and its eyebrow
-  is the unsigned "From MAJOR TV to MAJOR CONTENT" where his own build has
-  TV | FILM | BOOKS under the lockup. He deferred it in his note ("we can
-  explore the header video/animation after") and says his own logo timing is
-  wrong. `Assets/MAJOR-TV-logo-animation.mov` is the source file and has been
-  in the drop all along.
-- **Global icons** had its own band and no longer does; the eighteen names are
-  in bio paragraph three, which now renders in full.
+- **The hero. REPLACED 2026-09-26 — it is his own opening banner now.** He
+  sent his build (a claude.ai artifact link; read it, never publish one) and
+  asked for the hero copied word for word. Seven lines in his staging, his
+  gradient `linear-gradient(150deg,#030c17,#0a2038 60%,#0d2740)` under his
+  scrim, his fade/hold timing, and his logo build — chevron flip, M, AJOR
+  wipe, CONTENT — then TV | FILM | BOOKS. Verified against his page rendered
+  side by side: same logo box, same sub-line metrics, same gradient. The
+  blurred key art, the flash covers and the primer are gone from `/`;
+  `/image-led` still has the old hero. `Assets/MAJOR-TV-logo-animation.mov`
+  remains the source for the real logo animation if he ever wants the film
+  itself rather than this SVG rebuild of it.
 
 ## 0. Book synopses — DRAFTED FROM SOURCES, awaiting RG's sign-off
 
