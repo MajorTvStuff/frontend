@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { Poppins } from "next/font/google";
 import { site } from "@/lib/content";
 import { SITE_URL } from "@/lib/site";
 import "./globals.css";
@@ -13,8 +14,17 @@ const grotesk = localFont({
   declarations: [{ prop: "font-stretch", value: "62% 125%" }],
 });
 
+/* the hero's own face: his build sets the opening lines, the sub-line and
+   CONTENT in Poppins 300, and nothing else on the page uses it */
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["300"],
+  display: "swap",
+  variable: "--font-poppins",
+});
+
 export const viewport: Viewport = {
-  themeColor: "#0c0c0c",
+  themeColor: "#0a0a0a",
 };
 
 export const metadata: Metadata = {
@@ -51,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={grotesk.variable}>
+    <html lang="en" className={`${grotesk.variable} ${poppins.variable}`}>
       <body>
         {/*
           With no JS nothing may stay hidden — but this must be SCOPED to the

@@ -70,5 +70,15 @@
     "Álvaro Uribe",
     "Soledad O'Brien",
     "Ednita Nazario"
-  ]
+  ],
+  "heroSequence": [
+    "Bridging Content and Culture",
+    "with",
+    "Global Icons",
+    "Premium Programming",
+    "Worldwide Bestsellers",
+    "Resonating with the collective majority",
+    "That’s"
+  ],
+  "heroSequenceNote": "The same seven lines his own build shows in the opening banner, in his order. Same words as introLines — his staging puts 'with' on a line of its own before 'Global Icons'."
 }

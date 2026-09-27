@@ -27,15 +27,15 @@
 @theme {
   --color-*: initial;
 
-  --color-ground: #0c0c0c; /* his ground, sampled inside the screen */
+  --color-ground: #0a0a0a; /* his build's --bg */
   --color-panel: #151515; /* lifted frames — the only step above ground */
-  --color-paper: #ededed; /* primary text — his headline band */
+  --color-paper: #f5f4f1; /* his build's --text */
   --color-ink: #0c0c0c; /* text on light insets */
   --color-harbor: #5b5b5b; /* muted text on light insets */
-  --color-mid: #b7b7b7; /* his body type — 8.9:1 on the ground */
-  --color-faint: #8a8a8a; /* his secondary type — 5.0:1, still ≥4.5 */
-  --color-line: rgba(255, 255, 255, 0.16); /* his rules */
-  --color-screen: #0c0c0c; /* scrims */
+  --color-mid: rgba(245, 244, 241, 0.68); /* his --text-dim */
+  --color-faint: rgba(245, 244, 241, 0.4); /* his --text-faint */
+  --color-line: rgba(255, 255, 255, 0.12); /* his --line */
+  --color-screen: #0a0a0a; /* scrims */
   --color-band: #151515; /* the one tonal break, now a tonal one */
   --color-signal: #ffffff; /* there is no accent in his build: white */
   --color-red: #a22d32; /* the M's wings */
@@ -524,6 +524,256 @@
   }
   .link:active {
     transform: scale(0.99);
+  }
+}
+
+/* ------------------------------------------------------------------ *
+ *  THE OPENING BANNER — copied from the client's own build.
+ *
+ *  Every number below is his: the gradient and its angle, the scrim, the
+ *  0.9s fades and 1.4s holds of the line sequence, and the logo's four
+ *  movements at 0s / 0.45s / 1.9s / 2.9s / 4.9s. See components/HeroBanner.
+ * ------------------------------------------------------------------ */
+.hero-banner {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: #000;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+}
+/* HIS GRADIENT, exactly */
+.hero-bg .navy-panel {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(150deg, #030c17 0%, #0a2038 60%, #0d2740 100%);
+}
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.55) 0%,
+    rgba(0, 0, 0, 0.35) 40%,
+    rgba(10, 10, 10, 0.94) 100%
+  );
+}
+.hero-inner {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 0 24px;
+}
+
+/* the sequence: one line fully gone before the next appears */
+.hero-sequence {
+  min-height: 2.4em;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+}
+.hero-sequence span {
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
+  font-size: clamp(14px, 2.2vw, 20px);
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-mid);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+}
+.hero-sequence span.is-shown {
+  opacity: 1;
+}
+
+/* the logo, and its four movements */
+.hero-logo {
+  width: min(72vw, 460px);
+  margin: 0 auto;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.hero-logo.is-shown {
+  opacity: 1;
+}
+.hero-logo .chevron {
+  perspective: 260px;
+}
+.hero-logo .page-left,
+.hero-logo .page-right {
+  fill: #a71f03;
+  transform-box: fill-box;
+  opacity: 0;
+}
+.hero-logo .page-left {
+  transform-origin: 100% 100%;
+}
+.hero-logo .page-right {
+  transform-origin: 0% 100%;
+}
+.is-running .hero-logo .page-left {
+  animation: flipLeft 1.4s cubic-bezier(0.25, 0.6, 0.3, 1) 0s forwards;
+}
+.is-running .hero-logo .page-right {
+  animation: flipRight 1.4s cubic-bezier(0.25, 0.6, 0.3, 1) 0.45s forwards;
+}
+@keyframes flipLeft {
+  0% {
+    opacity: 1;
+    transform: perspective(260px) rotateY(-88deg);
+  }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(260px) rotateY(0deg);
+  }
+}
+@keyframes flipRight {
+  0% {
+    opacity: 1;
+    transform: perspective(260px) rotateY(88deg);
+  }
+  8% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(260px) rotateY(0deg);
+  }
+}
+.hero-logo .mletter path {
+  fill: #fff;
+  opacity: 0;
+}
+.is-running .hero-logo .mletter path {
+  animation: mIn 1s ease-out 1.9s forwards;
+}
+@keyframes mIn {
+  0% {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.hero-logo .ajor {
+  clip-path: inset(0 100% 0 0);
+}
+.hero-logo .ajor path {
+  fill: #fff;
+}
+.is-running .hero-logo .ajor {
+  animation: ajorWipe 1.6s cubic-bezier(0.3, 0.8, 0.2, 1) 2.9s forwards;
+}
+@keyframes ajorWipe {
+  0% {
+    clip-path: inset(0 100% 0 0);
+  }
+  100% {
+    clip-path: inset(0 0% 0 0);
+  }
+}
+/* CONTENT is part of the logo, not a line of copy under it */
+.hero-logo .subtitle {
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
+  fill: #fff;
+  opacity: 0;
+}
+.is-running .hero-logo .subtitle {
+  animation: subIn 1s ease-out 4.9s forwards;
+}
+@keyframes subIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.hero-sub-line {
+  margin-top: 22px;
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
+  font-size: clamp(13px, 1.8vw, 17px);
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--color-mid);
+  opacity: 0;
+  transition: opacity 0.9s ease;
+  text-align: center;
+}
+.hero-sub-line.is-shown {
+  opacity: 1;
+}
+
+.hero-scroll {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  color: var(--color-faint);
+  text-transform: uppercase;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: settle 1s ease-out 1.4s forwards;
+}
+.hero-scroll::after {
+  content: "";
+  width: 1px;
+  height: 26px;
+  background: var(--color-faint);
+}
+@keyframes settle {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.98);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+/* asked for less motion: the banner is simply there, at rest */
+@media (prefers-reduced-motion: reduce) {
+  .hero-logo,
+  .hero-sub-line,
+  .hero-scroll {
+    opacity: 1;
+    animation: none;
+    transition: none;
+  }
+  .hero-logo .page-left,
+  .hero-logo .page-right,
+  .hero-logo .mletter path,
+  .hero-logo .subtitle {
+    opacity: 1;
+    animation: none;
+  }
+  .hero-logo .ajor {
+    clip-path: none;
+    animation: none;
+  }
+  .hero-scroll {
+    transform: translateX(-50%);
   }
 }
 

@@ -36,6 +36,9 @@ const Site = z.object({
   domain: z.string(),
   verticals: z.string(),
   introLines: z.array(z.string()),
+  /** the same lines, staged as his own build stages them (see site.json) */
+  heroSequence: z.array(z.string()).optional(),
+  heroSequenceNote: z.string().optional(),
   company: z.array(z.string()),
   tvFilm: z.object({ label: z.string(), body: z.string() }),
   books: z.object({ label: z.string(), body: z.string() }),

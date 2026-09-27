@@ -6,8 +6,7 @@ import {
   youtubeId,
   credit,
 } from "@/lib/content";
-import type { Cover, Primer } from "@/components/Hero";
-import { Hero } from "@/components/Hero";
+import { HeroBanner } from "@/components/HeroBanner";
 import type { BandItem } from "@/components/Band";
 import { Band } from "@/components/Band";
 import { Reveal } from "@/components/Reveal";
@@ -25,7 +24,7 @@ import { VariantSwitch } from "@/components/VariantSwitch";
  * He built a version himself and sent the recording (Assets/1288.mp4). It is
  * the clearest brief we have had, and the order below is his:
  *
- *   hero     — the intro lines resolving into the lockup
+ *   hero     — his own opening banner, copied line for line
  *   company  — what the company is, all three paragraphs
  *   band     — every title in one drifting row: full tiles for the shows,
  *              books gridded two high. "All in one place", in his words.
@@ -55,19 +54,6 @@ import { VariantSwitch } from "@/components/VariantSwitch";
  * here, and he asked for simplicity.
  */
 
-/* The covers that hard-cut behind the word flow of the intro. Large sources
-   only; the small legacy scans stay in the band, where they are sharp. */
-const FLASH = [
-  "the-love-playbook",
-  "true-love",
-  "why-soccer-matters",
-  "my-voice",
-  "chasing-the-sun",
-  "clemente",
-];
-
-const cover = (slug: string): Cover => ({ slug, ...projectDims(slug) });
-
 export default function Home() {
   const f = site.founder;
   /* the copy doc's own order already alternates shows and books, so the
@@ -81,22 +67,6 @@ export default function Home() {
     /* and, for a show, the trailer itself: the panel embeds it */
     youtubeId: youtubeId(p.trailer),
   }));
-  const showRows = projects.filter((p) => p.medium === "show");
-  /* the hero's proof tokens, still every one of them verbatim */
-  const primer: Primer = {
-    eyebrow: site.positioning?.continuity ?? site.verticals,
-    statement: site.company[0].split(", focusing")[0] + ".",
-    proofs: [
-      ...showRows.map((s) => s.proof),
-      projects.find((p) => p.slug === "the-love-playbook")!.proof,
-    ],
-    proofsShort: [
-      showRows[0].proof,
-      showRows[1].proof,
-      projects.find((p) => p.slug === "the-love-playbook")!.proof,
-    ],
-  };
-
   return (
     <>
       {/* the chrome sits over the hero, which owns the viewport */}
@@ -113,12 +83,9 @@ export default function Home() {
       <VariantSwitch current="copy-led" />
 
       <main id="main">
-        <Hero
-          still={cover("drive")}
-          introLines={site.introLines}
-          flash={FLASH.map(cover)}
-          primer={primer}
-          ground="soft"
+        <HeroBanner
+          lines={site.heroSequence ?? site.introLines}
+          verticals={site.verticals}
         />
 
         {/* ————— what the company is ————— */}
