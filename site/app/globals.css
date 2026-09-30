@@ -666,12 +666,13 @@
   opacity: 1;
 }
 
-/* THE LOGO FILM — his real animation, on black, dropped out against the
-   gradient by a screen blend. 604x246 is the box everything in the clip
-   ever lights up, so nothing in it is cropped. */
+/* THE LOGO FILM — his own animation, on black, dropped out against the
+   gradient by a screen blend. 1120x468 is the box everything in his edit
+   ever lights up, cut from the 4K source with margin, so nothing in it is
+   cropped and it stays sharp at twice the size it is shown. */
 .hero-film {
   width: min(78vw, 520px);
-  aspect-ratio: 604 / 246;
+  aspect-ratio: 1120 / 468;
   margin: 0 auto;
   mix-blend-mode: screen;
   opacity: 0;
@@ -687,31 +688,6 @@
   height: 100%;
 }
 
-/* only there when the browser would not start the sound itself */
-.hero-sound {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-top: 1.75rem;
-  padding: 0.55rem 0.9rem;
-  border: 1px solid var(--color-line);
-  background: transparent;
-  color: var(--color-mid);
-  cursor: pointer;
-  animation: subIn 0.6s ease-out both;
-}
-.hero-sound svg {
-  width: 1rem;
-  height: 1rem;
-}
-.hero-sound:hover {
-  color: var(--color-paper);
-  border-color: color-mix(in oklab, var(--color-paper) 40%, transparent);
-}
-.hero-sound:focus-visible {
-  outline: 2px solid var(--color-signal);
-  outline-offset: 3px;
-}
 @keyframes subIn {
   0% {
     opacity: 0;

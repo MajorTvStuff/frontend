@@ -1,51 +1,45 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Lockup } from "@/components/Lockup";
 
 /**
  * THE NAVBAR THAT IS NOT THERE AT THE TOP.
  *
- * The banner spends nine seconds building the words MAJOR CONTENT out of
- * nothing, and the old header sat in the corner the whole time saying the
- * same thing — "too redundant", which it was. So nothing sits over the
- * banner now. Scroll past it and a real navbar arrives: the lockup on the
- * left, Contact on the right.
+ * The banner spends its opening building the words MAJOR CONTENT, and a
+ * lockup sitting in the corner the whole time said the same thing — too
+ * redundant, in his words. So at the top of the page there is no bar at
+ * all. The moment the visitor starts scrolling, a real navbar arrives: the
+ * lockup on the left, Contact on the right. Back at the very top, it goes.
  *
- * It watches the BANNER, not a pixel count: an IntersectionObserver fires
- * when the hero has left, so the bar arrives at the same moment on a phone
- * as on a desktop, whatever the viewport height. If there is no banner on
- * the page (or no observer), the bar is simply always there, which is the
- * safe way round.
- *
- * While it is away it is `hidden` to the pointer AND to the keyboard —
- * visibility: hidden in the stylesheet — so nobody tabs into an invisible
- * Contact link at the top of the page.
+ * While it is away it is visibility: hidden, not just transparent, so a
+ * keyboard cannot tab into an invisible Contact link. It is hidden from the
+ * first paint too — the server renders it without `is-shown`.
  */
-export function TopBar({ email, watch = ".hero-banner" }: { email: string; watch?: string }) {
+const START = 8; // px: the page has started to move, not a trackpad twitch
+
+export function TopBar({ email }: { email: string }) {
   const [shown, setShown] = useState(false);
-  const barRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
-    const hero = document.querySelector(watch);
-    if (!hero || typeof IntersectionObserver === "undefined") {
-      setShown(true); // no banner to hide behind
-      return;
-    }
-    /* the bar arrives once the banner is mostly gone — a sliver of it left
-       on screen is still the banner, and a bar appearing over it is the
-       thing he did not want */
-    const io = new IntersectionObserver(
-      ([entry]) => setShown(entry.intersectionRatio < 0.12),
-      { threshold: [0, 0.12, 0.5, 1] },
-    );
-    io.observe(hero);
-    return () => io.disconnect();
-  }, [watch]);
+    let frame = 0;
+    const check = () => {
+      frame = 0;
+      setShown(window.scrollY > START);
+    };
+    const onScroll = () => {
+      if (!frame) frame = requestAnimationFrame(check);
+    };
+    check(); // a reload halfway down the page shows it straight away
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
+  }, []);
 
   return (
     <header
-      ref={barRef}
       className={`topbar${shown ? " is-shown" : ""}`}
       data-shown={shown ? "true" : "false"}
     >
