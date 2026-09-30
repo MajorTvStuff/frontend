@@ -70,14 +70,17 @@
       "needs": []
     },
     "true-love": {
-      "summary": "Lopez's first book: a diary of the two years in which her marriage ended, her twins were born and she rebuilt both her life and her work. A portion of the proceeds goes to the Lopez Family Foundation.",
+      "summary": "Lopez's first book: a diary of the two years after she and Marc Anthony separated, begun on her 2012 Dance Again world tour, in which she rebuilt both her life and her work. A portion of the proceeds goes to the Lopez Family Foundation.",
       "released": "2014",
       "carrier": "Celebra | Penguin — published in English and Spanish, 4 November 2014",
       "role": "Founder and Publisher, Celebra",
       "roleBasis": "imprint",
       "sources": [
         "https://www.penguinrandomhouse.com/books/315716/true-love-by-jennifer-lopez/",
-        "https://en.wikipedia.org/wiki/True_Love_(book)"
+        "https://www.foxnews.com/entertainment/jennifer-lopez-pens-cathartic-book-true-love-out-in-october",
+        "https://www.latinpost.com/articles/24153/20141021/jennifer-lopez-true-love-biography-to-hit-stands-in-november.htm",
+        "https://www.today.com/popculture/j-los-twins-named-max-emme-1c9416561",
+        "http://www.hawes.com/2014/2014-11-23.pdf"
       ],
       "confirm": null,
       "onSite": true,
@@ -112,14 +115,14 @@
       "needs": []
     },
     "my-voice": {
-      "summary": "Two decades of hip-hop radio from the inside: an internship at Hot 97, 'Battle of the Beats', and the last interview Tupac Shakur gave, which Martinez was summoned to conduct at twenty-five. Foreword by J. Cole.",
+      "summary": "Two decades of hip-hop radio from the inside: an internship at Hot 97, her 'Battle of the Beats' segment, and the long 1996 interview she did with Tupac Shakur at twenty-five, most of which never aired. Foreword by J. Cole.",
       "released": "2016",
       "carrier": "Celebra | Penguin — 17 May 2016",
       "role": "Founder and Publisher, Celebra",
       "roleBasis": "imprint",
       "sources": [
         "https://www.penguinrandomhouse.com/books/531927/my-voice-by-angie-martinez-with-a-foreword-by-j-cole/",
-        "https://www.biblio.com/book/my-voice-memoir-martinez-angie/d/1604925485"
+        "http://web.archive.org/web/20250816022921/https://www.nytimes.com/books/best-sellers/2016/06/05/combined-print-and-e-book-nonfiction/"
       ],
       "confirm": null,
       "onSite": true,
@@ -210,7 +213,7 @@
       "needs": []
     },
     "chasing-the-sun": {
-      "summary": "An illustrated autobiography: growing up in Medellín through the most violent years of Colombia's recent history, founding the rock band Ekhymosis at sixteen, and the faith and music that carried him out.",
+      "summary": "An illustrated autobiography: growing up in Medellín through the most violent years of Colombia's recent history, co-founding the rock band Ekhymosis as a teenager, and the faith and music that carried him out.",
       "released": "2013",
       "carrier": "Celebra | Penguin — 2 April 2013",
       "role": "Founder and Publisher, Celebra",
@@ -238,26 +241,29 @@
       "needs": []
     },
     "chords-of-strength": {
-      "summary": "The American Idol finalist on the vocal cord paralysis he had to overcome to sing at all, and the faith he leaned on doing it. Written with Monica Haim — and the first New York Times bestseller Celebra ever had.",
+      "summary": "The American Idol runner-up on the vocal cord paralysis he had to overcome to keep singing, and the faith he leaned on doing it. Written with Monica Haim.",
       "released": "2010",
       "carrier": "Celebra | Penguin — 1 June 2010",
       "role": "Founder and Publisher, Celebra",
       "roleBasis": "imprint",
       "sources": [
-        "https://en.wikipedia.org/wiki/Chords_of_Strength",
-        "https://www.penguinrandomhouse.com/books/306632/chords-of-strength-by-david-archuleta/"
+        "https://www.penguinrandomhouse.com/books/306632/chords-of-strength-by-david-archuleta/",
+        "https://web.archive.org/web/20100624031155/http://www.nytimes.com/2010/06/20/books/bestseller/besthardnonfiction.html",
+        "https://openlibrary.org/isbn/9780451230188.json",
+        "https://www.today.com/popculture/q-just-17-david-archuleta-finds-his-voice-wbna24502366"
       ],
-      "confirm": "Are you happy for us to say this was Celebra's first New York Times bestseller? It is a matter of record, and it is a good line for the shelf.",
+      "confirm": null,
       "onSite": true,
       "needs": []
     },
     "growing-stronger": {
-      "summary": "The singer and telenovela star on the things she does not usually discuss: her father's death when she was five, her sister's kidnapping, and the illness that changed her life — set against her marriage to Tommy Mottola and their daughter.",
+      "summary": "The singer and telenovela star on the things she does not usually discuss: her father's death when she was five, the kidnapping of two of her sisters, and the illness that changed her life — set against her marriage to Tommy Mottola and their daughter.",
       "released": "2011",
       "carrier": "Celebra | Penguin — 1 November 2011",
       "role": "Founder and Publisher, Celebra",
       "roleBasis": "imprint",
       "sources": [
+        "https://www.penguinrandomhouse.com/books/309215/growing-stronger-by-thalia/",
         "https://www.amazon.com/Growing-Stronger-Thalia/dp/0451234413",
         "https://www.today.com/news/growing-stronger-thalia-shares-her-story-wbna45148867"
       ],
@@ -280,7 +286,7 @@
       "needs": []
     },
     "celia-my-life": {
-      "summary": "The autobiography the Queen of Salsa wrote in her final months — Havana and La Sonora Matancera, the exile that followed, and Pedro Knight. Written with Ana Cristina Reymundo.",
+      "summary": "The Queen of Salsa's life in her own words, drawn from interviews recorded in her final months — Havana and La Sonora Matancera, the exile that followed, and Pedro Knight. Written with Ana Cristina Reymundo.",
       "released": "2004",
       "carrier": "Rayo | HarperCollins — 6 July 2004",
       "role": "",
