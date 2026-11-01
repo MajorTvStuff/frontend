@@ -43,5 +43,8 @@ out/
 # site/next.config.ts)
 /site/.next-*/
 
-# the hosting bundle and its zip — built by site/scripts/package-deploy.py
-/deploy/
+# the hosting bundles and their zips — built by the scripts in site/scripts/
+# The contents, not the directory, for the same reason as /archive/ above: the
+# production Netlify zip is kept in git and nothing else in there is.
+/deploy/*
+!/deploy/majorcontent-netlify.zip

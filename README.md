@@ -77,11 +77,12 @@ There is no automated test suite.
 │   ├── public/            Reel, book and show art, founder portrait, redirects
 │   ├── scripts/           Build and packaging scripts
 │   └── preview-site.cmd   Serves the built site on Windows
+├── deploy/                The production Netlify zip
 ├── docs/                  Creative direction, roadmap and review documents
 └── archive/               Earlier builds, kept for reference. Nothing here runs.
 ```
 
-`Assets/` (the client's original files) and `deploy/` (the built zips) are git-ignored, so a fresh clone won't have them. The export script creates `deploy/` when it runs.
+`Assets/` (the client's original files) is git-ignored, so a fresh clone won't have it. In `deploy/`, only `majorcontent-netlify.zip` is in git. Everything else there is build output.
 
 `Hero`, `Slate` and `Shelf` in `components/`, along with `lib/clump.ts` and `lib/stage.ts`, are parked and not on the page. `BookPanel.tsx` still imports the `Cover` type from `Shelf.tsx`, so move that type before deleting `Shelf.tsx`.
 
@@ -164,6 +165,14 @@ npx http-server@14 out -p 3013
 > Don't open `out/index.html` directly. Every path in it starts at the site's root, so nothing loads from disk. It has to be served.
 
 **To deploy it,** drag the zip onto the Deploys page of the Netlify site. `site/public/_redirects` and `site/public/netlify.toml` forward majortvproductions.com to www.majorcontent.com.
+
+The production build is kept in git as [`deploy/majorcontent-netlify.zip`](deploy/majorcontent-netlify.zip). The export script doesn't update it, so after a new export, copy the new zip over it and commit it:
+
+```bash
+cp ../deploy/majorcontent-static.zip ../deploy/majorcontent-netlify.zip
+```
+
+Each new version adds about 34 MB to the repo's history for good, so only commit builds that go live.
 
 The zip also works on plain file hosting: extract it inside cPanel's `public_html`. It deliberately has no `.htaccess`, so it won't overwrite cPanel's own rules. `scripts/package-deploy.py` is the older route, which packages the site as a Node.js app for cPanel.
 
