@@ -1,33 +1,45 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { claimPlayer, releasePlayer } from "@/lib/player-bus";
 import { SHOW_TODOS } from "@/lib/site";
 import type { Cover } from "@/components/Shelf";
 
 const ORIGIN = "https://www.youtube-nocookie.com";
 
 /**
- * The write-up panel — it slides in from the right (up from the bottom on a
- * phone) when a tile or a jacket is pressed: clicked, tapped, or Enter on a
- * keyboard. It stays until it is put away, and pressing another swaps its
- * contents in place rather than flying out and back in.
+ * The write-up panel — a window over the page on a desktop, a sheet up from
+ * the bottom on a phone, opened by pressing a tile or a jacket: click, tap,
+ * or Enter on a keyboard. Pressing another swaps its contents in place.
  *
- * A SHOW OPENS AS A PLAYER. Showing the key art again, at the moment someone
- * pressed the key art, tells them nothing they did not just see: a show with
- * a trailer gets the trailer itself, embedded and playing, and the panel
- * becomes a centred window wide enough for it rather than a side rail. The
- * fourth show has no embeddable trailer — its youtubeId is null — so it
- * keeps the still and a link to where the footage actually lives.
+ * AS HIS NOTES OF 2026-10-21 HAVE IT:
+ *   - the page dims behind it, for a book exactly as for a show
+ *   - the way out is a "×" at the top right, a tap anywhere off it, a swipe
+ *     down on a phone, or Escape; there is no Close button at the foot
+ *   - the kicker carries the red line ("— The slate", "— The shelf") and
+ *     the title is set in the header font, light, caps, spaced
+ *   - on a phone a book stands its cover on top and the text runs full
+ *     width under it
+ *   - no years anywhere in it: research.json's summaries and award lines
+ *     are written without them, and the carrier line loses its date
  *
- * The iframe is mounted only while the panel is open, which is also how the
- * sound stops: closing unmounts the player rather than pausing it.
+ * A SHOW OPENS ON ITS KEY ART, with a frosted play button over it. The
+ * trailer is only fetched when that is pressed — so nothing loads from
+ * YouTube until a visitor asks for it, which is what the privacy page says —
+ * and it then plays in place. The fourth show has no embeddable trailer —
+ * its youtubeId is null — so it keeps the still and a link to where the
+ * footage lives. (He has asked for the trailers as files of his own; until
+ * they arrive, YouTube's player is what the button opens.)
+ *
+ * The player is mounted only while it plays, which is also how the sound
+ * stops: closing unmounts it rather than pausing it.
  *
  * The write-ups: the rule has not changed — we invent nothing — but "invent
  * nothing" was never the same as "say nothing". The summaries are ours,
  * written from published sources and cited per title in research.json, and
  * RG's role comes either from his own approved bio or from the imprint,
- * which is a matter of record. Publication dates are left out at his
- * instruction (see dateless() in lib/content.ts).
+ * which is a matter of record.
  */
 export function BookPanel({
   book,
@@ -42,41 +54,140 @@ export function BookPanel({
   onClose: () => void;
 }) {
   const r = book?.about ?? null;
-  const playable = !!(book?.youtubeId && open);
+  const isShow = book?.medium === "show";
+  const shown = open && !!book;
+
+  /* the trailer stays behind its poster until play is pressed; a new title,
+     or the panel closing, puts it back */
+  const [playing, setPlaying] = useState(false);
+  useEffect(() => {
+    setPlaying(false);
+  }, [book?.slug, open]);
+  const playable = !!(book?.youtubeId && open && playing);
+
+  /* one player on the page: while a trailer plays here it holds it, and the
+     banner's film stops rather than play on underneath */
+  useEffect(() => {
+    if (!playable) return;
+    claimPlayer("panel");
+    return () => releasePlayer("panel");
+  }, [playable]);
+
+  /* SWIPE DOWN TO CLOSE — the sheet, on a phone. Only from the top of its
+     own scroll, so a reader scrolling back up a long write-up is scrolling,
+     and the sheet follows the finger until it lets go. */
+  const sheetRef = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const el = sheetRef.current;
+    if (!el || !shown) return;
+    let y0 = 0;
+    let dy = 0;
+    let dragging = false;
+    const start = (e: TouchEvent) => {
+      if (!window.matchMedia("(max-width: 639px)").matches) return;
+      if (el.scrollTop > 0) return;
+      y0 = e.touches[0].clientY;
+      dy = 0;
+      dragging = true;
+    };
+    const move = (e: TouchEvent) => {
+      if (!dragging) return;
+      dy = e.touches[0].clientY - y0;
+      if (dy <= 0) {
+        el.style.transform = "";
+        return;
+      }
+      e.preventDefault();
+      el.style.transition = "none";
+      el.style.transform = `translateY(${dy}px)`;
+    };
+    const end = () => {
+      if (!dragging) return;
+      dragging = false;
+      el.style.transition = "";
+      el.style.transform = "";
+      if (dy > 90) onClose();
+    };
+    el.addEventListener("touchstart", start, { passive: true });
+    el.addEventListener("touchmove", move, { passive: false });
+    el.addEventListener("touchend", end);
+    el.addEventListener("touchcancel", end);
+    return () => {
+      el.removeEventListener("touchstart", start);
+      el.removeEventListener("touchmove", move);
+      el.removeEventListener("touchend", end);
+      el.removeEventListener("touchcancel", end);
+    };
+  }, [shown, onClose]);
+
   return (
     <>
-      {/* the player is a window, not a margin note, so the page behind it
-          steps back — and the scrim is one more place to press to close */}
-      {playable && (
-        <div
-          className="book-panel-scrim"
-          aria-hidden="true"
-          onClick={onClose}
-        />
+      {/* the page steps back behind it, and the dimmed page is one more
+          place to press to put it away */}
+      {shown && (
+        <div className="book-panel-scrim" aria-hidden="true" onClick={onClose} />
       )}
 
       <aside
+        ref={sheetRef}
         id="book-panel"
-        className={`book-panel${open && book ? " is-open" : ""}${
-          playable ? " is-video" : ""
-        }`}
+        className={`book-panel ${isShow ? "is-show" : "is-book"}${shown ? " is-open" : ""}`}
         aria-live="polite"
-        aria-hidden={!open || !book}
+        aria-hidden={!shown}
+        aria-label={book ? book.title : undefined}
       >
         {book && (
           <div className="book-panel-inner" key={book.slug}>
-            {playable ? (
+            <div className="book-panel-top">
+              <span className="book-panel-grip" aria-hidden="true" />
+              <button
+                type="button"
+                className="round-btn book-panel-close"
+                aria-label="Close"
+                onClick={onClose}
+              >
+                <svg viewBox="0 0 16 16" aria-hidden="true">
+                  <path d="M4 4l8 8M12 4l-8 8" />
+                </svg>
+              </button>
+            </div>
+
+            {isShow ? (
               <div className="book-panel-video">
-                <iframe
-                  title={`${book.title} — trailer`}
-                  src={
-                    `${ORIGIN}/embed/${book.youtubeId}` +
-                    `?autoplay=1&mute=0&controls=1&rel=0&playsinline=1` +
-                    `&cc_load_policy=0&iv_load_policy=3&modestbranding=1`
-                  }
-                  allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-                  allowFullScreen
-                />
+                {playable ? (
+                  <iframe
+                    title={`${book.title} — trailer`}
+                    src={
+                      `${ORIGIN}/embed/${book.youtubeId}` +
+                      `?autoplay=1&mute=0&controls=1&rel=0&playsinline=1` +
+                      `&cc_load_policy=0&iv_load_policy=3&modestbranding=1`
+                    }
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <>
+                    <Image
+                      src={`/projects/${book.slug}.jpg`}
+                      alt=""
+                      fill
+                      sizes="(min-width: 640px) 50rem, 100vw"
+                      className="book-panel-poster"
+                    />
+                    {book.youtubeId && (
+                      <button
+                        type="button"
+                        className="frost-btn frost-btn--lg book-panel-play"
+                        aria-label={`Play the ${book.title} trailer`}
+                        onClick={() => setPlaying(true)}
+                      >
+                        <svg viewBox="0 0 16 16" aria-hidden="true">
+                          <path d="M5.5 3.8v8.4L12.2 8z" fill="currentColor" />
+                        </svg>
+                      </button>
+                    )}
+                  </>
+                )}
               </div>
             ) : (
               <div className="book-panel-art">
@@ -85,29 +196,25 @@ export function BookPanel({
                   alt=""
                   width={book.width}
                   height={book.height}
-                  sizes="220px"
+                  sizes="(min-width: 640px) 14rem, 8rem"
                   className="h-auto w-full"
                 />
               </div>
             )}
 
             <div className="book-panel-say">
-              <p className="meta-caps mt-6 text-faint">
-                {book.medium === "show" ? "The slate" : "The shelf"}
+              <p className="book-panel-kicker">
+                <span className="section-rule" aria-hidden="true" />
+                {isShow ? "The slate" : "The shelf"}
               </p>
-              <h3 className="display-heavy mt-2 text-h2 leading-tight text-paper">
-                {book.title}
-              </h3>
-              {book.credit && (
-                <p className="mt-2 text-cap text-mid">{book.credit}</p>
-              )}
-
-              <p className="meta-caps mt-6 text-signal">{book.proof}</p>
+              <h3 className="book-panel-title">{book.title}</h3>
+              {book.credit && <p className="book-panel-credit">{book.credit}</p>}
+              {book.proof && <p className="book-panel-proof">{book.proof}</p>}
 
               {/* a show with no embeddable trailer says where its footage is,
                   rather than pretending the still is the trailer */}
-              {book.medium === "show" && !book.youtubeId && book.trailer && (
-                <p className="mt-6">
+              {isShow && !book.youtubeId && book.trailer && (
+                <p className="mt-5">
                   <a
                     className="link meta-caps"
                     href={book.trailer}
@@ -121,19 +228,17 @@ export function BookPanel({
 
               {r && (
                 <>
-                  <p className="book-panel-summary mt-6">{r.summary}</p>
+                  <p className="book-panel-summary">{r.summary}</p>
 
-                  <dl className="book-panel-facts mt-6">
+                  <dl className="book-panel-facts">
                     {/* the line is the imprint or the network now that the
                         dates are out of it, so it is labelled as one */}
-                    <dt className="meta-caps text-faint">
-                      {book.medium === "show" ? "Network" : "Publisher"}
-                    </dt>
-                    <dd className="mt-1 text-cap text-mid">{r.carrier}</dd>
+                    <dt>{isShow ? "Network" : "Publisher"}</dt>
+                    <dd>{r.carrier}</dd>
                     {r.award && (
                       <>
-                        <dt className="meta-caps mt-4 text-faint">Award</dt>
-                        <dd className="mt-1 text-cap text-mid">{r.award}</dd>
+                        <dt>Award</dt>
+                        <dd>{r.award}</dd>
                       </>
                     )}
                     {/* A title he has no established role on says nothing
@@ -143,8 +248,8 @@ export function BookPanel({
                         role prints nothing at all rather than a hedge. */}
                     {r.role && (
                       <>
-                        <dt className="meta-caps mt-4 text-faint">{founder}</dt>
-                        <dd className="mt-1 text-cap text-mid">{r.role}</dd>
+                        <dt>{founder}</dt>
+                        <dd>{r.role}</dd>
                       </>
                     )}
                   </dl>
@@ -156,14 +261,6 @@ export function BookPanel({
                   No write-up for this title yet — see content/research.json.
                 </p>
               )}
-
-              <button
-                type="button"
-                className="btn meta-caps mt-8 book-panel-close"
-                onClick={onClose}
-              >
-                Close
-              </button>
             </div>
           </div>
         )}

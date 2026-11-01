@@ -1,0 +1,14 @@
+# majorcontent.com is the site (RG, 2026-10-20: "I will be using that URL").
+# The old domain forwards to it, path and all, once it is added to this
+# Netlify site as a domain alias.
+[[redirects]]
+  from = "https://majortvproductions.com/*"
+  to = "https://www.majorcontent.com/:splat"
+  status = 301
+  force = true
+
+[[redirects]]
+  from = "https://www.majortvproductions.com/*"
+  to = "https://www.majorcontent.com/:splat"
+  status = 301
+  force = true

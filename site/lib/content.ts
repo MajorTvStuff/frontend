@@ -26,7 +26,8 @@ const Project = z.object({
   title: z.string(),
   credit: z.string().nullable(),
   medium: z.enum(["show", "book"]),
-  proof: z.string(),
+  /** null where he gave a title no proof line — we never write one for him */
+  proof: z.string().nullable(),
   trailer: z.string().nullable(),
 });
 
@@ -59,6 +60,8 @@ const Site = z.object({
     note: z.string(),
     entity: z.string(),
     jurisdiction: z.string(),
+    /** the year the company was founded — "EST. 2016" in every footer */
+    established: z.string(),
   }),
   icons: z.array(z.string()).optional(),
 });
@@ -77,7 +80,7 @@ const Research = z.object({
   confirm: z.string().nullable(),
   onSite: z.boolean(),
   needs: z.array(z.string()),
-  /** the six that have no tile yet also carry their own title and credit */
+  /** the titles that have no tile yet also carry their own title and credit */
   title: z.string().optional(),
   credit: z.string().optional(),
   medium: z.enum(["show", "book"]).optional(),

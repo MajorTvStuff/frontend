@@ -1,0 +1,3 @@
+# majorcontent.com is the site; the old domain forwards to it
+https://majortvproductions.com/*      https://www.majorcontent.com/:splat  301!
+https://www.majortvproductions.com/*  https://www.majorcontent.com/:splat  301!

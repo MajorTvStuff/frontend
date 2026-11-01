@@ -1,4 +1,3 @@
-import { Mark } from "@/components/Mark";
 import { Reveal } from "@/components/Reveal";
 
 /**
@@ -16,12 +15,16 @@ import { Reveal } from "@/components/Reveal";
  * TV | FILM and BOOKS are a PAIR in his layout — two labelled columns side
  * by side, not two stops one after the other. SectionPair puts them there,
  * and below 900px they stack, which is the only thing a phone can do.
+ *
+ * THE LABEL, from his final mockup: a short red line where the small M used
+ * to stand, the name larger and in his card font, light and widely spaced,
+ * and a hairline under it that fades out to the right.
  */
 
 function Head({ label }: { label: string }) {
   return (
-    <h2 className="section-label meta-caps reveal">
-      <Mark className="section-mark" />
+    <h2 className="section-label reveal">
+      <span className="section-rule" aria-hidden="true" />
       <span>{label}</span>
     </h2>
   );

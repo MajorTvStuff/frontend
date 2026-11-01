@@ -1,5 +1,5 @@
 {
-  "note": "All copy verbatim from MAJOR CONTENT_Copy.docx (received 2026-08-17). Do not edit wording here without RG sign-off.",
+  "note": "All copy verbatim from MAJOR CONTENT_Copy.docx (received 2026-08-17). Do not edit wording here without RG sign-off. His literary-representation line added to founder.bio[1] 2026-10-21/22.",
   "name": "MAJOR CONTENT",
   "domain": "https://www.majorcontent.com",
   "verticals": "TV | FILM | BOOKS",
@@ -18,23 +18,22 @@
   ],
   "tvFilm": {
     "label": "TV | FILM",
-    "body": "Major Content develops and produces scripted and unscripted series, features, and documentaries, with credits spanning premium cable, broadcast, and streaming platforms. Several of its projects are inspired by or adapted from bestselling books, drawing directly on the synergy between publishing and production to build marquee IP-driven properties."
+    "body": "Major Content develops and produces scripted and unscripted series, features, and documentaries, with credits spanning premium cable, broadcast, and streaming platforms. Several of its projects are inspired by or adapted from bestselling books, drawing directly on the synergy between publishing and production to build marquee properties."
   },
   "books": {
     "label": "BOOKS",
-    "body": "Major Content represents adult non-fiction and children's fiction by industry-leading, platform-driven, and celebrity authors, whose stories have the potential of becoming compelling television. Major Content brings a proven editorial and marketing sensibility to pair luminary authors with today's top publishing houses."
+    "body": "Major Content represents adult non-fiction and children's fiction by industry-leading and celebrity authors, whose stories have the potential of becoming compelling television. Major Content brings a proven editorial and marketing sensibility to pair luminary authors with today's top publishing houses."
   },
   "founder": {
     "name": "Raymond Garcia",
     "role": "Founder & CEO",
     "bio": [
-      "Raymond Garcia is the founder and CEO of Major Content, under which he has Executive Produced shows such as HULU's Emmy Award-winning DRIVE with SWIZZ BEATZ, OWN's and HBO MAX's TIME OF ESSENCE, DISCOVERY+'s and HBO MAX's REMIX MY SPACE with Marsai Martin, and VH1's RICKY MARTIN: BEHIND VEGAS RESIDENCY, and also served as literary representation for New York Times Bestsellers authors, such as Marco Borges, THE GREENPRINT and Emme Muñiz, LORD HELP ME.",
-      "Previously, Garcia was the Publisher and founder of Celebra | Penguin Random House, a premier celebrity imprint publishing adult nonfiction and children's fiction titles, primarily by mainstream Hispanic authors in both English and Spanish. Celebra's mission was to fully maximize the potential of every book worldwide with its distinctive approach of leveraging the multifaceted global platforms of its authors to reach a mass audience.",
-      "Home to a variety of International and New York Times Bestsellers, Celebra published acclaimed authors, including Jennifer Lopez, Ricky Martin, Emilio and Gloria Estefan, Mario Lopez, Victor Cruz, Rita Moreno, La La Anthony, Thalía, Tommy Mottola, Angie Martinez, George Lopez, Pelé, Juanes, Marco Borges, Adamari Lopez, Colombian President Álvaro Uribe, Soledad O'Brien, and Ednita Nazario, among many others.",
-      "Prior to starting Celebra, Garcia was the Associate Publisher and Marketing Director of Rayo | HarperCollins, which published revered authors including Isabel Allende, Paulo Coelho, and Gloria Estefan with her New York Times Bestselling children's book.",
-      "Prior to HarperCollins, Garcia was the Founder and President of REG | Strategic Innovations, a fully integrated branding and design firm based out of New Jersey and Florida, helping to bring Hispanic brands to Mainstream markets and Mainstream brands to Hispanic markets. His most notable achievements were developing the first interactive multicultural campaign with TIME Inc and growing the Celia Cruz license into a perennial International property."
+      "Raymond Garcia is the Founder and CEO of Major Content, drawing on a distinguished track record across premium television, publishing, and global brands.",
+      "As Executive Producer, Garcia's credits include the Emmy Award-winning Drive with Swizz Beatz (Hulu), Time of Essence (OWN/HBO Max), Remix My Space with Marsai Martin (HBO Max), and Ricky Martin: Behind the Vegas Residency (Paramount). Literary representation includes New York Times bestselling authors Marco Borges (The Greenprint, foreword by Jay-Z and Beyoncé) and Emme Muñiz (Lord Help Me).",
+      "Garcia previously founded and served as Publisher of Celebra at Penguin Random House, establishing a premier celebrity publishing imprint with an extensive list of New York Times and international bestselling authors, including Jennifer Lopez, Ricky Martin, Gloria and Emilio Estefan, Rita Moreno, La La Anthony, Mario Lopez, Victor Cruz, Pelé, Thalía, Tommy Mottola, Angie Martinez, George Lopez, and Juanes, among many others.",
+      "Earlier, Garcia served as Associate Publisher and Marketing Director of Rayo at HarperCollins and founded REG Brands, whose work included pioneering multicultural marketing campaigns with TIME Inc. and expanding the Celia Cruz brand into an international licensing property."
     ],
-    "recognition": "Garcia was also notably named one of People en Español's 50 Most Influential Hispanics – one of only three figures in business and the only representative in book publishing.",
+    "recognition": "Garcia was named one of People en Español's 50 Most Influential Hispanics—one of only three honorees from the business sector and the sole representative from book publishing.",
     "careerLine": "Founder and Publisher of Celebra | Penguin Random House. Associate Publisher and Marketing Director of Rayo | HarperCollins. Executive Producer across Hulu, OWN, HBO Max, Discovery+, and VH1."
   },
   "positioning": {
@@ -49,7 +48,8 @@
   "legal": {
     "note": "Supplied by the client 2026-09-07. The legal entity behind the MAJOR CONTENT brand; used by the terms, privacy and copyright notices.",
     "entity": "Major TV, Inc.",
-    "jurisdiction": "New Jersey"
+    "jurisdiction": "New Jersey",
+    "established": "2016"
   },
   "icons": [
     "Jennifer Lopez",

@@ -39,6 +39,9 @@
   --color-band: #151515; /* the one tonal break, now a tonal one */
   --color-signal: #ffffff; /* there is no accent in his build: white */
   --color-red: #a22d32; /* the M's wings */
+  /* his final mockup's red (sampled, 184/39/13): the dash before every
+     section label, the rule beside key copy, the carousel's progress */
+  --color-rule: #b8270d;
   --color-silver: #b7b7b7;
 
   --font-ui: var(--font-grotesk), Arial, sans-serif;
@@ -597,127 +600,192 @@
 }
 
 /* ------------------------------------------------------------------ *
- *  THE OPENING BANNER — copied from the client's own build.
+ *  THE ENTRY — his reel, the FINAL cut on a computer and the MOBILE cut
+ *  on a phone. See components/HeroBanner.tsx.
  *
- *  Every number below is his: the gradient and its angle, the scrim, the
- *  0.9s fades and 1.4s holds of the line sequence, and the logo's four
- *  movements at 0s / 0.45s / 1.9s / 2.9s / 4.9s. See components/HeroBanner.
+ *  The film is shown whole, as large as the banner allows at its own
+ *  16:9. It is sized in the banner's container units, so it fits the
+ *  banner's box rather than the window's — the two differ by the
+ *  scrollbar, and under the 560px floor.
+ *
+ *  THE GROUND IS HIS. Sampled down every card and the end frame, at both
+ *  edges and the centre, it is one vertical gradient: black at the top
+ *  and bottom edges, navy (2,7,24) through the middle. So the banner is
+ *  black — what meets the film above and below it on a phone — and a band
+ *  of that same gradient, the film's own height, runs behind it from edge
+ *  to edge, filling both sides on a screen wider than 16:9. Through the
+ *  cards and the logo the frame's edge does not show anywhere.
  * ------------------------------------------------------------------ */
 .hero-banner {
   position: relative;
   height: 100svh;
   min-height: 560px;
   width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   overflow: hidden;
   background: #000;
+  container-type: size;
 }
-.hero-bg {
+.hero-film-ground,
+.hero-film {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  /* without container units: the whole banner, the film letterboxed in it */
+  width: 100%;
+  height: 100%;
+  height: min(100cqh, 56.25cqw);
 }
-/* HIS GRADIENT, exactly */
-.hero-bg .navy-panel {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(150deg, #030c17 0%, #0a2038 60%, #0d2740 100%);
-}
-.hero-scrim {
-  position: absolute;
-  inset: 0;
+/* the film's ground as the browser paints it — read off the frame's edge in
+   Chrome every 2.5% (WebM and MP4 paint it alike), the two mirrored halves
+   averaged. Taken from the file instead, the stops came out 1-3 levels
+   dark: enough to draw a faint box round the film on a wide screen.
+   RE-READ 2026-10-21 for his 1080p master, whose ground is darker and
+   bluer than the cut before it (2,7,24 at the middle, not 5,15,27): the
+   old stops drew a lighter box round the new film. A new cut means a new
+   reading — scratchpad ground-calibrate.js. */
+.hero-film-ground {
   background: linear-gradient(
     180deg,
-    rgba(0, 0, 0, 0.55) 0%,
-    rgba(0, 0, 0, 0.35) 40%,
-    rgba(10, 10, 10, 0.94) 100%
+    #000002 0%,
+    #000002 5%,
+    #000004 7.5%,
+    #000004 12.5%,
+    #000006 15%,
+    #000006 17.5%,
+    #000008 20%,
+    #000009 22.5%,
+    #00010c 25%,
+    #00020d 27.5%,
+    #00020e 30%,
+    #000310 32.5%,
+    #000311 35%,
+    #010613 37.5%,
+    #020714 40%,
+    #020717 42.5%,
+    #020718 45%,
+    #020718 55%,
+    #020717 57.5%,
+    #020714 60%,
+    #010613 62.5%,
+    #000311 65%,
+    #000310 67.5%,
+    #00020e 70%,
+    #00020d 72.5%,
+    #00010c 75%,
+    #000009 77.5%,
+    #000008 80%,
+    #000006 82.5%,
+    #000006 85%,
+    #000004 87.5%,
+    #000004 92.5%,
+    #000002 95%,
+    #000002 100%
   );
 }
-.hero-inner {
-  /* no z-index: it paints over the ground by source order already, and a
-     z-index would make it a stacking context of its own — the film's screen
-     blend would then only see this transparent layer, and its black would
-     show as a box instead of dropping out against the gradient */
-  position: relative;
-  text-align: center;
-  padding: 0 24px;
-}
-
-/* the sequence: one line fully gone before the next appears */
-.hero-sequence {
-  min-height: 2.4em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-.hero-sequence span {
-  font-family: var(--font-poppins), var(--font-ui);
-  font-weight: 300;
-  font-size: clamp(14px, 2.2vw, 20px);
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-  color: var(--color-mid);
-  opacity: 0;
-  transition: opacity 0.9s ease;
-}
-.hero-sequence span.is-shown {
-  opacity: 1;
-}
-
-/* THE LOGO FILM — his own animation, on black, dropped out against the
-   gradient by a screen blend. 1120x468 is the box everything in his edit
-   ever lights up, cut from the 4K source with margin, so nothing in it is
-   cropped and it stays sharp at twice the size it is shown. */
 .hero-film {
-  width: min(78vw, 520px);
-  aspect-ratio: 1120 / 468;
-  margin: 0 auto;
-  mix-blend-mode: screen;
+  width: min(100cqw, calc(100cqh * 16 / 9));
   opacity: 0;
-  transition: opacity 0.5s ease;
+  transition: opacity 0.4s ease;
 }
 .hero-film.is-shown {
   opacity: 1;
 }
-.hero-film video,
-.hero-film img {
+.hero-film video {
   display: block;
   width: 100%;
   height: 100%;
+  object-fit: contain;
 }
 
-@keyframes subIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
+/* sound and replay: small, in the bottom-right corner, over the film */
+.hero-film {
+  cursor: pointer;
+}
+.hero-controls {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 2;
+}
+/* a phone: the film is a strip mid-screen, so the controls sit just under
+   it, centred, and leave the foot of the screen to the scroll cue */
+@media (max-width: 639px) {
+  .hero-controls {
+    top: calc(50% + 28.125cqw + 14px);
+    bottom: auto;
+    left: 0;
+    right: 0;
+    justify-content: center;
   }
 }
-
-.hero-sub-line {
-  margin-top: 22px;
+/* LIGHTER, at his word (2026-10-21): his card font, light, smaller than the
+   film's own card type, a fainter outline, the pill about a fifth smaller —
+   and still a 44px target, which the ::before carries */
+.hero-control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-height: 1.8rem;
+  padding: 0 0.85rem;
   font-family: var(--font-poppins), var(--font-ui);
   font-weight: 300;
-  font-size: clamp(13px, 1.8vw, 17px);
-  letter-spacing: 0.34em;
+  font-size: 0.625rem;
+  letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: var(--color-mid);
-  opacity: 0;
-  transition: opacity 0.9s ease;
-  text-align: center;
+  color: var(--color-paper);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  cursor: pointer;
+  transition:
+    background-color 160ms linear,
+    border-color 160ms linear,
+    color 160ms linear;
 }
-.hero-sub-line.is-shown {
-  opacity: 1;
+.hero-control::before {
+  content: "";
+  position: absolute;
+  inset: calc((1.8rem - 44px) / 2) -4px;
+}
+.hero-control svg {
+  width: 12px;
+  height: 12px;
+}
+/* tap or hover: it fills white and the type turns dark */
+@media (hover: hover) {
+  .hero-control:hover {
+    background: var(--color-paper);
+    border-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}
+.hero-control:active {
+  background: var(--color-paper);
+  border-color: var(--color-paper);
+  color: var(--color-ink);
+}
+.hero-control:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
 }
 
+/* low and small: on a wide screen the film runs to the banner's foot, and
+   its burned-in captions sit just above this */
 .hero-scroll {
   position: absolute;
-  bottom: 30px;
-  left: 50%;
-  transform: translateX(-50%);
+  bottom: 16px;
+  inset-inline: 0;
+  width: max-content;
+  margin-inline: auto;
+  /* the same light, wide grey caps as the carousel's caption (.caption-caps) */
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
   font-size: 10px;
   letter-spacing: 0.3em;
   color: var(--color-faint);
@@ -732,7 +800,7 @@
 .hero-scroll::after {
   content: "";
   width: 1px;
-  height: 26px;
+  height: 18px;
   background: var(--color-faint);
 }
 @keyframes settle {
@@ -748,14 +816,16 @@
 /* asked for less motion: the banner is simply there, at rest */
 @media (prefers-reduced-motion: reduce) {
   .hero-film,
-  .hero-sub-line,
   .hero-scroll {
     opacity: 1;
     animation: none;
     transition: none;
   }
-  .hero-scroll {
-    transform: translateX(-50%);
+}
+/* no JavaScript: nothing will start the film, so its still is the banner */
+@media (scripting: none) {
+  .hero-film {
+    opacity: 1;
   }
 }
 
@@ -1060,79 +1130,6 @@
 }
 
 /* ------------------------------------------------------------------ *
- *  THE VARIANT SWITCH — a reviewing tool, and it should look like one.
- *
- *  Two versions of the page exist while the direction is settled. This
- *  pins to the bottom of the viewport on both so they can be flipped
- *  between in front of the client. It is deliberately not styled as
- *  navigation: when the decision is made it goes, along with the
- *  /image-led route and the components only that route still uses.
- * ------------------------------------------------------------------ */
-.variant-switch {
-  position: fixed;
-  z-index: 90;
-  /* off the centre line: the hero's scroll cue and the claim both sit
-     there, and a review control should never cover the work */
-  right: 1rem;
-  bottom: 1rem;
-  display: flex;
-  align-items: stretch;
-  gap: 1px;
-  padding: 1px;
-  background: var(--color-line);
-  border: 1px solid var(--color-line);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  max-width: calc(100vw - 2rem);
-}
-.variant-switch-tag {
-  display: flex;
-  align-items: center;
-  padding: 0.5rem 0.7rem;
-  background: rgba(0, 0, 0, 0.92);
-  color: var(--color-faint);
-}
-.variant-switch-link {
-  display: flex;
-  flex-direction: column;
-  gap: 0.15rem;
-  padding: 0.45rem 0.85rem;
-  background: rgba(0, 0, 0, 0.92);
-  color: var(--color-mid);
-  text-decoration: none;
-  transition:
-    color 160ms linear,
-    background-color 160ms linear;
-}
-.variant-switch-link:hover {
-  color: var(--color-paper);
-}
-.variant-switch-link[data-here] {
-  background: var(--color-paper);
-  color: var(--color-ink);
-}
-.variant-switch-note {
-  font-size: 0.5625rem;
-  letter-spacing: 0.1em;
-  opacity: 0.7;
-  font-weight: 500;
-}
-/* the copy-led page ends in a footer the switch would sit on; give both
-   variants room to finish underneath it */
-.page-footer,
-main > footer {
-  padding-bottom: clamp(5rem, 8vw, 7rem);
-}
-@media (max-width: 480px) {
-  /* it stays a compact bottom-right pill: the base rule deliberately keeps
-     it off the centre line, and stretching it full width put it straight
-     back over the scroll cue and the beta watermark */
-  .variant-switch-tag {
-    display: none;
-  }
-}
-
-/* ------------------------------------------------------------------ *
  *  THE COPY-LED PAGE
  *
  *  The client's structure, on an editorial grid.
@@ -1203,27 +1200,39 @@ main > footer {
      his opening line and not one fewer — at 72ch ours broke that sentence
      across five lines where his takes four. */
   max-width: 93ch;
-  margin-top: 2rem;
+  margin-top: 1.4rem;
 }
 /* inside a pair the column IS the measure */
 .section-col .section-body {
   max-width: none;
 }
+/* HIS FINAL MOCKUP'S LABEL: a red dash (18 x 1 at phone size), the name in
+   his card font — light, wide, about 17px on a phone and growing to 24px —
+   and under it a hairline that fades out to the right */
 .section-label {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  /* white in his build, not grey: it is the only thing above the copy, and
-     a size up from our 11px meta with it */
-  font-size: var(--text-strip);
-  letter-spacing: 0.18em;
+  gap: 0.9rem;
+  padding-bottom: 1.25rem;
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
+  font-size: clamp(1.0625rem, 0.85rem + 0.8vw, 1.5rem);
+  line-height: 1.2;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
   color: var(--color-paper);
+  background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.16),
+      rgba(255, 255, 255, 0) 72%
+    )
+    left bottom / 100% 1px no-repeat;
 }
-.section-mark {
-  width: 0.95rem;
-  height: auto;
+.section-rule {
+  width: 1.15rem;
+  height: 1px;
   flex: none;
-  color: var(--color-paper);
+  background: var(--color-rule);
 }
 
 /* the one paragraph that carries a section, at the one step of scale the
@@ -1236,8 +1245,12 @@ main > footer {
   font-size: var(--text-read);
   line-height: 1.8;
   font-weight: 400;
-  color: var(--color-paper);
+  color: var(--color-mid);
   text-wrap: pretty;
+}
+/* the opening clause, lit as his final mockup lights it */
+.lede-key {
+  color: var(--color-paper);
 }
 .body-copy {
   /* his rhythm: a 40px line gap and 73px between paragraphs */
@@ -1247,28 +1260,68 @@ main > footer {
   color: var(--color-mid);
   text-wrap: pretty;
 }
-
-/* His name as he sets it: a heading in sentence case at a little over the
-   reading size, not a wall of 800-weight caps. */
-.founder-name {
-  font-size: clamp(1.5rem, 1.2rem + 0.9vw, 1.9rem);
+/* a sentence he asked for in bold — the literary-representation line in his
+   bio. The grotesk is variable, so this is the face's own 600, not a weight
+   the browser smears on. */
+.copy-bold {
   font-weight: 600;
-  letter-spacing: -0.01em;
-  line-height: 1.15;
   color: var(--color-paper);
 }
-.founder-name + .lede {
+
+/* HIS PORTRAIT AND NAME, as his final mockup sets them: the photo at 4:5,
+   and beside it, sitting on its bottom edge, the name and the role in his
+   card font — light, spaced caps, the role a step down and faint */
+.founder-card {
+  display: flex;
+  align-items: flex-end;
+  gap: clamp(1rem, 3vw, 1.75rem);
+}
+.founder-photo {
+  flex: none;
+  width: clamp(118px, 30vw, 220px);
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  /* a hairline so the edge of the photo's dark ground reads as intended */
+  border: 1px solid #242529;
+}
+/* the legal pages' title: the section label, a size up */
+.legal-title {
+  font-size: clamp(1.25rem, 1rem + 1vw, 1.75rem);
+}
+.founder-id {
+  padding-bottom: 0.35rem;
+}
+.founder-name {
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
+  font-size: clamp(0.9375rem, 0.78rem + 0.65vw, 1.375rem);
+  line-height: 1.3;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-paper);
+}
+.founder-role {
+  margin-top: 0.7rem;
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 400;
+  font-size: clamp(0.5625rem, 0.5rem + 0.25vw, 0.75rem);
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+.founder-card + .body-copy {
   margin-top: 1.75rem;
 }
 
-/* the citation, marked as the aside it is */
+/* KEY COPY: the line set off by his red rule */
 .recognition {
   margin-top: 2.8rem;
-  padding-left: 1.25rem;
-  border-left: 2px solid rgba(255, 255, 255, 0.3);
+  padding-left: 1rem;
+  border-left: 1px solid var(--color-rule);
   font-size: var(--text-read);
   line-height: 1.7;
-  font-weight: 600;
+  font-weight: 400;
   color: var(--color-paper);
 }
 
@@ -1376,14 +1429,28 @@ main > footer {
 }
 
 /* ------------------------------------------------------------------ *
- *  THE BAND — one row, everything in it, drifting.
+ *  THE BAND — one row, everything in it, stepped through.
  *
- *  Full-height 16:9 tiles for the shows, books half height in pairs. The
- *  page holds still and the row moves, so the work is continuously present
- *  without ever being the thing you are reading. One CSS animation, no
- *  script: the sequence is rendered twice and the track travels exactly
- *  half its width, so the loop closes on itself.
+ *  Full-height tiles for the shows, books half height in pairs. It holds
+ *  still now, as his final mockup has it: the row scrolls and snaps to a
+ *  tile's edge, the first tile starts on the text column's left edge and the
+ *  row runs off the right one, and under it sit the arrows, the red
+ *  progress line and the count.
  * ------------------------------------------------------------------ */
+/* the inset is the page's own gutter, so the row starts where the copy does */
+.page-section--band {
+  --band-inset: 1.25rem;
+}
+@media (min-width: 640px) {
+  .page-section--band {
+    --band-inset: 2rem;
+  }
+}
+@media (min-width: 900px) {
+  .page-section--band {
+    --band-inset: min(9vw, 8rem);
+  }
+}
 .band {
   /* Sized by the BOOK grid. A paired jacket used to come out 63-78px wide
      against a 370px show tile - a 5.9x range in one row, and eighteen of the
@@ -1392,40 +1459,33 @@ main > footer {
      for that to work. */
   --band-h: clamp(240px, 20vw, 288px);
   --band-gap: clamp(0.6rem, 1.4vw, 1.1rem);
-  --band-fade: calc(var(--band-h) * 0.45);
-  padding-inline: var(--band-gap);
-  /* A ROW YOU CAN WORK. It drifts on its own, but it is also a scroll
-     container at every width, so a finger, a trackpad, a dragged mouse or
-     the arrow keys can go through all 24 at any pace. Everything about the
-     drift is written so that the visitor outranks it. */
+  padding-inline: var(--band-inset);
+  /* room above and below for a tile lifting to 1.02 under a hover or tap */
+  padding-block: 0.6rem;
   overflow-x: auto;
   overflow-y: hidden;
+  /* NONE, not contain. Contain only kept the page from scrolling along with
+     the row; the row itself still bounced (iPhone) or stretched (Android)
+     past its first and last tiles, which the client saw as scrolling back
+     "into the negatives" before 01. None stops it dead at both ends: on iOS
+     WebKit makes it the native scroll view's own no-bounce. */
+  overscroll-behavior-x: none;
+  scroll-snap-type: x mandatory;
+  scroll-padding-inline: var(--band-inset);
   cursor: grab;
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-line) transparent;
-  /* the row fades out at both edges rather than being cut by them */
-  /* the ramp scales with the cells, not with the viewport */
-  mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 var(--band-fade),
-    #000 calc(100% - var(--band-fade)),
-    transparent
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent,
-    #000 var(--band-fade),
-    #000 calc(100% - var(--band-fade)),
-    transparent
-  );
+  /* the arrows and the count say where you are; the bar would only repeat it */
+  scrollbar-width: none;
+}
+.band::-webkit-scrollbar {
+  display: none;
 }
 /* On a phone the height is decided by WIDTH: a 16:9 show tile at 240px is
    427px across, wider than the screen it is on, so no whole tile is ever
-   visible. The row is sized so one fits, and the books stack to match. */
+   visible. The row is sized so one fits between the gutters, and the books
+   stack to match. */
 @media (max-width: 639px) {
   .band {
-    --band-h: calc((100vw - 2.25rem) * 0.5625);
+    --band-h: calc((100vw - 2 * var(--band-inset)) * 0.5625);
   }
 }
 .band:focus-visible {
@@ -1443,31 +1503,13 @@ main > footer {
 }
 .band-track {
   display: flex;
-  width: max-content;
-  animation: band-drift 96s linear infinite;
-}
-.band-run {
-  display: flex;
   gap: var(--band-gap);
-  padding-right: var(--band-gap);
-}
-/* look at it and it waits for you — and so does working it: [data-held] is
-   set for six seconds after a scroll, a drag or a tap, so a scrubbed row
-   does not snatch itself back the instant a finger lifts, and an open
-   write-up holds it still for as long as it is open */
-.band:hover .band-track,
-.band:focus-within .band-track,
-.band[data-held] .band-track {
-  animation-play-state: paused;
-}
-@keyframes band-drift {
-  to {
-    transform: translateX(-50%);
-  }
+  width: max-content;
 }
 .band-cell {
   height: var(--band-h);
   flex: none;
+  scroll-snap-align: start;
 }
 .band-cell--show {
   display: flex;
@@ -1489,6 +1531,98 @@ main > footer {
 .band-hit:focus-visible {
   outline: 2px solid var(--color-signal);
   outline-offset: 3px;
+}
+/* HIS NOTES OF 2026-10-21: every tile says it can be pressed — a frosted
+   button in its bottom-right corner (play on a show, + on a book, a smaller
+   + on a stacked one) — and a hover or a tap lifts it to 1.02, brightens it,
+   and fills the button white */
+.band-hit {
+  transition: transform 220ms var(--ease-out-strong);
+}
+.band-hit img {
+  transition: filter 220ms linear;
+}
+.band-cue {
+  position: absolute;
+  right: 0.6rem;
+  bottom: 0.6rem;
+  pointer-events: none;
+}
+.band-cell--pair .band-cue {
+  right: 0.4rem;
+  bottom: 0.4rem;
+}
+@media (hover: hover) {
+  .band-hit:hover {
+    transform: scale(1.02);
+  }
+  .band-hit:hover img {
+    filter: brightness(1.08);
+  }
+  .band-hit:hover .band-cue {
+    background: var(--color-paper);
+    border-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}
+.band-hit:active,
+.band-hit:focus-visible {
+  transform: scale(1.02);
+}
+.band-hit:active img,
+.band-hit:focus-visible img {
+  filter: brightness(1.08);
+}
+.band-hit:active .band-cue,
+.band-hit:focus-visible .band-cue,
+.band-hit[data-pressed] .band-cue {
+  background: var(--color-paper);
+  border-color: var(--color-paper);
+  color: var(--color-ink);
+}
+/* one soft pulse on the first tile, the first time the row is seen */
+.band-cue.is-pulse {
+  animation: cue-pulse 1.8s var(--ease-out-strong) 1;
+}
+@keyframes cue-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.45);
+  }
+  35% {
+    transform: scale(1.14);
+  }
+  100% {
+    box-shadow: 0 0 0 16px rgba(255, 255, 255, 0);
+    transform: scale(1);
+  }
+}
+/* the caption over the row, in the hero's SCROLL style: "tap" on a touch
+   screen, "select" with a mouse */
+.band-hint {
+  margin: 0 0 1rem;
+  padding-inline: var(--band-inset);
+}
+.band-hint-fine {
+  display: none;
+}
+@media (hover: hover) and (pointer: fine) {
+  .band-hint-touch {
+    display: none;
+  }
+  .band-hint-fine {
+    display: inline;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .band-hit,
+  .band-hit:hover,
+  .band-hit:active,
+  .band-hit:focus-visible {
+    transform: none;
+  }
+  .band-cue.is-pulse {
+    animation: none;
+  }
 }
 /* the pressed tile keeps a standing marker, like a pressed jacket does */
 .band-hit[data-pressed]::after {
@@ -1522,18 +1656,56 @@ main > footer {
    46px jacket — smaller than the title printed on it. The row's floor is
    240px now, so a stacked jacket is about 115px and legible, and "grids on
    the books" survives at the width the client reviews on. */
-/* A phone used to be excluded from the drift, on the reasoning that it
-   could not hover and so could never stop the row. It can now: a touch sets
-   [data-held]. And the drift is the one moving part in the client's own
-   recording, which he made on a phone — so it runs there too, and only a
-   stated preference for less motion stops it. */
+
+/* under the row, as his mockup has it: two round arrows, the progress line
+   with its red segment, and the count */
+.band-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1.5rem;
+  padding-inline: var(--band-inset);
+}
+/* the arrows are .round-btn: the same light outline as the panel's close */
+.band-progress {
+  position: relative;
+  flex: 1;
+  max-width: 34rem;
+  height: 1px;
+  margin-inline: 0.4rem;
+  background: rgba(255, 255, 255, 0.16);
+}
+.band-progress i {
+  position: absolute;
+  left: 0;
+  top: -0.5px;
+  height: 2px;
+  background: var(--color-rule);
+  transition:
+    transform 320ms var(--ease-out-strong),
+    width 320ms var(--ease-out-strong);
+}
+.band-count {
+  flex: none;
+  margin-left: 0.25rem;
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
+  font-size: 0.8125rem;
+  letter-spacing: 0.2em;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-faint);
+  /* hidden until the row is measured, so it never shows a guess */
+  visibility: hidden;
+}
+.band-count[data-measured] {
+  visibility: visible;
+}
+.band-count span {
+  color: var(--color-paper);
+}
 @media (prefers-reduced-motion: reduce) {
-  .band-track {
-    animation: none;
-  }
-  /* the duplicate run is decorative; with no drift it is just repetition */
-  .band-run[aria-hidden="true"] {
-    display: none;
+  .band-progress i {
+    transition: none;
   }
 }
 
@@ -1825,42 +1997,48 @@ main > footer {
   }
 }
 
-/* ---------- the book panel ---------- */
+/* ---------- the write-up panel ---------- */
 /*
- * Slides in from the right when a jacket is hovered, focused or tapped, and
- * stays while the reader moves along the shelf — the contents swap rather
- * than the panel flying out and back in over every gap.
- *
- * It carries no synopsis on purpose: the content files hold a title, an
- * author and a proof line, and writing plot summaries for twenty real books
- * would be inventing facts about other people's work.
+ * A window over the dimmed page on a desktop, a sheet up from the bottom on
+ * a phone — for a show and a book alike, as his notes of 2026-10-21 have
+ * it. A show's key art fills the top with a frosted play button on it; a
+ * book stands its jacket beside the text (above it, on a phone). The way out
+ * is the round "×", a tap off it, a swipe down, or Escape.
  */
-/* The panel floats OVER the shelf it describes, and the right-hand covers
-   sit underneath it. Left interactive it swallowed their clicks — the two
-   at the end of the first row were unreachable once a book was open.
-   So the panel itself is transparent to the pointer and only its own
-   control takes events. */
-.book-panel {
-  pointer-events: none;
+.book-panel-scrim {
   position: fixed;
-  top: 50%;
-  right: 0;
+  inset: 0;
+  z-index: 44;
+  background: rgba(0, 0, 0, 0.72);
+  animation: scrim-in 260ms linear both;
+}
+@keyframes scrim-in {
+  from {
+    opacity: 0;
+  }
+}
+.book-panel {
+  position: fixed;
   z-index: 45;
-  width: min(22rem, 84vw);
-  padding: 2rem 1.75rem 1.75rem;
-  background: color-mix(in oklab, var(--color-panel) 92%, black);
-  border-left: 1px solid var(--color-line);
-  box-shadow: -30px 0 60px rgba(0, 0, 0, 0.55);
-  transform: translate(100%, -50%);
+  top: 50%;
+  left: 50%;
+  width: min(50rem, 92vw);
+  max-height: 88svh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: #0d0e10;
+  border: 1px solid var(--color-line);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.6);
+  transform: translate(-50%, -48%) scale(0.98);
   opacity: 0;
   visibility: hidden;
   transition:
     transform 420ms var(--ease-out-strong),
-    opacity 260ms linear,
+    opacity 220ms linear,
     visibility 0s linear 420ms;
 }
 .book-panel.is-open {
-  transform: translate(0, -50%);
+  transform: translate(-50%, -50%) scale(1);
   opacity: 1;
   visibility: visible;
   transition:
@@ -1868,7 +2046,7 @@ main > footer {
     opacity 200ms linear,
     visibility 0s;
 }
-/* the contents cross-fade as the reader moves from jacket to jacket */
+/* the contents cross-fade as the visitor moves from title to title */
 .book-panel-inner {
   animation: panel-swap 260ms var(--ease-out-strong) both;
 }
@@ -1878,78 +2056,31 @@ main > footer {
     transform: translateY(6px);
   }
 }
-.book-panel .btn {
-  pointer-events: auto;
+/* a book's window: the jacket beside the write-up */
+.book-panel.is-book {
+  width: min(46rem, 92vw);
 }
-.book-panel-art {
-  width: 8.5rem;
-  box-shadow: inset 0 0 0 1px var(--color-line);
-  filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.6));
+.book-panel.is-book .book-panel-inner {
+  display: grid;
+  grid-template-columns: 13rem minmax(0, 1fr);
+  column-gap: 2rem;
+  padding: 0 2rem 2rem;
 }
-/* the write-up: the one long-form passage in the panel, so it gets the
-   reading measure and the line height the rest of the chrome does not */
-.book-panel-summary {
-  font-size: var(--text-about);
-  line-height: var(--text-about--line-height);
-  color: var(--color-paper);
-  max-width: 44ch;
+.book-panel.is-book .book-panel-top {
+  grid-column: 1 / -1;
+  margin-inline: -2rem;
 }
-/* publisher, year and RG's role — a definition list, because that is what it
-   is: a short column of facts, each with its own label */
-.book-panel-facts {
-  border-top: 1px solid var(--color-line);
-  padding-top: 1rem;
+/* the top row: the close (and, on a phone, the grip) */
+.book-panel-top {
+  position: relative;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding: 0.8rem;
 }
-.book-panel-facts dd {
-  margin: 0;
+.book-panel-grip {
+  display: none;
 }
-
-.book-panel-todo {
-  font-size: var(--text-strip);
-  line-height: 1.5;
-  color: var(--color-todo-text, #ffd666);
-  border-left: 2px solid currentColor;
-  padding-left: 0.75rem;
-}
-/* ——— A SHOW OPENS AS A PLAYER ———
-   The key art is what was pressed, so showing it again says nothing. A show
-   with a trailer gets the trailer, and the panel stops being a side rail:
-   it is a centred window, wide enough that the picture is the point, with
-   the page behind it stepped back. The panel takes its own pointer events
-   here, because the player's controls are inside it. */
-.book-panel-scrim {
-  position: fixed;
-  inset: 0;
-  z-index: 44;
-  /* the page steps back behind the player; it does not disappear */
-  background: rgba(0, 8, 18, 0.74);
-  animation: scrim-in 260ms linear both;
-}
-@keyframes scrim-in {
-  from {
-    opacity: 0;
-  }
-}
-.book-panel.is-video {
-  pointer-events: auto;
-  top: 50%;
-  left: 50%;
-  right: auto;
-  /* wide enough that the picture is the point, narrow enough that the
-     write-up under it is still on the screen with it */
-  width: min(50rem, 92vw);
-  max-height: 88svh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 0 0 1.75rem;
-  border-left: 0;
-  border: 1px solid var(--color-line);
-  transform: translate(-50%, -48%) scale(0.98);
-}
-.book-panel.is-video.is-open {
-  transform: translate(-50%, -50%) scale(1);
-}
-/* the picture, at the ratio every one of these trailers is cut in */
 .book-panel-video {
   position: relative;
   aspect-ratio: 16 / 9;
@@ -1963,106 +2094,285 @@ main > footer {
   height: 100%;
   border: 0;
 }
-.book-panel.is-video .book-panel-say {
-  padding: 0 1.75rem;
+.book-panel-poster {
+  object-fit: cover;
 }
-@media (prefers-reduced-motion: reduce) {
-  .book-panel.is-video,
-  .book-panel.is-video.is-open {
-    transform: translate(-50%, -50%);
-  }
-  .book-panel-scrim {
-    animation: none;
-  }
+.book-panel-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
-
-/* on a phone the panel is a bottom sheet — a 22rem rail would cover the
-   shelf it is describing */
+.book-panel-art {
+  align-self: start;
+  box-shadow: inset 0 0 0 1px var(--color-line);
+  filter: drop-shadow(0 16px 34px rgba(0, 0, 0, 0.6));
+}
+.book-panel.is-show .book-panel-say {
+  padding: 1.75rem 2rem 2rem;
+}
+/* the type: the red line on the kicker, his header font on the title */
+.book-panel-kicker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.32em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+.book-panel-title {
+  margin-top: 1rem;
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
+  font-size: clamp(1.5rem, 1.2rem + 1vw, 2.1rem);
+  line-height: 1.2;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-paper);
+}
+.book-panel-credit {
+  margin-top: 0.45rem;
+  font-size: var(--text-about);
+  color: var(--color-mid);
+}
+.book-panel-proof {
+  margin-top: 1rem;
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 400;
+  font-size: 0.6875rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--color-paper);
+}
+/* the write-up: the one long-form passage in the panel */
+.book-panel-summary {
+  margin-top: 1.5rem;
+  font-size: var(--text-about);
+  line-height: var(--text-about--line-height);
+  color: var(--color-mid);
+  max-width: 52ch;
+}
+/* network or publisher, the award, his role: a short column of facts */
+.book-panel-facts {
+  margin-top: 1.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line);
+}
+.book-panel-facts dt {
+  margin-top: 1.1rem;
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 400;
+  font-size: 0.625rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+.book-panel-facts dt:first-child {
+  margin-top: 0;
+}
+.book-panel-facts dd {
+  margin: 0.35rem 0 0;
+  font-size: var(--text-about);
+  color: var(--color-mid);
+}
+.book-panel-todo {
+  font-size: var(--text-strip);
+  line-height: 1.5;
+  color: var(--color-todo-text, #ffd666);
+  border-left: 2px solid currentColor;
+  padding-left: 0.75rem;
+}
+/* on a phone: a sheet up from the bottom with a grip on top, and a book's
+   jacket above its text rather than beside it */
 @media (max-width: 639px) {
-  .book-panel {
-    /* A sheet, unlike the rail, covers the shelf across its whole width, so
-       it takes its own taps: transparent here, a tap on the write-up fell
-       through and opened whichever book happened to be underneath it. It
-       also scrolls rather than outgrowing the screen when a write-up is
-       long, and keeps that scroll to itself. */
-    pointer-events: auto;
-    max-height: 78svh;
-    overflow-y: auto;
-    overscroll-behavior: contain;
+  .book-panel,
+  .book-panel.is-book {
     top: auto;
     bottom: 0;
     left: 0;
     right: 0;
     width: auto;
-    display: flex;
-    gap: 1.25rem;
-    align-items: center;
-    padding: 1.25rem;
-    border-left: 0;
+    max-height: 92svh;
+    border: 0;
     border-top: 1px solid var(--color-line);
     transform: translate(0, 100%);
-    box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.55);
   }
   .book-panel.is-open {
     transform: translate(0, 0);
   }
-  .book-panel-inner {
-    display: grid;
-    grid-template-columns: 4.5rem 1fr;
-    gap: 1rem;
-    align-items: center;
-    width: 100%;
-  }
-  /* a player is not a thumbnail: on a phone the video sheet is one column,
-     the picture full width across the top of it */
-  .book-panel.is-video {
-    top: auto;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    width: auto;
-    max-width: none;
-    max-height: 92svh;
-    transform: translate(0, 100%);
-  }
-  .book-panel.is-video.is-open {
-    transform: translate(0, 0);
-  }
-  .book-panel.is-video .book-panel-inner {
+  .book-panel.is-book .book-panel-inner {
     display: block;
+    padding: 0 1.25rem 2rem;
   }
-  .book-panel.is-video .book-panel-say {
-    padding: 0 1.25rem 0.5rem;
+  .book-panel.is-book .book-panel-top {
+    margin-inline: -1.25rem;
+  }
+  .book-panel-top {
+    min-height: 3.75rem;
+    padding: 0.75rem;
+  }
+  .book-panel-grip {
+    display: block;
+    position: absolute;
+    top: 0.55rem;
+    left: 50%;
+    width: 2.5rem;
+    height: 4px;
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.22);
+    transform: translateX(-50%);
   }
   .book-panel-art {
-    width: 4.5rem;
-    grid-row: span 6;
+    width: 8rem;
   }
-  .book-panel .mt-6,
-  .book-panel .mt-8 {
-    margin-top: 0.375rem;
+  .book-panel.is-book .book-panel-say {
+    margin-top: 1.5rem;
   }
-  /* the close button stays: on a phone it is the one sure way to put a
-     book away (Escape needs a keyboard, and the pressed cover itself may
-     have been panned out of the window or passed by the camera) */
+  .book-panel.is-show .book-panel-say {
+    padding: 1.5rem 1.25rem 2rem;
+  }
 }
 @media (prefers-reduced-motion: reduce) {
-  .book-panel {
+  .book-panel,
+  .book-panel.is-open {
+    transform: translate(-50%, -50%);
     transition:
       opacity 160ms linear,
       visibility 0s linear 160ms;
-    transform: translate(0, -50%);
   }
   .book-panel.is-open {
-    transform: translate(0, -50%);
     transition:
       opacity 160ms linear,
       visibility 0s;
   }
-  .book-panel-inner {
+  .book-panel-inner,
+  .book-panel-scrim {
     animation: none;
   }
 }
+@media (prefers-reduced-motion: reduce) and (max-width: 639px) {
+  .book-panel,
+  .book-panel.is-open {
+    transform: none;
+  }
+}
+
+/* ---------- the button system, from his notes of 2026-10-21 ----------
+   one outline for every round control (the carousel's arrows, the panel's
+   close), dark frosted glass for anything that sits on artwork, and a hover
+   or tap that fills a button white */
+.round-btn {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.26);
+  background: transparent;
+  color: var(--color-paper);
+  cursor: pointer;
+  transition:
+    background-color 160ms linear,
+    border-color 160ms linear,
+    color 160ms linear,
+    opacity 160ms linear;
+}
+.round-btn svg {
+  width: 0.9rem;
+  height: 0.9rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+@media (hover: hover) {
+  .round-btn:hover:not(:disabled) {
+    background: var(--color-paper);
+    border-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}
+.round-btn:active:not(:disabled) {
+  background: var(--color-paper);
+  border-color: var(--color-paper);
+  color: var(--color-ink);
+}
+.round-btn:disabled {
+  opacity: 0.32;
+  cursor: default;
+}
+.round-btn:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+}
+.frost-btn {
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  background: rgba(14, 15, 18, 0.5);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  color: var(--color-paper);
+  transition:
+    background-color 220ms linear,
+    border-color 220ms linear,
+    color 220ms linear;
+}
+.frost-btn svg {
+  width: 46%;
+  height: 46%;
+}
+.frost-btn--lg {
+  width: 4rem;
+  height: 4rem;
+  cursor: pointer;
+}
+.frost-btn--md {
+  width: 2.25rem;
+  height: 2.25rem;
+}
+.frost-btn--sm {
+  width: 1.9rem;
+  height: 1.9rem;
+}
+.frost-btn--xs {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+@media (hover: hover) {
+  .book-panel-play:hover {
+    background: var(--color-paper);
+    border-color: var(--color-paper);
+    color: var(--color-ink);
+  }
+}
+.book-panel-play:active,
+.book-panel-play:focus-visible {
+  background: var(--color-paper);
+  border-color: var(--color-paper);
+  color: var(--color-ink);
+}
+.book-panel-play:focus-visible {
+  outline: 2px solid var(--color-signal);
+  outline-offset: 3px;
+}
+/* light, widely spaced grey caps: the hero's SCROLL and the carousel's
+   "tap any title" */
+.caption-caps {
+  font-family: var(--font-poppins), var(--font-ui);
+  font-weight: 300;
+  font-size: 10px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--color-faint);
+}
+
 /* the whole jacket is the control; the button is its hit area and its
    accessible name, so keyboard and touch reach the panel too */
 .tilt-cover {
@@ -2117,11 +2427,6 @@ main > footer {
     opacity: 0;
     inset: -14px;
   }
-}
-/* every open panel belongs to a pressed book now, so it always wears the
-   edge that ties it to one */
-.book-panel.is-open {
-  border-left-color: var(--color-signal);
 }
 @media (prefers-reduced-motion: reduce) {
   .tilt-cover.is-pressed::after {

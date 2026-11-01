@@ -24,10 +24,21 @@ export function useDismiss(open: boolean, close: () => void) {
       if (e.key === "Escape") close();
     };
     const onClick = (e: MouseEvent) => {
-      if ((e.target as Element | null)?.closest(CONTROLS)) return;
-      const r = document.getElementById("book-panel")?.getBoundingClientRect();
+      /* Where the press came FROM, by the event's path rather than its
+         target: the path is fixed when the event is dispatched, so it still
+         holds the panel when the pressed control has already been replaced
+         (the play button swaps for the player before this runs). And a press
+         from the keyboard has no position at all — Enter on the play button
+         reported 0,0, which the box test below read as a press off the
+         panel, and closed it instead of playing. */
+      const path = e.composedPath();
+      const panel = document.getElementById("book-panel");
+      if (panel && path.includes(panel)) return;
+      if (path.some((n) => n instanceof Element && n.matches(CONTROLS))) return;
+      const r = panel?.getBoundingClientRect();
       if (
         r &&
+        e.detail > 0 &&
         e.clientX >= r.left &&
         e.clientX <= r.right &&
         e.clientY >= r.top &&

@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 import { SITE_URL } from "@/lib/site";
 
+// written once at build time — a static export (public_html) requires it
+export const dynamic = "force-static";
+
 export default function robots(): MetadataRoute.Robots {
   return {
-    /* /image-led is a review variant kept for comparison, not a page of the
-       site — it carries robots:noindex too, but a crawler should not spend
-       a request finding that out */
-    rules: { userAgent: "*", allow: "/", disallow: "/image-led" },
+    rules: { userAgent: "*", allow: "/" },
     sitemap: `${SITE_URL}/sitemap.xml`,
   };
 }

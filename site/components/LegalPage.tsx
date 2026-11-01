@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CurrentYear } from "@/components/CurrentYear";
 import { Lockup } from "@/components/Lockup";
 import { site } from "@/lib/content";
 import { SHOW_TODOS } from "@/lib/site";
@@ -36,7 +37,11 @@ export function LegalPage({
         id="main"
         className="mx-auto max-w-[860px] px-5 pb-24 pt-10 sm:px-8"
       >
-        <h1 className="display-heavy text-h2 text-paper">{title}</h1>
+        {/* the home page's section label, as the page's title */}
+        <h1 className="section-label legal-title">
+          <span className="section-rule" aria-hidden="true" />
+          <span>{title}</span>
+        </h1>
         <p className="meta-caps mt-3 text-faint">Last updated {updated}</p>
 
         {SHOW_TODOS && (
@@ -55,6 +60,13 @@ export function LegalPage({
             {site.contact.email}
           </a>
         </p>
+
+        {/* the way home at the foot of the page, as well as at the top */}
+        <p className="mt-10">
+          <Link href="/" className="link meta-caps">
+            <span aria-hidden="true">←</span> Back to the site
+          </Link>
+        </p>
       </main>
 
       <footer className="mx-auto flex max-w-[860px] flex-wrap items-center gap-x-6 gap-y-2 px-5 py-12 sm:px-8">
@@ -65,7 +77,8 @@ export function LegalPage({
           Privacy
         </Link>
         <p className="meta-caps text-mid">
-          {site.verticals} · © {new Date().getFullYear()} {site.legal.entity}
+          {site.verticals} · Est. {site.legal.established} · ©{" "}
+          <CurrentYear built={new Date().getFullYear()} /> {site.legal.entity}
         </p>
       </footer>
     </>

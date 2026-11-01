@@ -1,5 +1,5 @@
 {
-  "note": "RESEARCHED, NOT CLIENT-SUPPLIED. Every summary below is written by us from published sources (publisher listings, trade press, network announcements) and paraphrased — no jacket copy is reproduced. Facts (publisher, imprint, year, network, collaborators) are cited in `sources`. This file is deliberately separate from site.json, which holds RG's verbatim copy: nothing here goes on the site until RG signs it off. `roleBasis` says how we know RG's role — 'client-copy' means his own approved bio states it, 'imprint' means the publisher is verified and his bio states his job there, 'unconfirmed' means ask him. Compiled 2026-09-18; six further titles added the same day at the client's instruction, marked onSite:false — they are named in RG's bio but have no tile, and cannot get one until a cover image and a proof line exist for each.",
+  "note": "RESEARCHED, NOT CLIENT-SUPPLIED. Every summary below is written by us from published sources (publisher listings, trade press, network announcements) and paraphrased — no jacket copy is reproduced. Facts (publisher, imprint, year, network, collaborators) are cited in `sources`. This file is deliberately separate from site.json, which holds RG's verbatim copy: nothing here goes on the site until RG signs it off. `roleBasis` says how we know RG's role — 'client-copy' means his own approved bio states it, 'imprint' means the publisher is verified and his bio states his job there, 'unconfirmed' means ask him. Compiled 2026-09-18; six further titles added the same day at the client's instruction, marked onSite:false — they are named in RG's bio but have no tile, and cannot get one until a cover image and a proof line exist for each. 2026-10-21: three of those six went on the site with the covers and proof lines he sent — THE GREENPRINT, THE NEXT BIG STORY, and Mottola's, now titled HITMAKER at his word — with three new entries beside them (ROOTS OF STYLE, EXTRA LEAN, MAKE IT REALITY); the other three still wait.",
   "roleSources": {
     "shows": "founder.bio[0]: 'under which he has Executive Produced shows such as HULU's Emmy Award-winning DRIVE with SWIZZ BEATZ, OWN's and HBO MAX's TIME OF ESSENCE, DISCOVERY+'s and HBO MAX's REMIX MY SPACE with Marsai Martin, and VH1's RICKY MARTIN: BEHIND VEGAS RESIDENCY'",
     "literary": "founder.bio[0]: 'also served as literary representation for New York Times Bestsellers authors, such as Marco Borges, THE GREENPRINT and Emme Muñiz, LORD HELP ME'",
@@ -22,12 +22,12 @@
       "confirm": "Do you want the Emmy named by category — 'Outstanding Single Camera Editing, 2024 Daytime Emmy Awards' — or left as 'Emmy Award-Winning'?",
       "onSite": true,
       "needs": [],
-      "awardShort": "2024 Daytime Emmy — Outstanding Single Camera Editing"
+      "awardShort": "Daytime Emmy — Outstanding Single Camera Editing"
     },
     "time-of-essence": {
       "summary": "Five hours on fifty years of Essence, a decade to an episode — how the magazine reported and shaped Black American culture, told by the people who were in it. With Oprah Winfrey, Halle Berry, Whoopi Goldberg, Taraji P. Henson, Regina Hall, Taye Diggs, Gabrielle Union and Beverly Johnson.",
       "released": "2023",
-      "carrier": "OWN — five parts, premiered 18 August 2023; streams on Max",
+      "carrier": "OWN | HBO",
       "role": "Executive Producer",
       "roleBasis": "client-copy",
       "sources": [
@@ -42,7 +42,7 @@
     "remix-my-space": {
       "summary": "Marsai Martin and a design team surprise teenagers who have done something for their community, and rebuild their bedrooms around what each of them actually cares about — photography, robotics, sneakers.",
       "released": "2022",
-      "carrier": "Discovery+ — eight episodes, premiered January 2022; also on HBO Max",
+      "carrier": "HBO Max",
       "role": "Executive Producer",
       "roleBasis": "client-copy",
       "sources": [
@@ -57,7 +57,7 @@
     "behind-the-vegas-residency": {
       "summary": "A backstage hour on Ricky Martin's 'All In' residency at the Park Theater in Las Vegas — rehearsals, career flashbacks and the days before opening night.",
       "released": "2017",
-      "carrier": "VH1 — one-hour special, aired 4 September 2017",
+      "carrier": "Paramount",
       "role": "Executive Producer",
       "roleBasis": "client-copy",
       "sources": [
@@ -70,7 +70,7 @@
       "needs": []
     },
     "true-love": {
-      "summary": "Lopez's first book: a diary of the two years after she and Marc Anthony separated, begun on her 2012 Dance Again world tour, in which she rebuilt both her life and her work. A portion of the proceeds goes to the Lopez Family Foundation.",
+      "summary": "Lopez's first book: a diary of the two years after she and Marc Anthony separated, begun on her Dance Again world tour, in which she rebuilt both her life and her work. A portion of the proceeds goes to the Lopez Family Foundation.",
       "released": "2014",
       "carrier": "Celebra | Penguin — published in English and Spanish, 4 November 2014",
       "role": "Founder and Publisher, Celebra",
@@ -115,7 +115,7 @@
       "needs": []
     },
     "my-voice": {
-      "summary": "Two decades of hip-hop radio from the inside: an internship at Hot 97, her 'Battle of the Beats' segment, and the long 1996 interview she did with Tupac Shakur at twenty-five, most of which never aired. Foreword by J. Cole.",
+      "summary": "Two decades of hip-hop radio from the inside: an internship at Hot 97, her 'Battle of the Beats' segment, and the long interview she did with Tupac Shakur at twenty-five, most of which never aired. Foreword by J. Cole.",
       "released": "2016",
       "carrier": "Celebra | Penguin — 17 May 2016",
       "role": "Founder and Publisher, Celebra",
@@ -157,7 +157,7 @@
       "needs": []
     },
     "to-selena-with-love": {
-      "summary": "Selena's husband and guitarist on their life together — how they met in her band, the marriage, and her death in 1995 — written seventeen years afterwards.",
+      "summary": "Selena's husband and guitarist on their life together — how they met in her band, the marriage, and her death — written seventeen years afterwards.",
       "released": "2012",
       "carrier": "Celebra | Penguin — 6 March 2012; a commemorative edition followed",
       "role": "Founder and Publisher, Celebra",
@@ -171,7 +171,7 @@
       "needs": []
     },
     "why-soccer-matters": {
-      "summary": "Pelé on six decades of the game, built around five World Cups — 1950, 1958, 1970, 1994 and 2014 — and on what the sport did for lives far away from the pitch. Written with Brian Winter.",
+      "summary": "Pelé on six decades of the game, built around five World Cups, and on what the sport did for lives far away from the pitch. Written with Brian Winter.",
       "released": "2014",
       "carrier": "Celebra | Penguin — 1 April 2014",
       "role": "Founder and Publisher, Celebra",
@@ -272,7 +272,7 @@
       "needs": []
     },
     "clemente": {
-      "summary": "Roberto Clemente told by his own family: Puerto Rico to the major leagues, eighteen seasons and three thousand hits, and the relief flight to earthquake victims in Nicaragua that he died on at the end of 1972.",
+      "summary": "Roberto Clemente told by his own family: Puerto Rico to the major leagues, eighteen seasons and three thousand hits, and the relief flight to earthquake victims in Nicaragua on which he died.",
       "released": "2013",
       "carrier": "Celebra | Penguin — 24 September 2013",
       "role": "Founder and Publisher, Celebra",
@@ -361,10 +361,7 @@
       "needs": []
     },
     "the-greenprint": {
-      "title": "THE GREENPRINT",
-      "credit": "Marco Borges",
-      "medium": "book",
-      "summary": "Twenty-two rules for eating plants, with around sixty recipes and the exercise and lifestyle habits meant to go with them. Introduction by Jay-Z and Beyoncé.",
+      "summary": "Twenty-two laws for eating plants, with more than sixty recipes and the exercise and lifestyle habits meant to go with them. Introduction by Jay-Z and Beyoncé.",
       "released": "2018",
       "carrier": "Harmony | Penguin Random House — 31 December 2018",
       "role": "Literary representation (Major Content)",
@@ -374,12 +371,89 @@
         "https://www.prnewswire.com/news-releases/plant-based-leader-marco-borges-to-launch-the-greenprint-300736909.html"
       ],
       "confirm": null,
-      "onSite": false,
-      "needs": [
-        "cover image",
-        "proof line"
+      "onSite": true,
+      "needs": [],
+      "note": "Named in RG's bio as a Major Content representation credit — since 2026-10-21 in the literary-representation line he asked for in bold. Harmony, not Celebra — which is consistent: this is the post-Celebra, representation-era Borges title, where THE 22-DAY REVOLUTION was the Celebra one. On the site from 2026-10-21 with the cover and proof line he sent, which he marked big. Summary corrected the same day against the publisher's listing: '22 Laws', 'more than 60' recipes."
+    },
+    "the-next-big-story": {
+      "summary": "O'Brien on the stories that made her as a reporter — Hurricane Katrina, the tsunami in Southeast Asia and the earthquake in Haiti — on her CNN documentaries Black in America and Latino in America, and on growing up in a mixed-race family. Written with Rose Marie Arce.",
+      "released": "2010",
+      "carrier": "Celebra | Penguin — 2 November 2010",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.amazon.com/Next-Big-Story-Journey-Possibilities/dp/0451231376",
+        "http://www.cnn.com/2010/LIVING/11/11/inam.soledad.excerpt2/index.html",
+        "https://penguinrandomhouse.com/books/306344/the-next-big-story-by-soledad-obrien/9780451232847",
+        "https://www.publishersweekly.com/9780451231376"
       ],
-      "note": "Named in RG's bio as a Major Content representation credit. Harmony, not Celebra — which is consistent: this is the post-Celebra, representation-era Borges title, where THE 22-DAY REVOLUTION was the Celebra one."
+      "confirm": null,
+      "onSite": true,
+      "needs": [],
+      "note": "Full title: THE NEXT BIG STORY: MY JOURNEY THROUGH THE LAND OF POSSIBILITIES. O'Brien is named in RG's bio as a Celebra author. On the site from 2026-10-21 with the cover and proof line he sent."
+    },
+    "roots-of-style": {
+      "summary": "Isabel Toledo's memoir — a childhood in Cuba, her marriage to Ruben, and how sewing and craft became a curious girl's way of expressing herself — with a case for trusting your instincts and finding a style of your own. Illustrated throughout by Ruben Toledo.",
+      "released": "2012",
+      "carrier": "Celebra | Penguin — 6 March 2012",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.penguinrandomhouse.com/books/306356/roots-of-style-by-isabel-toledo-illustrated-by-ruben-toledo/",
+        "https://www.foxnews.com/lifestyle/isabel-and-ruben-toledo-reflect-on-new-book-roots-of-style"
+      ],
+      "confirm": null,
+      "onSite": true,
+      "needs": [],
+      "note": "Added 2026-10-21 with the cover he sent. Full title: ROOTS OF STYLE: WEAVING TOGETHER LIFE, LOVE, AND FASHION. He credits it to 'Isabel and Ruben Toledo' (the jacket: Isabel Toledo, illustrations by Ruben Toledo). He gave no proof line, so the tile has none."
+    },
+    "extra-lean": {
+      "summary": "Lopez's plan for eating to burn fat, built on three habits — balancing carbohydrate, protein and fat, keeping portions in check, and eating often through the day — with more than forty recipes and a seven-week meal plan. Written with the trainer Jimmy Peña.",
+      "released": "2010",
+      "carrier": "Celebra | Penguin — 4 May 2010",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.goodreads.com/work/editions/11175217-extra-lean-the-fat-burning-plan-that-changes-the-way-you-eat-for-life",
+        "https://www.penguin.com.au/books/extra-lean-9781101537121"
+      ],
+      "confirm": null,
+      "onSite": true,
+      "needs": [],
+      "note": "Added 2026-10-21 with the cover he sent, which he marked big. Full title: EXTRA LEAN: THE FAT-BURNING PLAN THAT CHANGES THE WAY YOU EAT FOR LIFE. Celebra hardcover 4 May 2010 (ISBN 9780451230164); the paperback followed 3 May 2011."
+    },
+    "make-it-reality": {
+      "summary": "Abrego's road from hauling camera gear on Road Rules to making The Surreal Life and Flavor of Love and the top job at Endemol Shine North America — each stage paired with what it taught him about setting goals and taking risks. Foreword by Pitbull.",
+      "released": "2016",
+      "carrier": "Celebra | Penguin — 3 May 2016",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://penguinrandomhouse.com/books/531928/make-it-reality-by-cris-abrego-foreword-by-pitbull",
+        "https://www.bookshare.org/browse/book/1215928",
+        "https://publishersweekly.com/pw/print/20161003/71647-changes-coming-this-fall-for-spanish-language-publishers.html"
+      ],
+      "confirm": null,
+      "onSite": true,
+      "needs": [],
+      "note": "Added 2026-10-21 with the cover he sent. Full title: MAKE IT REALITY: CREATE YOUR OPPORTUNITY, OWN YOUR SUCCESS. He gave no proof line, so the tile has none — the publisher's page flags it 'Best Seller', but a proof line is his to give. Published by Celebra five months before Publishers Weekly reported Berkley winding the imprint down (3 October 2016), so the imprint basis holds here as it does for the rest of the list."
+    },
+    "hitmaker": {
+      "summary": "Mottola's account of the record business, from the Bronx to the head of Sony Music worldwide: the careers he discovered, developed or managed — Mariah Carey, Celine Dion, Shakira, Jennifer Lopez and Gloria Estefan among them — his marriage to Carey, and his power struggle with his mentor Walter Yetnikoff. Written with Cal Fussman.",
+      "released": "2014",
+      "carrier": "Celebra | Penguin — the Spanish edition, EL CREADOR DE ÉXITOS, 5 August 2014",
+      "role": "Founder and Publisher, Celebra",
+      "roleBasis": "imprint",
+      "sources": [
+        "https://www.penguinrandomhouse.com/books/310275/el-creador-de-exitos-by-tommy-mottola/",
+        "https://openlibrary.org/isbn/0451241053",
+        "https://specialsales.hbgusa.com/titles/tommy-mottola/hitmaker/9780446585187",
+        "https://www.amazon.com/Hitmaker-Man-Music-Tommy-Mottola/dp/0446585181"
+      ],
+      "confirm": null,
+      "onSite": true,
+      "needs": [],
+      "note": "Was 'el-creador-de-exitos', parked with the question 'Celebra published the SPANISH edition only — Grand Central had the English. Do you want this tile at all, and if so under which title?' He answered on 2026-10-21: HITMAKER, 'New York Times Bestseller', 'You could put Celebra', with an Amazon link to ISBN 0451241053 — EL CREADOR DE ÉXITOS, Celebra, 5 August 2014 — and its cover as the art. So the publisher line is the Celebra Spanish edition, said outright, never Celebra for the English book: that was Grand Central (29 January 2013), written with Cal Fussman. The Spanish jacket carries 'Autor bestseller en el New York Times de HITMAKER'."
     },
     "no-lost-causes": {
       "title": "NO LOST CAUSES",
@@ -401,49 +475,6 @@
         "proof line"
       ],
       "note": "Uribe is named in RG's bio as a Celebra author."
-    },
-    "the-next-big-story": {
-      "title": "THE NEXT BIG STORY",
-      "credit": "Soledad O'Brien",
-      "medium": "book",
-      "summary": "The broadcaster's account of her own route into news and of the stories she chose to go after. Written with Rose Marie Arce.",
-      "released": "2010",
-      "carrier": "Celebra | Penguin — 2 November 2010",
-      "role": "Founder and Publisher, Celebra",
-      "roleBasis": "imprint",
-      "sources": [
-        "https://www.amazon.com/Next-Big-Story-Journey-Possibilities/dp/0451231376",
-        "http://www.cnn.com/2010/LIVING/11/11/inam.soledad.excerpt2/index.html"
-      ],
-      "confirm": null,
-      "onSite": false,
-      "needs": [
-        "cover image",
-        "proof line"
-      ],
-      "note": "Full title: THE NEXT BIG STORY: MY JOURNEY THROUGH THE LAND OF POSSIBILITIES. O'Brien is named in RG's bio as a Celebra author."
-    },
-    "el-creador-de-exitos": {
-      "title": "EL CREADOR DE ÉXITOS",
-      "credit": "Tommy Mottola",
-      "medium": "book",
-      "summary": "The Bronx college dropout who became one of the music industry's most powerful and most argued-over executives, and who signed and steered Mariah Carey, Celine Dion, Shakira, Jennifer Lopez and Gloria Estefan.",
-      "released": "2014",
-      "carrier": "Celebra | Penguin — Spanish edition, 2014. The English edition, HITMAKER: THE MAN AND HIS MUSIC, was published by Grand Central in 2013, written with Cal Fussman.",
-      "role": "Founder and Publisher, Celebra — Spanish edition",
-      "roleBasis": "imprint",
-      "sources": [
-        "https://www.penguinrandomhouse.com/books/310275/el-creador-de-exitos-by-tommy-mottola/",
-        "https://www.amazon.com/Hitmaker-Man-Music-Tommy-Mottola/dp/0446585181"
-      ],
-      "confirm": "Celebra published the SPANISH edition only — Grand Central had the English. Do you want this tile at all, and if so under which title?",
-      "onSite": false,
-      "needs": [
-        "cover image",
-        "proof line",
-        "which edition to show"
-      ],
-      "note": "This resolves an apparent contradiction: Mottola is named in RG's bio as a Celebra author, and the English HITMAKER is Grand Central. The Spanish edition is the Celebra one."
     },
     "viviendo": {
       "title": "VIVIENDO",

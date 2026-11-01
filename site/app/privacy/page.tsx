@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 
 export default function Privacy() {
   return (
-    <LegalPage title="Privacy" updated="August 2026">
+    <LegalPage title="Privacy" updated="October 2026">
       <h2>The short version</h2>
       <p>
         This site does not collect personal information. There are no accounts,
@@ -26,15 +26,24 @@ export default function Privacy() {
         technical information a browser must send in order to receive a page —
         your IP address, the page requested, and your browser and device type —
         and may keep it briefly in server logs for security and reliability.
-        That processing is the host&rsquo;s, and it is described in{" "}
-        <span className="ph">[hosting provider and link to their policy]</span>.
+        That processing is the host&rsquo;s — the site is hosted by Netlify —
+        and it is described in{" "}
+        <a
+          href="https://www.netlify.com/privacy/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="link"
+        >
+          Netlify&rsquo;s Privacy Statement
+        </a>
+        .
       </p>
 
       <h2>The one third party: trailers</h2>
       <p>
         The slate carries trailers for our shows. Nothing loads from YouTube
-        until you ask for a trailer by hovering, tapping or activating one; the
-        page shows still key art until then. When a trailer does load, it is
+        until you press play on one; a show opens on its still key art. When a
+        trailer does load, it is
         embedded from <strong>youtube-nocookie.com</strong>, Google&rsquo;s
         reduced-tracking host, which means Google does not set its usual
         advertising cookies for that playback. Google still receives your IP
@@ -95,7 +104,7 @@ export default function Privacy() {
         <a href={`mailto:${site.contact.email}`} className="link">
           {site.contact.email}
         </a>
-        . <span className="ph">[registered office address]</span>
+        .
       </p>
     </LegalPage>
   );

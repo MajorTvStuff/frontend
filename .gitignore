@@ -42,3 +42,6 @@ out/
 # directory so they can never poison the dev server's .next (see
 # site/next.config.ts)
 /site/.next-*/
+
+# the hosting bundle and its zip — built by site/scripts/package-deploy.py
+/deploy/

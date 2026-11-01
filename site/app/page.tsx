@@ -6,6 +6,8 @@ import {
   youtubeId,
   credit,
 } from "@/lib/content";
+import Image from "next/image";
+import { CurrentYear } from "@/components/CurrentYear";
 import { HeroBanner } from "@/components/HeroBanner";
 import type { BandItem } from "@/components/Band";
 import { Band } from "@/components/Band";
@@ -17,7 +19,6 @@ import {
   SectionColumn,
   SectionPair,
 } from "@/components/Section";
-import { VariantSwitch } from "@/components/VariantSwitch";
 
 /**
  * THE PAGE, IN THE CLIENT'S OWN ORDER.
@@ -25,14 +26,16 @@ import { VariantSwitch } from "@/components/VariantSwitch";
  * He built a version himself and sent the recording (Assets/1288.mp4). It is
  * the clearest brief we have had, and the order below is his:
  *
- *   hero     — his own opening banner, copied line for line
+ *   hero     — his own film: the opening lines as title cards between
+ *              footage, ending on the logo and TV | FILM | BOOKS
  *   company  — what the company is, all three paragraphs
- *   band     — every title in one drifting row: full tiles for the shows,
- *              books gridded two high. "All in one place", in his words.
+ *   band     — every title in one row, stepped through with arrows: full
+ *              tiles for the shows, books gridded two high. "All in one
+ *              place", in his words.
  *   tv|film  — the copy, then the four trailers
  *   books    — the copy
- *   founder  — the whole bio, and the recognition
- *   contact  — the address, and the footer
+ *   founder  — his portrait, the whole bio, and the recognition
+ *   footer   — no address: the navbar's Contact button carries it
  *
  * The note that drove it: "I want the site to breathe more with copy and
  * messaging, and have the images be more supportive." So copy leads every
@@ -55,6 +58,44 @@ import { VariantSwitch } from "@/components/VariantSwitch";
  * here, and he asked for simplicity.
  */
 
+/**
+ * His final mockup lights only the opening clause of a section's first
+ * paragraph — what the company is, what it makes — and lets the rest fall
+ * back to the reading grey. `at` is where the clause ends; if the copy ever
+ * changes and it is not found, the whole paragraph stays lit.
+ */
+function Lead({ text, at }: { text: string; at: string }) {
+  const i = text.indexOf(at);
+  if (i < 0) return <span className="lede-key">{knit(text)}</span>;
+  return (
+    <>
+      <span className="lede-key">{knit(text.slice(0, i))}</span>
+      {knit(text.slice(i))}
+    </>
+  );
+}
+
+/**
+ * A sentence he asked for in bold, marked **like this** in site.json the way
+ * his email marked it: the literary-representation line he added to his bio
+ * on 2026-10-21.
+ */
+function Bolded({ text }: { text: string }) {
+  return (
+    <>
+      {text.split(/\*\*(.+?)\*\*/).map((part, i) =>
+        i % 2 ? (
+          <strong key={i} className="copy-bold">
+            {knit(part)}
+          </strong>
+        ) : (
+          knit(part)
+        ),
+      )}
+    </>
+  );
+}
+
 export default function Home() {
   const f = site.founder;
   /* the copy doc's own order already alternates shows and books, so the
@@ -62,27 +103,22 @@ export default function Home() {
   const band: BandItem[] = projects.map((p) => ({
     ...p,
     ...projectDims(p.slug),
-    /* pressing a tile opens this in the panel — the same write-up the
-       shelf shows on the other variant, dates excluded */
+    /* pressing a tile opens this in the panel: its write-up, dates
+       excluded */
     about: credit(p.slug),
     /* and, for a show, the trailer itself: the panel embeds it */
     youtubeId: youtubeId(p.trailer),
   }));
   return (
     <>
-      {/* Nothing sits over the banner: it spends nine seconds spelling out
-          MAJOR CONTENT, and a lockup in the corner saying it again was, in
-          his words, too redundant. The navbar arrives once the banner has
-          scrolled away. */}
+      {/* Nothing sits over the banner: his film spends forty seconds
+          arriving at MAJOR CONTENT, and a lockup in the corner saying it
+          the whole time was, in his words, too redundant. The navbar
+          arrives once the page starts to scroll. */}
       <TopBar email={site.contact.email} />
 
-      <VariantSwitch current="copy-led" />
-
       <main id="main">
-        <HeroBanner
-          lines={site.heroSequence ?? site.introLines}
-          verticals={site.verticals}
-        />
+        <HeroBanner verticals={site.verticals} />
 
         {/* ————— what the company is ————— */}
         <Section label="Company">
@@ -90,7 +126,9 @@ export default function Home() {
               and the other two qualify it, so it leads on colour — his own
               build sets the whole section at one size, and a paragraph that
               steps up in scale is the thing he called "not breathing". */}
-          <p className="reveal lede">{knit(site.company[0])}</p>
+          <p className="reveal lede">
+            <Lead text={site.company[0]} at=" whose work" />
+          </p>
           {site.company.slice(1).map((para, i) => (
             <p key={i} className={`reveal reveal-${i + 2} body-copy`}>
               {knit(para)}
@@ -98,7 +136,7 @@ export default function Home() {
           ))}
         </Section>
 
-        {/* ————— every title, in one drifting row ————— */}
+        {/* ————— every title, in one row ————— */}
         <Reveal className="page-section page-section--band">
           <Band items={band} founder={f.name} />
         </Reveal>
@@ -106,43 +144,50 @@ export default function Home() {
         {/* ————— the two halves of the business, side by side ————— */}
         <SectionPair>
           <SectionColumn label={site.tvFilm.label}>
-            <p className="reveal lede">{knit(site.tvFilm.body)}</p>
+            <p className="reveal lede">
+              <Lead text={site.tvFilm.body} at=" with credits" />
+            </p>
           </SectionColumn>
           <SectionColumn label={site.books.label}>
-            <p className="reveal lede">{knit(site.books.body)}</p>
+            <p className="reveal lede">
+              <Lead text={site.books.body} at=" by industry-leading" />
+            </p>
           </SectionColumn>
         </SectionPair>
 
         {/* ————— the person, at last at full length ————— */}
         <Section label="Founder">
-          {/* His name, set the way he sets it: a heading in sentence case,
-              not a wall of heavy caps. The role line under it is gone — his
-              own first sentence is "Raymond Garcia is the founder and CEO of
-              Major Content", so the page was saying it twice. */}
-          <h3 className="reveal founder-name">{f.name}</h3>
-          <p className="reveal reveal-2 lede">{knit(f.bio[0])}</p>
+          {/* His portrait, with his name and role beside it, as his final
+              mockup sets them; then his bio, and the recognition marked as
+              key copy with the red rule */}
+          <div className="founder-card reveal">
+            <Image
+              src="/founder/raymond-garcia.jpg"
+              alt={f.name}
+              width={720}
+              height={900}
+              sizes="(min-width: 900px) 220px, 30vw"
+              className="founder-photo"
+            />
+            <div className="founder-id">
+              <h3 className="founder-name">{f.name}</h3>
+              <p className="founder-role">{f.role}</p>
+            </div>
+          </div>
+          {/* his name and title lit, the rest of the bio in the reading grey */}
+          <p className="reveal reveal-3 body-copy">
+            <Lead text={f.bio[0]} at=", drawing on" />
+          </p>
           {f.bio.slice(1).map((para, i) => (
             <p key={i} className="reveal reveal-3 body-copy">
-              {knit(para)}
+              <Bolded text={para} />
             </p>
           ))}
           <p className="reveal reveal-4 recognition">{knit(f.recognition)}</p>
         </Section>
 
-        {/* ————— the address ————— */}
-        <Reveal className="page-section page-section--address">
-          <div className="section-grid">
-            <div className="section-body">
-              <a
-                href={`mailto:${site.contact.email}`}
-                className="link contact-line reveal"
-              >
-                {site.contact.email}
-              </a>
-            </div>
-          </div>
-        </Reveal>
-
+        {/* The address section is gone at his word: the Contact button in the
+            navbar is enough. */}
         <footer className="page-section page-footer">
           <div className="section-grid">
             <div className="section-body">
@@ -155,7 +200,8 @@ export default function Home() {
                   Privacy
                 </a>
                 <p className="meta-caps text-faint">
-                  {site.verticals} · © {new Date().getFullYear()}{" "}
+                  {site.verticals} · Est. {site.legal.established} · ©{" "}
+                  <CurrentYear built={new Date().getFullYear()} />{" "}
                   {site.legal.entity}
                 </p>
               </div>

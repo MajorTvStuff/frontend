@@ -14,11 +14,12 @@ const grotesk = localFont({
   declarations: [{ prop: "font-stretch", value: "62% 125%" }],
 });
 
-/* the hero's own face: his build sets the opening lines, the sub-line and
-   CONTENT in Poppins 300, and nothing else on the page uses it */
+/* his card font — the CONTENT of his logo. His final mockup sets the section
+   labels, his name and the carousel's counter in it, light and widely
+   spaced; the reading copy stays in the grotesk */
 const poppins = Poppins({
   subsets: ["latin"],
-  weight: ["300"],
+  weight: ["300", "400"],
   display: "swap",
   variable: "--font-poppins",
 });
@@ -85,13 +86,6 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationLd) }}
         />
         {children}
-        {/* beta watermark — the one element to delete at launch */}
-        <div
-          aria-hidden="true"
-          className="meta-caps pointer-events-none fixed bottom-3 left-3 z-50 border border-line bg-band/90 px-2.5 py-1.5 !text-[0.6rem] text-silver print:hidden"
-        >
-          Beta MVP
-        </div>
       </body>
     </html>
   );
